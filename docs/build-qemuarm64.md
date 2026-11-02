@@ -66,10 +66,10 @@ The minimal `core-image-morse` recipe remains unchanged. Input diagnostics are k
 ```bitbake
 # meta-morse-mouse/recipes-core/images/core-image-morse-dev.bb
 require core-image-morse.bb
-IMAGE_INSTALL:append = " evtest"
+IMAGE_INSTALL:append = " evtest uinput-selftest"
 ```
 
-The `evtest` recipe (version 1.36) is provided by the OpenEmbedded `meta-oe` layer. The external `meta-openembedded` checkout is pinned in [Source pins](../manifest/source-pins.md). Register it once:
+The `evtest` recipe (version 1.36) is provided by the OpenEmbedded `meta-oe` layer. The `uinput-selftest` recipe and C program are maintained in this project layer. The external `meta-openembedded` checkout is pinned in [Source pins](../manifest/source-pins.md). Register it once:
 
 ```bash
 git clone --branch scarthgap --single-branch https://github.com/openembedded/meta-openembedded.git meta-openembedded
@@ -86,7 +86,7 @@ QB=tmp/deploy/images/qemuarm64/core-image-morse-dev-qemuarm64.rootfs.qemuboot.co
 ../poky/scripts/runqemu "$QB" nographic slirp
 ```
 
-In the guest, run `evtest` and select the QEMU USB Tablet. The 2 Nov 2026 test confirmed that `evtest` 1.36 enumerated the tablet and advertised `BTN_LEFT`, `BTN_RIGHT`, `BTN_MIDDLE`, `REL_WHEEL`, and `REL_WHEEL_HI_RES`. This is capability discovery only: capture actual input events and test `/dev/uinput` separately. QEMU results do not validate the physical Zebronics receiver.
+In the guest, run `evtest` and select the QEMU USB Tablet. The 2 Nov 2026 tests verified its advertised `BTN_LEFT`, `BTN_RIGHT`, `BTN_MIDDLE`, `REL_WHEEL`, and `REL_WHEEL_HI_RES` capabilities, and captured actual button press/release and wheel up/down events. See [QEMU evdev runtime evidence](../evidence/input/2026-11-02-qemu-evdev-runtime-events.md).\n\nThe development image also includes `uinput-selftest`. Run it as root to create a temporary virtual keyboard, inject `KEY_A` press/release events, and verify those events through evdev. See [uinput self-test instructions](uinput-selftest.md). The updated image must be rebuilt after pulling the test utility changes. QEMU results do not validate the physical Zebronics receiver.
 
 ## Build targets
 
