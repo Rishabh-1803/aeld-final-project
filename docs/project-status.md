@@ -25,7 +25,7 @@
 | QEMU `uinput` virtual keyboard | Verified | `uinput-selftest` created a virtual keyboard and verified `KEY_A` press/release readback through `/dev/input/event2` |
 | Guest architecture/kernel | Verified | `aarch64`; `6.6.151-yocto-standard` |
 | Guest network | Verified | DHCP address `10.0.2.15` |
-| Initial input visibility | Partially verified | QEMU tablet/keyboard enumerated; capabilities and runtime mouse events verified; virtual keyboard `uinput` test pending |
+| Initial input visibility | Verified in QEMU | QEMU tablet events captured through evdev; `uinput-selftest` created a virtual keyboard and read back `KEY_A` press/release |
 
 ## Current configuration observed on 2 November 2026
 
