@@ -56,3 +56,14 @@ PASS: virtual keyboard creation and KEY_A press/release readback verified.
 The actual `eventN` number can vary. A successful result proves that this kernel exposes a functioning `uinput` interface and that a synthetic keyboard's key transitions can be read back through evdev. It does not yet test the MorseMouse driver, keymap, or physical mouse.
 
 If the command fails, record the complete output and `dmesg | tail -n 60`; do not mark the test complete until the cause is resolved.
+
+
+## Recorded QEMU result — 2 November 2026
+
+The updated development image built successfully and booted on QEMU ARM64. Running `uinput-selftest` as root created `MorseMouse-uinput-selftest`, registered it as `/dev/input/event2`, and read back `KEY_A` press (value 1) and release (value 0), each followed by `SYN_REPORT`. The program printed:
+
+```text
+PASS: virtual keyboard creation and KEY_A press/release readback verified.
+```
+
+See [the test evidence](../evidence/input/2026-11-02-uinput-virtual-keyboard-selftest.md). This is QEMU input-stack evidence only; it is not MorseMouse driver or physical hardware acceptance.
