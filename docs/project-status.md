@@ -11,6 +11,7 @@
 | WSL 2 / Ubuntu 24.04.5 | Verified | WSL distribution installed and used for build |
 | Poky Scarthgap | Verified | Commit `4fb7016a07507683359ebd620f1951fd5ea44bfa` |
 | meta-raspberrypi Scarthgap | Verified | Commit `018d44467c4f09eb63f8ea5e86e85d755250cf89` |
+| meta-openembedded (`meta-oe`) | Verified | Scarthgap commit `2db6aece32c7f8ebf6015b468e1b4e21de072e3b`; `evtest` 1.36 recipe available |
 | QEMU baseline | Verified | `core-image-minimal` built and booted |
 | QEMU guest baseline | Verified | Root login; `aarch64`; kernel `6.6.151-yocto-standard` |
 | Custom layer | Verified | `meta-morse-mouse` registered; BitBake lists collection `morse` |
@@ -46,10 +47,8 @@ The parallel Make setting is retained because the user reports that it worked fo
 
 ## Not yet complete
 
-- Inspect kernel config values for `CONFIG_INPUT`, `CONFIG_INPUT_EVDEV`, `CONFIG_INPUT_UINPUT`, `CONFIG_USB_HID` and `CONFIG_HID_GENERIC`.
-- Verify the guest's existing input devices and capabilities.
-- Add diagnostics such as `evtest` to a development image or test package set.
-- Implement and test a guest-side `uinput` synthetic mouse injector.
+- Capture actual button and wheel events using `evtest`; capability enumeration has been verified, but runtime event delivery has not yet been captured.
+- Implement a guest-side `uinput` test utility and verify virtual-device creation, event injection, and readback.
 - Capture actual Zebronics PULSE receiver capabilities on the Raspberry Pi.
 - Freeze gesture grammar and timing rules.
 - Create the authoritative 95-character mapping and validator.
