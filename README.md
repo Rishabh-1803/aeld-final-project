@@ -18,20 +18,24 @@ The project is in **Sprint 1 (2–15 November 2026)**.
 - Poky Scarthgap 5.0.21 is checked out at `4fb7016a07507683359ebd620f1951fd5ea44bfa`.
 - `meta-raspberrypi` Scarthgap is checked out at `018d44467c4f09eb63f8ea5e86e85d755250cf89`.
 - The `qemuarm64` `core-image-minimal` baseline was built and booted successfully.
-- The QEMU guest reported `aarch64` and kernel `6.6.151-yocto-standard`.
-- The custom `meta-morse-mouse` layer has been created and registered in the QEMU build configuration.
-- BitBake discovers `core-image-morse` and `packagegroup-morse-mouse`; metadata parsing succeeds.
-- The first `bitbake core-image-morse` build completed with all 5,332 tasks successful and no task failures. Fetch/host-kernel warnings are recorded in the build evidence.
+- The baseline QEMU guest reported `aarch64` and kernel `6.6.151-yocto-standard`.
+- The custom `meta-morse-mouse` layer is registered in the QEMU build.
+- BitBake discovers both project recipes and metadata parsing succeeds.
+- The minimal-composition `core-image-morse` build completed: 4,083 tasks attempted, all successful, no failed tasks.
+- Its package manifest matches the baseline package-name set plus `packagegroup-morse-mouse`.
+- The project image booted in QEMU using its generated `.qemuboot.conf`; root login succeeded.
+- The guest reported `aarch64`, kernel `6.6.151-yocto-standard`, and DHCP address `10.0.2.15`.
+- QEMU USB tablet/keyboard were detected by HID. A `/dev/uinput` node was present; event injection is not yet tested.
 
-### Not yet validated
+### Not yet implemented or validated
 
-- The generated `core-image-morse` artifacts have not yet been inspected and its root filesystem has not yet been booted in QEMU.
+- The guest input capability/configuration inspection and functional `uinput` injector test remain pending.
 - No MorseMouse kernel input handler/module, UAPI, daemon, CLI, HUD, or reference decoder has been implemented.
-- QEMU `uinput` mouse injection and physical Zebronics PULSE receiver event discovery remain pending.
+- Physical Zebronics PULSE receiver event discovery remains pending.
 - The Morse grammar and complete printable-ASCII keymap remain to be frozen and tested.
 - The Raspberry Pi image and physical acceptance tests remain pending.
 
-The successful baseline and project image build are platform milestones, not evidence that MorseMouse input functionality is implemented.
+A successful project image build and QEMU boot establish the platform baseline, not completed MorseMouse functionality.
 
 ## Project goal
 
@@ -72,7 +76,7 @@ Power-control behavior is separate from text entry. It is dry-run/disabled by de
 
 | Component | Role | Status |
 |---|---|---|
-| QEMU ARM64, `qemuarm64` | Reproducible development and integration tests | Baseline boot verified; project image build successful, boot pending |
+| QEMU ARM64, `qemuarm64` | Reproducible development and integration tests | Minimal project image built and booted; input injection pending |
 | Raspberry Pi 4, `raspberrypi4-64` | Physical demonstration target | Selected; project image not built |
 | Zebronics PULSE mouse + 2.4 GHz USB receiver | Physical input device | Available; Linux event capabilities not yet captured |
 
@@ -125,3 +129,4 @@ A repository license has not yet been selected. Do not assume that the Yocto rec
 ## Latest evidence
 
 - [2 Nov 2026 — QEMU ARM64 `core-image-morse` build](evidence/builds/2026-11-02-core-image-morse-build.md)
+- [2 Nov 2026 — QEMU ARM64 `core-image-morse` boot](evidence/boots/2026-11-02-core-image-morse-qemu-boot.md)
