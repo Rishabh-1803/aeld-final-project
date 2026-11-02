@@ -23,7 +23,9 @@ The project is in **Sprint 1 (2–15 November 2026)**.
 - BitBake discovers both project recipes and metadata parsing succeeds.
 - The minimal-composition `core-image-morse` build completed: 4,083 tasks attempted, all successful, no failed tasks.
 - Its package manifest matches the baseline package-name set plus `packagegroup-morse-mouse`.
-- The project image booted in QEMU using its generated `.qemuboot.conf`; root login succeeded.\n- A separate `core-image-morse-dev` image built and booted with `evtest` 1.36; the minimal `core-image-morse` image recipe remains unchanged.\n- `evtest` enumerated the QEMU tablet and reported left/right/middle button, vertical wheel, and absolute X/Y capabilities.
+- The project image booted in QEMU using its generated `.qemuboot.conf`; root login succeeded.
+- A separate `core-image-morse-dev` image built and booted with `evtest` 1.36; the minimal `core-image-morse` image recipe remains unchanged.
+- `evtest` enumerated the QEMU tablet and reported left/right/middle button, vertical wheel, and absolute X/Y capabilities.
 - The guest reported `aarch64`, kernel `6.6.151-yocto-standard`, and DHCP address `10.0.2.15`.
 - QEMU USB tablet/keyboard were detected by HID. A `/dev/uinput` node was present; event injection is not yet tested.
 
@@ -129,4 +131,5 @@ A repository license has not yet been selected. Do not assume that the Yocto rec
 ## Latest evidence
 
 - [2 Nov 2026 — QEMU ARM64 `core-image-morse` build](evidence/builds/2026-11-02-core-image-morse-build.md)
-- [2 Nov 2026 — QEMU ARM64 `core-image-morse` boot](evidence/boots/2026-11-02-core-image-morse-qemu-boot.md)\n- [2 Nov 2026 — QEMU ARM64 development image and `evtest`](evidence/builds/2026-11-02-core-image-morse-dev-build.md)
+- [2 Nov 2026 — QEMU ARM64 `core-image-morse` boot](evidence/boots/2026-11-02-core-image-morse-qemu-boot.md)
+- [2 Nov 2026 — QEMU ARM64 development image and `evtest`](evidence/builds/2026-11-02-core-image-morse-dev-build.md)
