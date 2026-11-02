@@ -50,7 +50,7 @@ The parallel Make setting is retained because the user reports that it worked fo
 ## Not yet complete
 
 - Capture actual Zebronics PULSE receiver capabilities and runtime events on Raspberry Pi hardware.
-- Freeze gesture grammar and timing rules.
+- Complete and freeze the gesture grammar and filtering/timing rules (button-identity encoding has been selected; remaining controls are pending).
 - Create the authoritative 95-character mapping and validator.
 - Build and test a userspace reference decoder.
 - Implement the kernel input handler, FSM, virtual keyboard and character-device ABI.
