@@ -23,13 +23,13 @@ The project is in **Sprint 1 (2–15 November 2026)**.
 - BitBake discovers both project recipes and metadata parsing succeeds.
 - The minimal-composition `core-image-morse` build completed: 4,083 tasks attempted, all successful, no failed tasks.
 - Its package manifest matches the baseline package-name set plus `packagegroup-morse-mouse`.
-- The project image booted in QEMU using its generated `.qemuboot.conf`; root login succeeded.
+- The project image booted in QEMU using its generated `.qemuboot.conf`; root login succeeded.\n- A separate `core-image-morse-dev` image built and booted with `evtest` 1.36; the minimal `core-image-morse` image recipe remains unchanged.\n- `evtest` enumerated the QEMU tablet and reported left/right/middle button, vertical wheel, and absolute X/Y capabilities.
 - The guest reported `aarch64`, kernel `6.6.151-yocto-standard`, and DHCP address `10.0.2.15`.
 - QEMU USB tablet/keyboard were detected by HID. A `/dev/uinput` node was present; event injection is not yet tested.
 
 ### Not yet implemented or validated
 
-- The guest input capability/configuration inspection and functional `uinput` injector test remain pending.
+- Actual click/scroll event capture and functional `uinput` virtual-device creation/injection remain pending.
 - No MorseMouse kernel input handler/module, UAPI, daemon, CLI, HUD, or reference decoder has been implemented.
 - Physical Zebronics PULSE receiver event discovery remains pending.
 - The Morse grammar and complete printable-ASCII keymap remain to be frozen and tested.
@@ -76,7 +76,7 @@ Power-control behavior is separate from text entry. It is dry-run/disabled by de
 
 | Component | Role | Status |
 |---|---|---|
-| QEMU ARM64, `qemuarm64` | Reproducible development and integration tests | Minimal project image built and booted; input injection pending |
+| QEMU ARM64, `qemuarm64` | Reproducible development and integration tests | Minimal and diagnostics images built/booted; QEMU input capabilities discovered; runtime events and `uinput` injection pending |
 | Raspberry Pi 4, `raspberrypi4-64` | Physical demonstration target | Selected; project image not built |
 | Zebronics PULSE mouse + 2.4 GHz USB receiver | Physical input device | Available; Linux event capabilities not yet captured |
 
@@ -129,4 +129,4 @@ A repository license has not yet been selected. Do not assume that the Yocto rec
 ## Latest evidence
 
 - [2 Nov 2026 — QEMU ARM64 `core-image-morse` build](evidence/builds/2026-11-02-core-image-morse-build.md)
-- [2 Nov 2026 — QEMU ARM64 `core-image-morse` boot](evidence/boots/2026-11-02-core-image-morse-qemu-boot.md)
+- [2 Nov 2026 — QEMU ARM64 `core-image-morse` boot](evidence/boots/2026-11-02-core-image-morse-qemu-boot.md)\n- [2 Nov 2026 — QEMU ARM64 development image and `evtest`](evidence/builds/2026-11-02-core-image-morse-dev-build.md)
