@@ -29,11 +29,10 @@ The project is in **Sprint 1 (2–15 November 2026)**.
 - Runtime QEMU evdev testing confirmed left/right/middle button press/release events and vertical wheel up/down events.
 - The `uinput-selftest` utility successfully created a virtual keyboard and verified `KEY_A` press/release readback through evdev.
 - The guest reported `aarch64`, kernel `6.6.151-yocto-standard`, and DHCP address `10.0.2.15`.
-- QEMU USB tablet/keyboard were detected by HID. A `/dev/uinput` node was present; event injection is not yet tested.
 
 ### Not yet implemented or validated
 
-- QEMU-generated click/scroll events are verified; physical Zebronics event capture and functional `uinput` virtual-device creation/injection remain pending.
+- QEMU-generated click/scroll events and `uinput` virtual-keyboard creation/readback are verified. Physical Zebronics testing and MorseMouse driver integration remain pending.
 - No MorseMouse kernel input handler/module, UAPI, daemon, CLI, HUD, or reference decoder has been implemented.
 - Physical Zebronics PULSE receiver event discovery remains pending.
 - The Morse grammar and complete printable-ASCII keymap remain to be frozen and tested.
@@ -84,7 +83,7 @@ Power-control behavior is separate from text entry. It is dry-run/disabled by de
 | Raspberry Pi 4, `raspberrypi4-64` | Physical demonstration target | Selected; project image not built |
 | Zebronics PULSE mouse + 2.4 GHz USB receiver | Physical input device | Available; Linux event capabilities not yet captured |
 
-QEMU `uinput` tests validate driver/FSM behavior with synthetic events. They do not replace physical receiver and Raspberry Pi acceptance tests.
+The QEMU `uinput-selftest` validates virtual keyboard creation and evdev event readback. It does not validate MorseMouse driver/FSM behavior and does not replace physical receiver and Raspberry Pi acceptance tests.
 
 ## Repository layout
 
