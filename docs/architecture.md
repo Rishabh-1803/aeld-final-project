@@ -61,7 +61,7 @@ The daemon must not interpret client-provided strings as shell commands. The HUD
 
 ## Input mapping and state machine
 
-The left and right buttons are proposed as dot and dash inputs. Middle-button and wheel gestures provide commit, layer, navigation, and control functions. Exact gesture precedence and timing remain to be frozen in `docs/input-grammar.md` before implementing the kernel FSM.
+The selected initial encoding is button-identity based: left-button down means dot and right-button down means dash; press duration does not distinguish the two. Middle-button and wheel gestures remain proposals for commit, layer, and word-space functions. Exact gesture precedence, chord handling, and filtering/timing remain to be frozen in [`docs/input-grammar.md`](input-grammar.md) before implementing the kernel FSM.
 
 The intended printable range is ASCII decimal 32–126 (95 values) under a declared US QWERTY acceptance layout. `config/morse_map.csv` is intended to be the single authoritative mapping source. Any non-standard Morse extensions must be explicitly labelled.
 
