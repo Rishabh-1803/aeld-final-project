@@ -20,17 +20,18 @@ The project is in **Sprint 1 (2–15 November 2026)**.
 - The `qemuarm64` `core-image-minimal` baseline was built and booted successfully.
 - The QEMU guest reported `aarch64` and kernel `6.6.151-yocto-standard`.
 - The custom `meta-morse-mouse` layer has been created and registered in the QEMU build configuration.
-- BitBake discovers `core-image-morse` and `packagegroup-morse-mouse`; `bitbake -e core-image-morse` parses successfully and resolves `MACHINE = "qemuarm64"`.
+- BitBake discovers `core-image-morse` and `packagegroup-morse-mouse`; metadata parsing succeeds.
+- The first `bitbake core-image-morse` build completed with all 5,332 tasks successful and no task failures. Fetch/host-kernel warnings are recorded in the build evidence.
 
-### Not yet implemented or validated
+### Not yet validated
 
-- The `core-image-morse` image has **not yet been built or booted**.
+- The generated `core-image-morse` artifacts have not yet been inspected and its root filesystem has not yet been booted in QEMU.
 - No MorseMouse kernel input handler/module, UAPI, daemon, CLI, HUD, or reference decoder has been implemented.
 - QEMU `uinput` mouse injection and physical Zebronics PULSE receiver event discovery remain pending.
 - The Morse grammar and complete printable-ASCII keymap remain to be frozen and tested.
 - The Raspberry Pi image and physical acceptance tests remain pending.
 
-The successful baseline is a platform milestone, not evidence that the MorseMouse application is implemented.
+The successful baseline and project image build are platform milestones, not evidence that MorseMouse input functionality is implemented.
 
 ## Project goal
 
@@ -71,7 +72,7 @@ Power-control behavior is separate from text entry. It is dry-run/disabled by de
 
 | Component | Role | Status |
 |---|---|---|
-| QEMU ARM64, `qemuarm64` | Reproducible development and integration tests | Baseline boot verified |
+| QEMU ARM64, `qemuarm64` | Reproducible development and integration tests | Baseline boot verified; project image build successful, boot pending |
 | Raspberry Pi 4, `raspberrypi4-64` | Physical demonstration target | Selected; project image not built |
 | Zebronics PULSE mouse + 2.4 GHz USB receiver | Physical input device | Available; Linux event capabilities not yet captured |
 
@@ -91,7 +92,7 @@ QEMU `uinput` tests validate driver/FSM behavior with synthetic events. They do 
 ├── tools/                  # Keymap generator/validator (planned)
 ├── tests/                  # Unit, QEMU and hardware tests (planned)
 ├── scripts/                # Build/test helpers (planned)
-└── evidence/               # Build and validation evidence (planned)
+└── evidence/               # Build and validation evidence
 ```
 
 Upstream Poky and BSP source trees, BitBake build output, downloads, and shared-state caches are not committed in this repository. See [Build: QEMU ARM64](docs/build-qemuarm64.md) and [Source pins](manifest/source-pins.md).
@@ -120,3 +121,7 @@ Implementation status and acceptance evidence are tracked in [GitHub Issues](htt
 ## License
 
 A repository license has not yet been selected. Do not assume that the Yocto recipe's `LICENSE = "MIT"` declaration settles the licensing of every project source file.
+
+## Latest evidence
+
+- [2 Nov 2026 — QEMU ARM64 `core-image-morse` build](evidence/builds/2026-11-02-core-image-morse-build.md)
