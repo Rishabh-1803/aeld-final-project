@@ -14,7 +14,9 @@
 | QEMU baseline | Verified | `core-image-minimal` built and booted |
 | QEMU guest | Verified | Root login; `aarch64`; kernel `6.6.151-yocto-standard` |
 | Custom layer | Verified | `meta-morse-mouse` registered; BitBake lists collection `morse` |
-| Image metadata | Verified | `core-image-morse` and `packagegroup-morse-mouse` discovered; `bitbake -e` succeeds |
+| Image metadata | Verified | Both project recipes discovered; `bitbake -e core-image-morse` succeeds |
+| Project image build | Verified | `bitbake core-image-morse`; 5,332 tasks succeeded; no failed tasks reported |
+| Build configuration | Verified | `qemuarm64`, BitBake threads 10, Make parallelism 6 |
 
 ## Current configuration observed on 2 November 2026
 
@@ -27,9 +29,14 @@
 
 The parallel Make setting is retained because the user reports that it worked for the baseline build. Observe resource use and change it only if measurements or build failures justify doing so.
 
+## Build warnings
+
+The first build completed successfully despite seven fetch warnings while Yocto attempted source URLs/mirrors. The second invocation found all tasks current/successful and reported one warning: the build host kernel lacks `CONFIG_TASK_IO_ACCOUNTING`. No task failure was reported. These warnings should remain visible in the evidence record rather than be described as zero-warning builds.
+
 ## Not yet complete
 
-- Build and boot `core-image-morse`.
+- Inspect generated `core-image-morse` artifacts, manifest, kernel and QEMU boot configuration.
+- Boot the project image in QEMU and verify root login, `uname -m`, and kernel version.
 - Add development diagnostics such as `evtest` to the development image.
 - Inspect QEMU kernel configuration for input/evdev/uinput support.
 - Implement and test a guest-side `uinput` synthetic mouse injector.
@@ -50,3 +57,7 @@ The parallel Make setting is retained because the user reports that it worked fo
 | Sprint 3 | 30 Nov–13 Dec 2026 | Daemon, guarded dry-run power policy, HUD, integration, security, physical validation and final demo |
 
 Do not close an issue or mark a deliverable complete without implementation and validation evidence. Keep this document, issue descriptions/comments, project board, and course wiki synchronized.
+
+## Build evidence
+
+See [QEMU ARM64 core-image-morse build evidence](../evidence/builds/2026-11-02-core-image-morse-build.md). Build completion is verified; image inspection and boot are pending.
