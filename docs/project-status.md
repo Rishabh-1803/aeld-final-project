@@ -17,10 +17,10 @@
 | Image metadata | Verified | Both project recipes discovered; `bitbake -e core-image-morse` succeeds |
 | Minimal project image build | Verified | 4,083 tasks attempted; all succeeded; no task failures |
 | Package composition | Verified | Final manifest differs from baseline only by `packagegroup-morse-mouse` |
-| Project image QEMU boot | Verified | Explicit QEMU config selected project rootfs; root login succeeded |
+| Project image QEMU boot | Verified | Explicit QEMU config selected project rootfs; root login succeeded |\n| Development image | Verified | `core-image-morse-dev` built and booted with `evtest` 1.36; base image recipe unchanged |\n| QEMU tablet capabilities | Verified | `evtest` enumerated left/right/middle buttons, vertical wheel and absolute X/Y |
 | Guest architecture/kernel | Verified | `aarch64`; `6.6.151-yocto-standard` |
 | Guest network | Verified | DHCP address `10.0.2.15` |
-| Initial input visibility | Partially verified | QEMU USB tablet and keyboard enumerated through HID; `/dev/uinput` node exists; event injection not tested |
+| Initial input visibility | Partially verified | QEMU tablet/keyboard enumerated; tablet capabilities decoded with `evtest`; runtime event capture and `uinput` injection not tested |
 
 ## Current configuration observed on 2 November 2026
 
@@ -39,7 +39,7 @@ The parallel Make setting is retained because the user reports that it worked fo
 - QEMU boot printed `ip: RTNETLINK answers: File exists` during network interface setup, but DHCP succeeded and the guest received `10.0.2.15`.
 - Rootfs reported `19.3M` total, `12.9M` used and `4.9M` available (72% used) inside the guest.
 - `/dev/uinput` was present. This alone does not prove that creating and injecting a virtual device works.
-- `evtest` and the guest-side synthetic mouse injector have not yet been installed/implemented or tested.
+- `evtest` 1.36 is installed in the separate development image and its capability listing is verified; actual click/scroll event capture remains pending.\n- The guest-side synthetic mouse injector and functional `/dev/uinput` creation/injection test have not been implemented or tested.
 
 ## Not yet complete
 
@@ -68,4 +68,4 @@ Do not close an issue or mark a deliverable complete without implementation and 
 ## Evidence
 
 - [QEMU ARM64 core-image-morse build](../evidence/builds/2026-11-02-core-image-morse-build.md)
-- [QEMU ARM64 core-image-morse boot](../evidence/boots/2026-11-02-core-image-morse-qemu-boot.md)
+- [QEMU ARM64 core-image-morse boot](../evidence/boots/2026-11-02-core-image-morse-qemu-boot.md)\n- [QEMU ARM64 development image and evtest](../evidence/builds/2026-11-02-core-image-morse-dev-build.md)
