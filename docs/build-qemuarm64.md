@@ -46,6 +46,19 @@ bitbake-layers show-layers
 
 If the layer is already listed, do not add it a second time.
 
+## Image composition
+
+The project image inherits `core-image` but explicitly uses the same base package group as upstream `core-image-minimal`, then appends the MorseMouse package group:
+
+```bitbake
+IMAGE_INSTALL = "packagegroup-core-boot ${CORE_IMAGE_EXTRA_INSTALL}"
+IMAGE_LINGUAS = " "
+inherit core-image
+IMAGE_INSTALL:append = " packagegroup-morse-mouse"
+```
+
+This keeps the initial project image minimal. Development tools such as `evtest` should be added deliberately when needed, rather than pulling in unrelated desktop/audio/Bluetooth packages.
+
 ## Build targets
 
 The baseline target was successfully built:
@@ -54,45 +67,54 @@ The baseline target was successfully built:
 bitbake core-image-minimal
 ```
 
-The project-owned image recipe is:
+Build the project image:
 
 ```bash
 bitbake core-image-morse
 ```
 
-**Status note:** the baseline `core-image-minimal` build and QEMU boot are verified. The `core-image-morse` recipe and package group are discovered by BitBake and pass metadata parsing, but the project image build/boot must still be run and evidenced.
+The final minimal-composition build on 2 Nov 2026 attempted 4,083 tasks; all succeeded. The final manifest's package-name set was identical to the baseline plus `packagegroup-morse-mouse`.
 
 ## Inspect image output
 
 ```bash
-ls -lh tmp/deploy/images/qemuarm64/
+ls -lh tmp/deploy/images/qemuarm64/ | grep core-image-morse
 ```
 
-Inspect the generated kernel, root filesystem, manifest, and QEMU boot configuration before launching. Do not assume a timestamped artifact name.
+Inspect the generated kernel, root filesystem, manifest and QEMU boot configuration. The verified final rootfs artifact was:
+
+```text
+core-image-morse-qemuarm64.rootfs-20261102154400.ext4
+```
 
 ## Run QEMU
 
-Check the available syntax first:
+The `runqemu` script is a file at `poky/scripts/runqemu`, not a directory. If the command is not in PATH, invoke it through its relative path.
+
+The automatic shorthand invocation `runqemu qemuarm64 core-image-morse ext4 nographic slirp` failed in this environment because `IMAGE_LINK_NAME` was not set for its automatic QEMU config lookup. The generated QEMU config was then provided explicitly and booted successfully:
 
 ```bash
-runqemu --help
+QB=tmp/deploy/images/qemuarm64/core-image-morse-qemuarm64.rootfs.qemuboot.conf
+../poky/scripts/runqemu "$QB" nographic slirp
 ```
 
-The previously verified baseline command was:
+This selected the timestamped `core-image-morse` rootfs, not the `core-image-minimal` rootfs.
 
-```bash
-runqemu qemuarm64 nographic slirp
-```
+## Verified project-image boot
 
-After the project image is built, confirm that `runqemu` selects the `core-image-morse` artifacts (or use the generated boot configuration as supported by the installed `runqemu`). Capture the actual command and boot transcript as evidence.
+The 2 Nov 2026 guest validation reported:
 
-## Baseline validation facts
+- Root login succeeded at the Poky 5.0.21 `qemuarm64` login prompt.
+- `uname -m` returned `aarch64`.
+- `uname -r` returned `6.6.151-yocto-standard`.
+- DHCP assigned `10.0.2.15`.
+- QEMU used 4 CPUs and 256 MiB guest RAM.
+- The guest root filesystem reported 19.3 MiB total, 12.9 MiB used, 4.9 MiB available.
+- QEMU USB tablet and keyboard were enumerated by the USB HID/input stack.
+- `/dev/uinput` existed; functional virtual-device creation and event injection are still pending.
 
-The recorded baseline guest reported:
+The network startup printed `ip: RTNETLINK answers: File exists`, but DHCP completed successfully. See [boot evidence](../evidence/boots/2026-11-02-core-image-morse-qemu-boot.md).
 
-- Architecture: `aarch64`
-- Kernel: `6.6.151-yocto-standard`
-- Root login successful
-- DHCP address: `10.0.2.15`
+## Baseline notes
 
-The minimal image did not contain `/etc/os-release` or the `tree` utility; these observations did not indicate a failed build or boot.
+The earlier `core-image-minimal` guest also reported `aarch64` and kernel `6.6.151-yocto-standard`. Its lack of `/etc/os-release` and `tree` was expected for the minimal image and did not indicate a boot failure.
