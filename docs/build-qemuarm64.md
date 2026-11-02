@@ -59,6 +59,35 @@ IMAGE_INSTALL:append = " packagegroup-morse-mouse"
 
 This keeps the initial project image minimal. Development tools such as `evtest` should be added deliberately when needed, rather than pulling in unrelated desktop/audio/Bluetooth packages.
 
+## Development image and input diagnostics
+
+The minimal `core-image-morse` recipe remains unchanged. Input diagnostics are kept in a separate image:
+
+```bitbake
+# meta-morse-mouse/recipes-core/images/core-image-morse-dev.bb
+require core-image-morse.bb
+IMAGE_INSTALL:append = " evtest"
+```
+
+The `evtest` recipe (version 1.36) is provided by the OpenEmbedded `meta-oe` layer. The external `meta-openembedded` checkout is pinned in [Source pins](../manifest/source-pins.md). Register it once:
+
+```bash
+git clone --branch scarthgap --single-branch https://github.com/openembedded/meta-openembedded.git meta-openembedded
+source poky/oe-init-build-env build-qemu
+bitbake-layers add-layer ../meta-openembedded/meta-oe
+bitbake-layers show-recipes evtest
+```
+
+Build and boot the diagnostic image:
+
+```bash
+bitbake core-image-morse-dev
+QB=tmp/deploy/images/qemuarm64/core-image-morse-dev-qemuarm64.rootfs.qemuboot.conf
+../poky/scripts/runqemu "$QB" nographic slirp
+```
+
+In the guest, run `evtest` and select the QEMU USB Tablet. The 2 Nov 2026 test confirmed that `evtest` 1.36 enumerated the tablet and advertised `BTN_LEFT`, `BTN_RIGHT`, `BTN_MIDDLE`, `REL_WHEEL`, and `REL_WHEEL_HI_RES`. This is capability discovery only: capture actual input events and test `/dev/uinput` separately. QEMU results do not validate the physical Zebronics receiver.
+
 ## Build targets
 
 The baseline target was successfully built:
