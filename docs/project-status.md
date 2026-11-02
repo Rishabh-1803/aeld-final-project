@@ -24,7 +24,7 @@
 | QEMU evdev runtime events | Verified | HMP-generated left/right/middle press/release and vertical wheel events captured with `evtest`; physical mouse still pending |
 | Guest architecture/kernel | Verified | `aarch64`; `6.6.151-yocto-standard` |
 | Guest network | Verified | DHCP address `10.0.2.15` |
-| Initial input visibility | Partially verified | QEMU tablet/keyboard enumerated; tablet capabilities decoded with `evtest`; runtime event capture and `uinput` injection not tested |
+| Initial input visibility | Partially verified | QEMU tablet/keyboard enumerated; capabilities and runtime mouse events verified; virtual keyboard `uinput` test pending |
 
 ## Current configuration observed on 2 November 2026
 
@@ -43,14 +43,13 @@ The parallel Make setting is retained because the user reports that it worked fo
 - QEMU boot printed `ip: RTNETLINK answers: File exists` during network interface setup, but DHCP succeeded and the guest received `10.0.2.15`.
 - Rootfs reported `19.3M` total, `12.9M` used and `4.9M` available (72% used) inside the guest.
 - `/dev/uinput` was present. This alone does not prove that creating and injecting a virtual device works.
-- `evtest` 1.36 is installed in the separate development image and its capability listing is verified; actual click/scroll event capture remains pending.
-- The guest-side synthetic mouse injector and functional `/dev/uinput` creation/injection test have not been implemented or tested.
+- `evtest` 1.36 is installed in the separate development image; QEMU button press/release and vertical wheel events have been captured successfully.
+- A `uinput-selftest` C utility and Yocto recipe have been added to the repository and included in the development image recipe; the updated image has not yet been rebuilt and the test has not yet run.
 
 ## Not yet complete
 
-- Implement a guest-side `uinput` test utility and verify virtual-device creation, event injection, and readback.
-- Capture actual Zebronics PULSE receiver capabilities and runtime events on physical hardware.
-- Capture actual Zebronics PULSE receiver capabilities on the Raspberry Pi.
+- Rebuild `core-image-morse-dev`, run `uinput-selftest`, and verify virtual-keyboard creation plus `KEY_A` press/release readback through evdev.
+- Capture actual Zebronics PULSE receiver capabilities and runtime events on Raspberry Pi hardware.
 - Freeze gesture grammar and timing rules.
 - Create the authoritative 95-character mapping and validator.
 - Build and test a userspace reference decoder.
