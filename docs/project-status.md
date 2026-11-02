@@ -22,6 +22,7 @@
 | Development image | Verified | `core-image-morse-dev` built and booted with `evtest` 1.36; base image recipe unchanged |
 | QEMU tablet capabilities | Verified | `evtest` enumerated left/right/middle buttons, vertical wheel and absolute X/Y |
 | QEMU evdev runtime events | Verified | HMP-generated left/right/middle press/release and vertical wheel events captured with `evtest`; physical mouse still pending |
+| QEMU `uinput` virtual keyboard | Verified | `uinput-selftest` created a virtual keyboard and verified `KEY_A` press/release readback through `/dev/input/event2` |
 | Guest architecture/kernel | Verified | `aarch64`; `6.6.151-yocto-standard` |
 | Guest network | Verified | DHCP address `10.0.2.15` |
 | Initial input visibility | Partially verified | QEMU tablet/keyboard enumerated; capabilities and runtime mouse events verified; virtual keyboard `uinput` test pending |
@@ -44,11 +45,10 @@ The parallel Make setting is retained because the user reports that it worked fo
 - Rootfs reported `19.3M` total, `12.9M` used and `4.9M` available (72% used) inside the guest.
 - `/dev/uinput` was present. This alone does not prove that creating and injecting a virtual device works.
 - `evtest` 1.36 is installed in the separate development image; QEMU button press/release and vertical wheel events have been captured successfully.
-- A `uinput-selftest` C utility and Yocto recipe have been added to the repository and included in the development image recipe; the updated image has not yet been rebuilt and the test has not yet run.
+- The `uinput-selftest` Yocto package built into `core-image-morse-dev`; QEMU run verified virtual keyboard registration and `KEY_A` press/release readback through evdev.
 
 ## Not yet complete
 
-- Rebuild `core-image-morse-dev`, run `uinput-selftest`, and verify virtual-keyboard creation plus `KEY_A` press/release readback through evdev.
 - Capture actual Zebronics PULSE receiver capabilities and runtime events on Raspberry Pi hardware.
 - Freeze gesture grammar and timing rules.
 - Create the authoritative 95-character mapping and validator.
@@ -73,3 +73,4 @@ Do not close an issue or mark a deliverable complete without implementation and 
 - [QEMU ARM64 core-image-morse boot](../evidence/boots/2026-11-02-core-image-morse-qemu-boot.md)
 - [QEMU ARM64 development image and evtest](../evidence/builds/2026-11-02-core-image-morse-dev-build.md)
 - [QEMU evdev runtime mouse-event test](../evidence/input/2026-11-02-qemu-evdev-runtime-events.md)
+- [QEMU `uinput` virtual-keyboard self-test](../evidence/input/2026-11-02-uinput-virtual-keyboard-selftest.md)
