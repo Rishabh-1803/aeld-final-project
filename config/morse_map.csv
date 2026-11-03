@@ -1,0 +1,96 @@
+ascii_decimal,ascii_hex,character,label,morse,encoding
+32,0x20, ,SPACE,------,MorseMouse extension: SPACE code
+33,0x21,!,EXCLAMATION_MARK,..-......,MorseMouse extension: punctuation prefix ..-. + suffix index 00
+34,0x22,"""",DOUBLE_QUOTE,.-..-.,ITU-R M.1677-1 punctuation code
+35,0x23,#,NUMBER_SIGN,..-.....-,MorseMouse extension: punctuation prefix ..-. + suffix index 01
+36,0x24,$,DOLLAR_SIGN,..-....-.,MorseMouse extension: punctuation prefix ..-. + suffix index 02
+37,0x25,%,PERCENT_SIGN,..-....--,MorseMouse extension: punctuation prefix ..-. + suffix index 03
+38,0x26,&,AMPERSAND,..-...-..,MorseMouse extension: punctuation prefix ..-. + suffix index 04
+39,0x27,',APOSTROPHE,.----.,ITU-R M.1677-1 punctuation code
+40,0x28,(,LEFT_PARENTHESIS,-.--.,ITU-R M.1677-1 punctuation code
+41,0x29,),RIGHT_PARENTHESIS,-.--.-,ITU-R M.1677-1 punctuation code
+42,0x2A,*,ASTERISK,..-...-.-,MorseMouse extension: punctuation prefix ..-. + suffix index 05
+43,0x2B,+,PLUS_SIGN,.-.-.,ITU-R M.1677-1 punctuation code
+44,0x2C,",",COMMA,--..--,ITU-R M.1677-1 punctuation code
+45,0x2D,-,HYPHEN_MINUS,-....-,ITU-R M.1677-1 punctuation code
+46,0x2E,.,FULL_STOP,.-.-.-,ITU-R M.1677-1 punctuation code
+47,0x2F,/,SOLIDUS,-..-.,ITU-R M.1677-1 punctuation code
+48,0x30,0,DIGIT_0,-----,ITU-R M.1677-1 figure code
+49,0x31,1,DIGIT_1,.----,ITU-R M.1677-1 figure code
+50,0x32,2,DIGIT_2,..---,ITU-R M.1677-1 figure code
+51,0x33,3,DIGIT_3,...--,ITU-R M.1677-1 figure code
+52,0x34,4,DIGIT_4,....-,ITU-R M.1677-1 figure code
+53,0x35,5,DIGIT_5,.....,ITU-R M.1677-1 figure code
+54,0x36,6,DIGIT_6,-....,ITU-R M.1677-1 figure code
+55,0x37,7,DIGIT_7,--...,ITU-R M.1677-1 figure code
+56,0x38,8,DIGIT_8,---..,ITU-R M.1677-1 figure code
+57,0x39,9,DIGIT_9,----.,ITU-R M.1677-1 figure code
+58,0x3A,:,COLON,---...,ITU-R M.1677-1 punctuation code
+59,0x3B,;,SEMICOLON,..-...--.,MorseMouse extension: punctuation prefix ..-. + suffix index 06
+60,0x3C,<,LESS_THAN,..-...---,MorseMouse extension: punctuation prefix ..-. + suffix index 07
+61,0x3D,=,EQUALS_SIGN,-...-,ITU-R M.1677-1 punctuation code
+62,0x3E,>,GREATER_THAN,..-..-...,MorseMouse extension: punctuation prefix ..-. + suffix index 08
+63,0x3F,?,QUESTION_MARK,..--..,ITU-R M.1677-1 punctuation code
+64,0x40,@,AT_SIGN,.--.-.,ITU-R M.1677-1 punctuation code
+65,0x41,A,LETTER_A,.-,ITU-R M.1677-1 letter code (uppercase project mapping)
+66,0x42,B,LETTER_B,-...,ITU-R M.1677-1 letter code (uppercase project mapping)
+67,0x43,C,LETTER_C,-.-.,ITU-R M.1677-1 letter code (uppercase project mapping)
+68,0x44,D,LETTER_D,-..,ITU-R M.1677-1 letter code (uppercase project mapping)
+69,0x45,E,LETTER_E,.,ITU-R M.1677-1 letter code (uppercase project mapping)
+70,0x46,F,LETTER_F,..-.,ITU-R M.1677-1 letter code (uppercase project mapping)
+71,0x47,G,LETTER_G,--.,ITU-R M.1677-1 letter code (uppercase project mapping)
+72,0x48,H,LETTER_H,....,ITU-R M.1677-1 letter code (uppercase project mapping)
+73,0x49,I,LETTER_I,..,ITU-R M.1677-1 letter code (uppercase project mapping)
+74,0x4A,J,LETTER_J,.---,ITU-R M.1677-1 letter code (uppercase project mapping)
+75,0x4B,K,LETTER_K,-.-,ITU-R M.1677-1 letter code (uppercase project mapping)
+76,0x4C,L,LETTER_L,.-..,ITU-R M.1677-1 letter code (uppercase project mapping)
+77,0x4D,M,LETTER_M,--,ITU-R M.1677-1 letter code (uppercase project mapping)
+78,0x4E,N,LETTER_N,-.,ITU-R M.1677-1 letter code (uppercase project mapping)
+79,0x4F,O,LETTER_O,---,ITU-R M.1677-1 letter code (uppercase project mapping)
+80,0x50,P,LETTER_P,.--.,ITU-R M.1677-1 letter code (uppercase project mapping)
+81,0x51,Q,LETTER_Q,--.-,ITU-R M.1677-1 letter code (uppercase project mapping)
+82,0x52,R,LETTER_R,.-.,ITU-R M.1677-1 letter code (uppercase project mapping)
+83,0x53,S,LETTER_S,...,ITU-R M.1677-1 letter code (uppercase project mapping)
+84,0x54,T,LETTER_T,-,ITU-R M.1677-1 letter code (uppercase project mapping)
+85,0x55,U,LETTER_U,..-,ITU-R M.1677-1 letter code (uppercase project mapping)
+86,0x56,V,LETTER_V,...-,ITU-R M.1677-1 letter code (uppercase project mapping)
+87,0x57,W,LETTER_W,.--,ITU-R M.1677-1 letter code (uppercase project mapping)
+88,0x58,X,LETTER_X,-..-,ITU-R M.1677-1 letter code (uppercase project mapping)
+89,0x59,Y,LETTER_Y,-.--,ITU-R M.1677-1 letter code (uppercase project mapping)
+90,0x5A,Z,LETTER_Z,--..,ITU-R M.1677-1 letter code (uppercase project mapping)
+91,0x5B,[,LEFT_SQUARE_BRACKET,..-..-..-,MorseMouse extension: punctuation prefix ..-. + suffix index 09
+92,0x5C,\,REVERSE_SOLIDUS,..-..-.-.,MorseMouse extension: punctuation prefix ..-. + suffix index 10
+93,0x5D,],RIGHT_SQUARE_BRACKET,..-..-.--,MorseMouse extension: punctuation prefix ..-. + suffix index 11
+94,0x5E,^,CIRCUMFLEX_ACCENT,..-..--..,MorseMouse extension: punctuation prefix ..-. + suffix index 12
+95,0x5F,_,LOW_LINE,..-..--.-,MorseMouse extension: punctuation prefix ..-. + suffix index 13
+96,0x60,`,GRAVE_ACCENT,..-..---.,MorseMouse extension: punctuation prefix ..-. + suffix index 14
+97,0x61,a,LOWERCASE_A,--.-.-,MorseMouse extension: lowercase prefix --.- + letter code
+98,0x62,b,LOWERCASE_B,--.--...,MorseMouse extension: lowercase prefix --.- + letter code
+99,0x63,c,LOWERCASE_C,--.--.-.,MorseMouse extension: lowercase prefix --.- + letter code
+100,0x64,d,LOWERCASE_D,--.--..,MorseMouse extension: lowercase prefix --.- + letter code
+101,0x65,e,LOWERCASE_E,--.-.,MorseMouse extension: lowercase prefix --.- + letter code
+102,0x66,f,LOWERCASE_F,--.-..-.,MorseMouse extension: lowercase prefix --.- + letter code
+103,0x67,g,LOWERCASE_G,--.---.,MorseMouse extension: lowercase prefix --.- + letter code
+104,0x68,h,LOWERCASE_H,--.-....,MorseMouse extension: lowercase prefix --.- + letter code
+105,0x69,i,LOWERCASE_I,--.-..,MorseMouse extension: lowercase prefix --.- + letter code
+106,0x6A,j,LOWERCASE_J,--.-.---,MorseMouse extension: lowercase prefix --.- + letter code
+107,0x6B,k,LOWERCASE_K,--.--.-,MorseMouse extension: lowercase prefix --.- + letter code
+108,0x6C,l,LOWERCASE_L,--.-.-..,MorseMouse extension: lowercase prefix --.- + letter code
+109,0x6D,m,LOWERCASE_M,--.---,MorseMouse extension: lowercase prefix --.- + letter code
+110,0x6E,n,LOWERCASE_N,--.--.,MorseMouse extension: lowercase prefix --.- + letter code
+111,0x6F,o,LOWERCASE_O,--.----,MorseMouse extension: lowercase prefix --.- + letter code
+112,0x70,p,LOWERCASE_P,--.-.--.,MorseMouse extension: lowercase prefix --.- + letter code
+113,0x71,q,LOWERCASE_Q,--.---.-,MorseMouse extension: lowercase prefix --.- + letter code
+114,0x72,r,LOWERCASE_R,--.-.-.,MorseMouse extension: lowercase prefix --.- + letter code
+115,0x73,s,LOWERCASE_S,--.-...,MorseMouse extension: lowercase prefix --.- + letter code
+116,0x74,t,LOWERCASE_T,--.--,MorseMouse extension: lowercase prefix --.- + letter code
+117,0x75,u,LOWERCASE_U,--.-..-,MorseMouse extension: lowercase prefix --.- + letter code
+118,0x76,v,LOWERCASE_V,--.-...-,MorseMouse extension: lowercase prefix --.- + letter code
+119,0x77,w,LOWERCASE_W,--.-.--,MorseMouse extension: lowercase prefix --.- + letter code
+120,0x78,x,LOWERCASE_X,--.--..-,MorseMouse extension: lowercase prefix --.- + letter code
+121,0x79,y,LOWERCASE_Y,--.--.--,MorseMouse extension: lowercase prefix --.- + letter code
+122,0x7A,z,LOWERCASE_Z,--.---..,MorseMouse extension: lowercase prefix --.- + letter code
+123,0x7B,{,LEFT_CURLY_BRACKET,..-..----,MorseMouse extension: punctuation prefix ..-. + suffix index 15
+124,0x7C,|,VERTICAL_LINE,..-.-....,MorseMouse extension: punctuation prefix ..-. + suffix index 16
+125,0x7D,},RIGHT_CURLY_BRACKET,..-.-...-,MorseMouse extension: punctuation prefix ..-. + suffix index 17
+126,0x7E,~,TILDE,..-.-..-.,MorseMouse extension: punctuation prefix ..-. + suffix index 18
