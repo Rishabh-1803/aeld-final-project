@@ -1,12 +1,12 @@
-# MorseMouse C reference decoder — draft v0.1
+# MorseMouse C reference decoder — v0.2
 
-**Status:** Local prototype; not a kernel driver and not yet a frozen input protocol.
+**Status:** Userspace reference prototype with optional Linux virtual-keyboard output. This is not the planned kernel driver.
 
 ## Purpose
 
 This small C program reads the authoritative `config/morse_map.csv` and provides a userspace reference for exact Morse-sequence lookup. It is intended to establish mapping and character-boundary behavior before implementing the Linux input handler or kernel state machine.
 
-It does not read `/dev/input/event*`, capture mouse buttons, emit keyboard events, or implement debounce/chord timing. It accepts abstract `DOT`, `DASH`, `COMMIT`, and `RESET` tokens so that these concerns remain separate.
+It supports interactive DOT/DASH/COMMIT/RESET testing and Linux evdev mouse input. Its optional `--uinput` mode emits decoded characters through a Linux virtual keyboard. Debounce, chord timing, and the final physical gesture grammar remain unimplemented.
 
 ## Build
 
@@ -68,3 +68,11 @@ The current CSV includes a MorseMouse-specific direct code for ASCII SPACE. Whet
 2. Agree the complete physical gesture grammar and filtering behavior.
 3. Add unit tests around the event-to-symbol state machine.
 4. Port the same defined behavior into the kernel implementation, with separate QEMU and physical mouse evidence.
+## Evdev and virtual keyboard mode
+
+The decoder can read mouse button events from a Linux evdev device.
+
+Run the decoder using:
+
+```bash
+./tools/morse-ref-decoder --map config/morse_map.csv --evdev DEVICE

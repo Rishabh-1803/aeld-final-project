@@ -44,3 +44,6 @@ Thumbs.db
 
 # Locally compiled helper binaries
 /tools/morse-ref-decoder
+
+# Locally compiled test binaries
+/tools/test-morse-keymap

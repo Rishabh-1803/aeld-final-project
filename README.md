@@ -9,7 +9,7 @@
 - **Physical demonstration target:** Raspberry Pi 4, 64-bit (`raspberrypi4-64`)
 - **Build system:** Yocto Project / Poky, Scarthgap 5.0.21 LTS
 
-## Current status — 2 November 2026
+## Current status — 3 November 2026
 
 The project is in **Sprint 1 (2–15 November 2026)**.
 
@@ -29,13 +29,14 @@ The project is in **Sprint 1 (2–15 November 2026)**.
 - Runtime QEMU evdev testing confirmed left/right/middle button press/release events and vertical wheel up/down events.
 - The `uinput-selftest` utility successfully created a virtual keyboard and verified `KEY_A` press/release readback through evdev.
 - The guest reported `aarch64`, kernel `6.6.151-yocto-standard`, and DHCP address `10.0.2.15`.
+- The userspace C reference decoder reads Linux evdev mouse events and optionally emits decoded characters through a virtual keyboard using `/dev/uinput`.
+- The 95-character Morse map and US QWERTY keymap pass host-side tests. QEMU testing verified A, e, 5, !, SPACE, repeated characters, invalid-sequence recovery, and virtual-device cleanup.
+- The `morse-ref-decoder` Yocto recipe and updated `core-image-morse-dev` image built successfully.
 
 ### Not yet implemented or validated
 
-- QEMU-generated click/scroll events and `uinput` virtual-keyboard creation/readback are verified. Physical Zebronics testing and MorseMouse driver integration remain pending.
-- No MorseMouse kernel input handler/module, UAPI, daemon, CLI, HUD, or reference decoder has been implemented.
 - Physical Zebronics PULSE receiver event discovery remains pending.
-- The Morse grammar and complete printable-ASCII keymap remain to be frozen and tested.
+- The physical Morse gesture grammar remains to be frozen. The 95-character Morse map and US QWERTY key translation pass host-side tests; userspace keyboard-event behavior has been validated in QEMU.
 - The Raspberry Pi image and physical acceptance tests remain pending.
 
 A successful project image build and QEMU boot establish the platform baseline, not completed MorseMouse functionality.
@@ -92,11 +93,11 @@ The QEMU `uinput-selftest` validates virtual keyboard creation and evdev event r
 ├── meta-morse-mouse/       # Project Yocto layer
 ├── docs/                   # Architecture, build and status documentation
 ├── manifest/               # Pinned external layer/source revisions
-├── config/                 # Authoritative Morse keymap and defaults (planned)
+├── config/                 # Authoritative Morse map and defaults
 ├── driver/                 # Kernel input handler (planned)
 ├── include/                # Versioned userspace/kernel UAPI (planned)
 ├── userspace/              # Daemon, CLI and HUD (planned)
-├── tools/                  # Keymap generator/validator (planned)
+├── tools/                  # Reference decoder, keymap and validation tools
 ├── tests/                  # Unit, QEMU and hardware tests (planned)
 ├── scripts/                # Build/test helpers (planned)
 └── evidence/               # Build and validation evidence
@@ -136,3 +137,4 @@ A repository license has not yet been selected. Do not assume that the Yocto rec
 - [2 Nov 2026 — QEMU ARM64 development image and `evtest`](evidence/builds/2026-11-02-core-image-morse-dev-build.md)
 - [2 Nov 2026 — QEMU evdev runtime mouse-event test](evidence/input/2026-11-02-qemu-evdev-runtime-events.md)
 - [2 Nov 2026 — QEMU `uinput` virtual-keyboard self-test](evidence/input/2026-11-02-uinput-virtual-keyboard-selftest.md)
+- [3 Nov 2026 — QEMU Morse-to-uinput reference decoder validation](evidence/input/2026-11-03-qemu-uinput-keyboard.md)

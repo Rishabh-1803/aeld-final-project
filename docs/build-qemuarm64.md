@@ -142,7 +142,8 @@ The 2 Nov 2026 guest validation reported:
 - QEMU used 4 CPUs and 256 MiB guest RAM.
 - The guest root filesystem reported 19.3 MiB total, 12.9 MiB used, 4.9 MiB available.
 - QEMU USB tablet and keyboard were enumerated by the USB HID/input stack.
-- `/dev/uinput` existed; functional virtual-device creation and event injection are still pending.
+- `/dev/uinput` was available with root-only permissions.
+- The MorseMouse reference decoder created a virtual keyboard and emitted verified keyboard events for printable characters. See [QEMU uinput keyboard evidence](../evidence/input/2026-11-03-qemu-uinput-keyboard.md).
 
 The network startup printed `ip: RTNETLINK answers: File exists`, but DHCP completed successfully. See [boot evidence](../evidence/boots/2026-11-02-core-image-morse-qemu-boot.md).
 

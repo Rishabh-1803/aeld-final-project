@@ -1,4 +1,4 @@
-# MorseMouse userspace evdev prototype — v0.1
+# MorseMouse userspace evdev prototype — v0.2
 
 **Status:** Experimental QEMU validation utility. This is not the planned kernel driver and does not freeze the full physical gesture grammar.
 
@@ -88,7 +88,13 @@ The QEMU monitor codes above were verified earlier against the emulated QEMU tab
 
 - Use a new event-node path only after inspecting `/proc/bus/input/devices`; do not assume `event0` is stable.
 - This userspace prototype intentionally does not call `EVIOCGRAB`; normal desktop pointer handling remains active.
-- It emits decoded characters to its standard output only. It does not inject keystrokes into applications.
+- By default, decoded characters are printed to stdout. With the optional
+`--uinput` flag, decoded characters are emitted through the Linux
+virtual keyboard `MorseMouse Reference Keyboard`.
+
+The QEMU prototype verified keyboard events for uppercase, lowercase,
+digits, punctuation and SPACE. See
+`evidence/input/2026-11-03-qemu-uinput-keyboard.md`.
 - Run it as root in the test image if permissions prevent opening `/dev/input/eventN`.
 - QEMU validates the emulated tablet and the code path, not the Zebronics PULSE receiver or Raspberry Pi hardware.
 - The kernel `input_handler`, virtual keyboard, `/dev/morse_hid` ABI, daemon, and physical acceptance tests remain future work.

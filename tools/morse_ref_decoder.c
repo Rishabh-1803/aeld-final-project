@@ -7,9 +7,12 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <signal.h>
 #include <string.h>
 #include <sys/ioctl.h>
 #include <unistd.h>
+
+#include "morse_uinput.h"
 
 #define ASCII_MIN 32
 #define ASCII_MAX 126
@@ -547,13 +550,30 @@ static void append_event_symbol(MorseDecoder *decoder, char symbol,
     fflush(stdout);
 }
 
-static int run_evdev(const MorseMap *map, const char *device_path)
+
+static volatile sig_atomic_t stop_requested = 0;
+
+static void handle_stop_signal(int signal_number)
 {
-    int fd;
+    (void)signal_number;
+    stop_requested = 1;
+}
+
+static int run_evdev(const MorseMap *map,
+                     const char *device_path,
+                     bool enable_uinput)
+{
+    int fd = -1;
     char device_name[256] = {0};
     MorseDecoder decoder;
+    MorseUinputKeyboard keyboard;
     struct input_event events[16];
     bool dropping_events = false;
+    bool keyboard_open = false;
+    int result = EXIT_FAILURE;
+
+    memset(&keyboard, 0, sizeof(keyboard));
+    keyboard.fd = -1;
 
     fd = open(device_path, O_RDONLY | O_CLOEXEC);
     if (fd < 0) {
@@ -563,15 +583,33 @@ static int run_evdev(const MorseMap *map, const char *device_path)
     }
 
     if (!verify_mouse_device(fd, device_name, sizeof(device_name))) {
-        close(fd);
-        return EXIT_FAILURE;
+        goto cleanup;
+    }
+
+    if (enable_uinput) {
+        if (morse_uinput_open(&keyboard) < 0) {
+            fprintf(stderr, "ERROR: cannot create virtual keyboard: %s\n",
+                    strerror(errno));
+            goto cleanup;
+        }
+
+        keyboard_open = true;
     }
 
     decoder_reset(&decoder);
+
     printf("Listening to %s (%s).\n", device_path, device_name);
     puts("Left down = DOT; right down = DASH; middle down = COMMIT.");
-    puts("Release events and key-repeat events are ignored; Ctrl+C stops the reader.");
-    puts("This is a userspace evdev prototype; it does not grab the mouse or emit keyboard events.");
+    puts("Release events and key-repeat events are ignored.");
+
+    if (enable_uinput) {
+        puts("Virtual keyboard output is ENABLED.");
+        puts("Decoded characters will be sent through /dev/uinput.");
+    } else {
+        puts("Virtual keyboard output is disabled; decoded characters go to stdout.");
+    }
+
+    puts("Press Ctrl+C to stop.");
     fflush(stdout);
 
     for (;;) {
@@ -580,33 +618,42 @@ static int run_evdev(const MorseMap *map, const char *device_path)
         size_t i;
 
         if (bytes < 0) {
-            if (errno == EINTR)
+            if (errno == EINTR) {
+                if (stop_requested) {
+                    result = EXIT_SUCCESS;
+                    break;
+                }
                 continue;
+            }
+
             fprintf(stderr, "ERROR: read from '%s' failed: %s\n",
                     device_path, strerror(errno));
-            close(fd);
-            return EXIT_FAILURE;
+            break;
         }
+
         if (bytes == 0) {
-            fprintf(stderr, "ERROR: input device '%s' reached end of file.\n", device_path);
-            close(fd);
-            return EXIT_FAILURE;
-        }
-        if ((size_t)bytes % sizeof(events[0]) != 0) {
-            fprintf(stderr, "ERROR: received a partial input_event record from '%s'.\n",
+            fprintf(stderr, "ERROR: input device '%s' reached end of file.\n",
                     device_path);
-            close(fd);
-            return EXIT_FAILURE;
+            break;
+        }
+
+        if ((size_t)bytes % sizeof(events[0]) != 0) {
+            fprintf(stderr,
+                    "ERROR: received a partial input_event record from '%s'.\n",
+                    device_path);
+            break;
         }
 
         count = (size_t)bytes / sizeof(events[0]);
+
         for (i = 0; i < count; i++) {
             const struct input_event *event = &events[i];
 
             if (event->type == EV_SYN && event->code == SYN_DROPPED) {
                 decoder_reset(&decoder);
                 dropping_events = true;
-                puts("WARNING: evdev queue overflow (SYN_DROPPED); sequence reset; ignoring events until SYN_REPORT.");
+                puts("WARNING: evdev queue overflow (SYN_DROPPED); "
+                     "sequence reset; ignoring events until SYN_REPORT.");
                 fflush(stdout);
                 continue;
             }
@@ -628,29 +675,61 @@ static int run_evdev(const MorseMap *map, const char *device_path)
                 unsigned char ascii;
                 char rejected[MAX_MORSE_LEN + 1];
 
-                (void)snprintf(rejected, sizeof(rejected), "%s", decoder.symbols);
+                (void)snprintf(rejected, sizeof(rejected), "%s",
+                               decoder.symbols);
+
                 if (decoder_commit(map, &decoder, &ascii)) {
                     puts("INPUT: BTN_MIDDLE down -> COMMIT");
                     print_decoded(ascii);
+
+                    if (enable_uinput) {
+                        if (morse_uinput_emit_ascii(&keyboard, ascii) < 0) {
+                            fprintf(stderr,
+                                    "ERROR: failed to emit ASCII %u: %s\n",
+                                    (unsigned int)ascii, strerror(errno));
+                            goto cleanup;
+                        }
+
+                        printf("UINPUT: emitted ASCII %u successfully.\n",
+                               (unsigned int)ascii);
+                    }
                 } else if (rejected[0] == '\0') {
-                    puts("INPUT: BTN_MIDDLE down -> COMMIT; ignored because sequence is empty.");
+                    puts("INPUT: BTN_MIDDLE down -> COMMIT; "
+                         "ignored because sequence is empty.");
                 } else {
-                    printf("INPUT: BTN_MIDDLE down -> COMMIT\n");
-                    printf("ERROR: unmapped Morse sequence '%s'; buffer cleared.\n", rejected);
+                    puts("INPUT: BTN_MIDDLE down -> COMMIT");
+                    printf("ERROR: unmapped Morse sequence '%s'; buffer cleared.\n",
+                           rejected);
                 }
+
                 fflush(stdout);
             }
         }
     }
+
+cleanup:
+    if (keyboard_open) {
+        if (morse_uinput_close(&keyboard) < 0) {
+            fprintf(stderr, "ERROR: virtual keyboard cleanup failed: %s\n",
+                    strerror(errno));
+            result = EXIT_FAILURE;
+        }
+    }
+
+    if (fd >= 0)
+        close(fd);
+
+    return result;
 }
 
 static void print_usage(const char *program)
 {
-    printf("Usage: %s [--map CSV_PATH] [--self-test | --interactive | --evdev DEVICE]\n", program);
+    printf("Usage: %s [--map CSV_PATH] [--self-test | --interactive | --evdev DEVICE [--uinput]]\n", program);
     puts("  --map PATH       Mapping CSV (default: config/morse_map.csv)");
     puts("  --self-test      Round-trip all 95 entries and test boundary/error behavior");
     puts("  --interactive    Read DOT/DASH/COMMIT/RESET tokens from standard input");
     puts("  --evdev DEVICE   Read BTN_LEFT/BTN_RIGHT/BTN_MIDDLE events from a Linux evdev node");
+    puts("  --uinput         Also emit decoded characters through a virtual keyboard");
     puts("  --help           Show this help");
 }
 
@@ -660,6 +739,7 @@ int main(int argc, char **argv)
     bool self_test = false;
     bool interactive = false;
     const char *evdev_path = NULL;
+    bool enable_uinput = false;
     MorseMap map;
     int i;
 
@@ -680,6 +760,8 @@ int main(int argc, char **argv)
                 return EXIT_FAILURE;
             }
             evdev_path = argv[++i];
+        } else if (strcmp(argv[i], "--uinput") == 0) {
+            enable_uinput = true;
         } else if (strcmp(argv[i], "--help") == 0) {
             print_usage(argv[0]);
             return EXIT_SUCCESS;
@@ -695,6 +777,11 @@ int main(int argc, char **argv)
         return EXIT_FAILURE;
     }
 
+    if (enable_uinput && evdev_path == NULL) {
+        fputs("ERROR: --uinput requires --evdev DEVICE\n", stderr);
+        return EXIT_FAILURE;
+    }
+
     if (!load_map(map_path, &map))
         return EXIT_FAILURE;
 
@@ -703,8 +790,22 @@ int main(int argc, char **argv)
     if (self_test)
         return run_self_test(&map) ? EXIT_SUCCESS : EXIT_FAILURE;
 
-    if (evdev_path != NULL)
-        return run_evdev(&map, evdev_path);
+    if (evdev_path != NULL) {
+        struct sigaction action;
+
+        memset(&action, 0, sizeof(action));
+        action.sa_handler = handle_stop_signal;
+        sigemptyset(&action.sa_mask);
+
+        if (sigaction(SIGINT, &action, NULL) < 0 ||
+            sigaction(SIGTERM, &action, NULL) < 0) {
+            perror("ERROR: sigaction");
+            return EXIT_FAILURE;
+        }
+
+        stop_requested = 0;
+        return run_evdev(&map, evdev_path, enable_uinput);
+    }
 
     run_interactive(&map);
     return EXIT_SUCCESS;
