@@ -1,78 +1,111 @@
 # MorseMouse input grammar
 
-**Status:** Partial decision recorded — 2 November 2026  
+**Status:** v1 baseline approved — 4 November 2026  
 **Decision owner:** Rishabh Shah  
 **Scope:** Initial discrete Morse input mode
 
 ## 1. Confirmed encoding decision
 
-MorseMouse will use **button identity**, not press duration, to distinguish Morse elements.
+MorseMouse uses **button identity**, not press duration, to distinguish Morse elements.
 
 | Physical control | Linux input event | Morse element | Meaning |
 |---|---|---|---|
-| Left mouse button | `BTN_LEFT` (expected code 272) | `.` | Dit |
-| Right mouse button | `BTN_RIGHT` (expected code 273) | `-` | Dah |
+| Left mouse button | `BTN_LEFT` (272) | `.` | DOT |
+| Right mouse button | `BTN_RIGHT` (273) | `-` | DASH |
 
-The event codes above are the standard Linux input codes. They still need to be confirmed on the physical Zebronics PULSE receiver; current runtime evidence is from the QEMU emulated tablet only.
+QEMU runtime tests confirm these event mappings for the emulated USB tablet. The physical Zebronics PULSE receiver remains to be inspected during the final hardware-validation stage.
 
 ### Event interpretation
 
-- A button-down transition (event value `1`) contributes exactly one Morse element.
-- The corresponding button-up transition (event value `0`) ends the physical press; it does not add another element.
-- Press duration has no Morse meaning. A short and a long left-button press both mean one dit; a short and a long right-button press both mean one dah.
-- A held button must not generate repeated Morse elements. Only a new down transition after a release can contribute another element.
-- Kernel repeat events, if ever observed, must not be interpreted as additional Morse elements.
+- A button-down transition (value `1`) contributes one Morse element.
+- The corresponding button-up transition (value `0`) adds no symbol and rearms the button.
+- Press duration has no Morse meaning.
+- A held button must not generate repeated Morse elements.
+- Kernel key-repeat events are ignored.
 
-This is the selected baseline. Do not implement duration thresholds for dit-versus-dah classification.
+## 2. Approved v1 input grammar
 
-## 2. Remaining grammar decisions
-
-The button-identity choice does **not** yet freeze the complete interaction grammar. The following controls remain candidates and must be confirmed before the FSM is considered frozen:
-
-| Candidate control | Candidate action | Status |
+| Input | v1 action | Status |
 |---|---|---|
-| Middle-button click | Commit the current Morse sequence as one character | Proposed; not confirmed |
-| Wheel up/down | Select previous/next character layer | Proposed; not confirmed |
-| Middle button held + wheel | Insert a word space | Proposed; not confirmed |
-| Left and right held simultaneously | Treat as an invalid/reserved chord and discard the overlapping input | Proposed safety rule; not confirmed |
+| Left-button press | Append one DOT (`.`) | Approved |
+| Right-button press | Append one DASH (`-`) | Approved |
+| Left/right release | No symbol; rearm the button | Approved |
+| Repeated press while held | Ignore | Approved |
+| Middle-button press (value 1) | Commit current Morse sequence as one character | Approved |
+| Middle-button release | No additional commit | Approved |
+| Empty COMMIT | Ignore | Approved |
+| Invalid/unmapped COMMIT | Reject and clear sequence | Approved |
+| Left and right held simultaneously | Clear sequence and enter chord lockout | Approved |
+| During chord lockout | Ignore input until both primary buttons are released | Approved |
+| Wheel up/down | Ignore input | Disabled in v1 |
+| Middle button held + wheel | Ignore input | Disabled in v1 |
 
-The final grammar must define precedence for middle-button and wheel combinations, chord handling, invalid sequences, reset/cancel behavior, and layer count.
+### 2.1 Simultaneous left/right input
+
+If the left and right buttons become held simultaneously:
+
+1. Clear the current Morse sequence.
+2. Enter chord lockout.
+3. Ignore input while either primary button remains held.
+4. Exit lockout only after both primary buttons are released.
+5. Accept new input after lockout ends.
+
+This behavior is implemented in the independent userspace FSM and verified in QEMU.
 
 ## 3. Timing and filtering
 
-The following are deliberately **not frozen**:
+The following rules are fixed for v1:
 
-- Debounce/filter interval.
-- Chord-detection interval and exact overlap semantics.
-- Whether a character can be committed only explicitly or also by an inactivity timeout.
-- Any long-press gesture used for controls other than Morse element entry.
+- Press duration does not distinguish DOT from DASH.
+- No automatic character timeout.
+- No long-press interpretation.
+- No arbitrary debounce interval until hardware measurements justify one.
+- Explicit middle-button COMMIT is required to finish a character.
+- Chord detection is based on overlapping button-held states, not a configurable time window.
 
-The earlier duration-based dit/dah timing suggestions are not applicable to the selected button-identity encoding. Timing may still be used for noise filtering or gesture recognition, but never to decide whether a left/right press means dit or dah.
+Hardware measurements may justify future filtering changes, but must not silently change the approved v1 grammar.
 
-## 4. Initial mode and scope
+## 4. Initial mode and mapping scope
 
-- Start with discrete dit/dah entry; do not add Iambic keying to the first implementation.
-- Target printable ASCII decimal 32–126 (95 characters) using a declared US QWERTY acceptance layout.
-- Standard Morse letters and digits can be used directly. Any extensions needed for punctuation, symbols, or other printable characters must be explicit, deterministic, documented, and collision-free.
-- The mapping must be stored in one authoritative table and validated for duplicate codes, missing characters, and invalid sequences.
+- Use discrete DOT/DASH entry; Iambic keying is excluded from v1.
+- Target printable ASCII decimal 32–126 (95 characters) under the declared US QWERTY acceptance layout.
+- Standard Morse letters and digits are used directly.
+- MorseMouse-specific extensions for lowercase, punctuation and SPACE are documented in the authoritative CSV.
+- `config/morse_map.csv` is the single authoritative mapping source.
+- The validator checks missing characters, duplicate sequences and invalid symbols.
+
+The map contains 95 unique Morse sequences and 385 prefix relationships. Explicit COMMIT is therefore required; inactivity-based autocommit is not used.
 
 ## 5. Required tests
 
-Once the remaining grammar is agreed and implemented, the reference decoder and driver tests must cover at least:
+The reference decoder and FSM tests cover:
 
-1. Left down/up produces one dit.
-2. Right down/up produces one dah.
+1. Left down/up produces one DOT.
+2. Right down/up produces one DASH.
 3. Short and long holds of the same button produce the same single element.
 4. A continuous hold does not produce repeated elements.
 5. A new press after release produces a new element.
-6. Release events do not append elements.
-7. Simultaneous/chord behavior follows the final documented rule.
-8. Invalid/unmapped sequences are handled deterministically.
-9. All 95 printable ASCII characters map uniquely under the declared layout.
-10. QEMU-generated tests and physical Zebronics receiver tests are recorded separately.
+6. Release events do not append symbols.
+7. Empty middle-button COMMIT is ignored.
+8. A valid sequence is consumed after COMMIT.
+9. An invalid sequence is rejected and consumed.
+10. A left/right overlap clears the current sequence.
+11. Input remains ignored during chord lockout.
+12. Input resumes only after both primary buttons are released.
+13. All 95 printable ASCII characters map uniquely.
+14. QEMU results and physical Zebronics results are recorded separately.
+
+The independent FSM test executable reports 37 passing checks. The reference decoder and keymap test suites also pass.
 
 ## 6. Hardware-validation boundary
 
-QEMU has verified delivery of left/right/middle button and wheel events from its emulated USB tablet. QEMU has also verified the independent `uinput` virtual-keyboard path. Neither result proves that the Zebronics PULSE mouse and receiver expose identical events on Raspberry Pi 4. Physical capabilities and event delivery remain a separate acceptance item.
+QEMU verified button events from its emulated USB tablet and the complete userspace evdev → Morse FSM → decoder → uinput keyboard path. QEMU results do not prove that the Zebronics PULSE receiver exposes identical capabilities or event behavior on Raspberry Pi 4.
 
-See [QEMU evdev runtime-event evidence](../evidence/input/2026-11-02-qemu-evdev-runtime-events.md) and [uinput virtual-keyboard self-test](../evidence/input/2026-11-02-uinput-virtual-keyboard-selftest.md).
+Actual receiver VID/PID, HID descriptors, physical button events and Raspberry Pi behavior are reserved for the final hardware stage.
+
+## 7. Evidence
+
+- [QEMU evdev runtime-event evidence](../evidence/input/2026-11-02-qemu-evdev-runtime-events.md)
+- [QEMU uinput virtual-keyboard self-test](../evidence/input/2026-11-02-uinput-virtual-keyboard-selftest.md)
+- [QEMU Morse-to-uinput reference decoder validation](../evidence/input/2026-11-03-qemu-uinput-keyboard.md)
+- [QEMU FSM, chord lockout, recovery and uinput integration — 4 November 2026](../evidence/input/2026-11-04-qemu-fsm-integration.md)
