@@ -6,7 +6,7 @@
 
 This small C program reads the authoritative `config/morse_map.csv` and provides a userspace reference for exact Morse-sequence lookup. It is intended to establish mapping and character-boundary behavior before implementing the Linux input handler or kernel state machine.
 
-It supports interactive DOT/DASH/COMMIT/RESET testing and Linux evdev mouse input. Its optional `--uinput` mode emits decoded characters through a Linux virtual keyboard. Debounce, chord timing, and the final physical gesture grammar remain unimplemented.
+It supports interactive DOT/DASH/COMMIT/RESET testing and Linux evdev mouse input. Its optional `--uinput` mode emits decoded characters through a Linux virtual keyboard. The approved v1 userspace FSM implements button-state tracking, ignored repeats, explicit COMMIT, chord cancellation and release-based lockout/recovery. This remains a userspace reference, not the kernel driver.
 
 ## Build
 
@@ -56,18 +56,19 @@ Other commands:
 
 An invalid sequence is reported and cleared. An empty commit is ignored and reported. No character is emitted before `COMMIT`.
 
-## Design boundary
+## v1 input grammar and design boundary
 
-The mapping contains prefix relationships, so this decoder deliberately requires explicit `COMMIT`. It must not decide a character boundary from a guessed idle timeout. The middle-button commit gesture remains a candidate in `docs/input-grammar.md`; the CLI's `COMMIT` token is only a test abstraction and does not freeze that physical gesture.
+The approved v1 grammar is documented in [input-grammar.md](input-grammar.md): left-button press adds DOT, right-button press adds DASH, and middle-button press commits. Releases add no symbol; repeated press events are ignored. A left/right overlap clears the sequence and locks input until both buttons are released. Scroll-wheel gestures are disabled.
 
-The current CSV includes a MorseMouse-specific direct code for ASCII SPACE. Whether space is entered with that code or via a separate word-space gesture remains a grammar decision.
+The mapping contains prefix relationships, so explicit COMMIT is required; no inactivity-based autocommit is used. Press duration does not distinguish DOT from DASH, and v1 has no automatic character timeout or long-press behavior.
 
-## Next validation stages
+The current CSV includes a MorseMouse-specific direct code for ASCII SPACE. That mapping is part of the authoritative 95-character table.
 
-1. Review and freeze the 95-character mapping and its extensions.
-2. Agree the complete physical gesture grammar and filtering behavior.
-3. Add unit tests around the event-to-symbol state machine.
-4. Port the same defined behavior into the kernel implementation, with separate QEMU and physical mouse evidence.
+## Validation status and next stages
+
+The 95-character map, US QWERTY keymap and independent v1 FSM have passed their host tests. The FSM has 37 passing checks. QEMU integration verified the reference path through evdev and uinput, including chord cancellation and recovery; see [QEMU FSM integration evidence](../evidence/input/2026-11-04-qemu-fsm-integration.md).
+
+Next, port the approved behavior into the kernel input handler and kernel virtual keyboard, and validate those components in QEMU. Physical Zebronics/Raspberry Pi work is deliberately the final hardware stage.
 ## Evdev and virtual keyboard mode
 
 The decoder can read mouse button events from a Linux evdev device.
