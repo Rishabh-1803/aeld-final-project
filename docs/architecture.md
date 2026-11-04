@@ -2,7 +2,7 @@
 
 ## Purpose
 
-MorseMouse is an Embedded Linux input system. A supported three-button mouse and scroll wheel become a compact chorded Morse text-entry device. The core implementation targets QEMU ARM64 first and Raspberry Pi 4 64-bit for physical demonstration.
+MorseMouse is an Embedded Linux input system designed to turn a supported mouse into a compact Morse text-entry device. The approved v1 grammar uses the left button for DOT, the right button for DASH, and the middle button for explicit COMMIT. Scroll-wheel gestures are disabled in v1. QEMU ARM64 is the development and integration target; Raspberry Pi 4 64-bit is reserved for final physical validation.
 
 ## Planned data path
 
@@ -31,6 +31,50 @@ Linux applications   read-only telemetry
 ```
 
 This diagram describes the intended architecture. Components must not be treated as implemented until source code and validation evidence exist.
+
+## Implemented userspace reference path
+
+The current userspace reference prototype implements this data path:
+
+```text
+QEMU USB Tablet / Linux evdev
+             |
+             v
+      morse_ref_decoder
+             |
+             v
+          morse_fsm
+             |
+       DOT / DASH / COMMIT
+             |
+             v
+      Morse sequence buffer
+             |
+             v
+       95-character map
+             |
+             v
+       US QWERTY keymap
+             |
+             v
+           /dev/uinput
+             |
+             v
+    Virtual Linux keyboard
+```
+
+Implemented behavior:
+
+- Left-button press appends one DOT; right-button press appends one DASH.
+- Releases update button state without adding symbols.
+- Repeated press and key-repeat events are ignored.
+- Middle-button press requests explicit COMMIT; empty COMMIT is ignored.
+- A committed sequence is consumed whether valid or invalid.
+- An overlapping left/right press clears the sequence and activates chord lockout.
+- Lockout ends only after both primary buttons have been released.
+- Decoded printable ASCII characters can be emitted through uinput.
+
+The independent FSM has 37 passing unit checks. The integrated decoder and virtual keyboard were verified in QEMU. This is a userspace reference implementation, not the planned kernel input handler.
 
 ## Kernel module responsibilities
 
@@ -61,11 +105,26 @@ The daemon must not interpret client-provided strings as shell commands. The HUD
 
 ## Input mapping and state machine
 
-The selected initial encoding is button-identity based: left-button down means dot and right-button down means dash; press duration does not distinguish the two. Middle-button and wheel gestures remain proposals for commit, layer, and word-space functions. Exact gesture precedence, chord handling, and filtering/timing remain to be frozen in [`docs/input-grammar.md`](input-grammar.md) before implementing the kernel FSM.
+The approved v1 grammar is documented in [`docs/input-grammar.md`](input-grammar.md).
 
-The intended printable range is ASCII decimal 32–126 (95 values) under a declared US QWERTY acceptance layout. `config/morse_map.csv` is intended to be the single authoritative mapping source. Any non-standard Morse extensions must be explicitly labelled.
+| Physical input | v1 behavior |
+|---|---|
+| Left-button press | Append DOT (`.`) |
+| Right-button press | Append DASH (`-`) |
+| Left/right release | Update button state; no symbol |
+| Middle-button press | Explicit COMMIT |
+| Empty COMMIT | Ignore |
+| Left/right overlap | Clear sequence and enter chord lockout |
+| During chord lockout | Ignore input until both primary buttons are released |
+| Scroll wheel | Disabled in v1 |
 
-A sentinel-bit representation is planned for bounded direct table lookup. Sequence length must be checked before shifting; invalid or unmapped sequences must have deterministic behavior.
+Button identity determines DOT and DASH. Press duration has no Morse meaning. There is no automatic character timeout or arbitrary debounce interval in v1.
+
+The authoritative mapping is `config/morse_map.csv`. It contains all 95 printable ASCII characters (decimal 32–126), with unique Morse sequences. The validator checks completeness, uniqueness, symbol validity and mapping conventions.
+
+The userspace reference decoder uses this mapping and a separate US QWERTY Linux keymap. The standalone FSM is implemented in `tools/morse_fsm.c` and tested in `tools/morse_fsm_test.c`.
+
+The kernel-side input handler and in-kernel FSM remain future work. They must follow the approved grammar and reproduce the verified reference behavior.
 
 ## Targets and validation boundary
 
@@ -82,4 +141,24 @@ Power control is separate from ordinary text entry. The development default is d
 
 ## Current implementation status
 
-As of 2 November 2026, only the Yocto baseline and initial custom image metadata have been validated. The project-specific kernel driver, ABI, daemon, CLI, HUD, decoder, and input tests are not implemented yet. See [Project status](project-status.md).
+As of 4 November 2026, the following QEMU-side userspace functionality is implemented and validated:
+
+- Yocto Scarthgap QEMU ARM64 development image.
+- Approved v1 input grammar and 95-character Morse mapping.
+- Morse mapping validator and US QWERTY keymap.
+- C userspace reference decoder with evdev input.
+- Independent Morse FSM with 37 passing unit checks.
+- Chord cancellation, lockout and recovery.
+- Optional `/dev/uinput` virtual keyboard output.
+- QEMU integration tests for normal decoding, empty COMMIT, chord handling, recovery and uppercase keyboard events.
+
+See [QEMU FSM integration evidence](../evidence/input/2026-11-04-qemu-fsm-integration.md).
+
+The following components are not yet implemented:
+
+- Kernel `input_handler` module and in-kernel FSM.
+- Kernel-side event queue and virtual `input_dev` keyboard.
+- Versioned `/dev/morse_hid` userspace ABI.
+- `morsed`, `morsectl` and the read-only HUD.
+- QEMU integration of these future kernel/userspace components.
+- Raspberry Pi 4 and physical Zebronics validation, deliberately deferred to the final hardware stage.
