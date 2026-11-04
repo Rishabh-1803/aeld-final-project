@@ -1,76 +1,112 @@
 # Project status
 
-**Snapshot:** 2 November 2026  
+**Snapshot:** 4 November 2026  
 **Owner:** Rishabh Shah (solo)  
-**Current sprint:** Sprint 1, 2–15 November 2026
+**Current sprint:** Sprint 1 — QEMU reference implementation; Sprint 2 begins 16 November 2026
 
 ## Verified
 
 | Item | Status | Evidence |
 |---|---|---|
-| WSL 2 / Ubuntu 24.04.5 | Verified | WSL distribution installed and used for build |
+| WSL 2 / Ubuntu 24.04.5 | Verified | WSL distribution used for builds |
 | Poky Scarthgap | Verified | Commit `4fb7016a07507683359ebd620f1951fd5ea44bfa` |
-| meta-raspberrypi Scarthgap | Verified | Commit `018d44467c4f09eb63f8ea5e86e85d755250cf89` |
-| meta-openembedded (`meta-oe`) | Verified | Scarthgap commit `2db6aece32c7f8ebf6015b468e1b4e21de072e3b`; `evtest` 1.36 recipe available |
+| meta-raspberrypi Scarthgap | Pinned | Commit `018d44467c4f09eb63f8ea5e86e85d755250cf89` |
+| meta-openembedded (`meta-oe`) | Pinned | Commit `2db6aece32c7f8ebf6015b468e1b4e21de072e3b` |
 | QEMU baseline | Verified | `core-image-minimal` built and booted |
-| QEMU guest baseline | Verified | Root login; `aarch64`; kernel `6.6.151-yocto-standard` |
-| Custom layer | Verified | `meta-morse-mouse` registered; BitBake lists collection `morse` |
-| Image metadata | Verified | Both project recipes discovered; `bitbake -e core-image-morse` succeeds |
-| Minimal project image build | Verified | 4,083 tasks attempted; all succeeded; no task failures |
-| Package composition | Verified | Final manifest differs from baseline only by `packagegroup-morse-mouse` |
-| Project image QEMU boot | Verified | Explicit QEMU config selected project rootfs; root login succeeded |
-| Development image | Verified | `core-image-morse-dev` built and booted with `evtest` 1.36; base image recipe unchanged |
-| QEMU tablet capabilities | Verified | `evtest` enumerated left/right/middle buttons, vertical wheel and absolute X/Y |
-| QEMU evdev runtime events | Verified | HMP-generated left/right/middle press/release and vertical wheel events captured with `evtest`; physical mouse still pending |
-| QEMU `uinput` virtual keyboard | Verified | `uinput-selftest` created a virtual keyboard and verified `KEY_A` press/release readback through `/dev/input/event2` |
-| Guest architecture/kernel | Verified | `aarch64`; `6.6.151-yocto-standard` |
-| Guest network | Verified | DHCP address `10.0.2.15` |
-| Initial input visibility | Verified in QEMU | QEMU tablet events captured through evdev; `uinput-selftest` created a virtual keyboard and read back `KEY_A` press/release |
+| QEMU guest | Verified | `aarch64`; kernel `6.6.151-yocto-standard` |
+| Custom layer | Verified | `meta-morse-mouse` registered with BitBake |
+| Project image | Verified | `core-image-morse` built and booted in QEMU |
+| Development image | Verified | `core-image-morse-dev` built and booted |
+| QEMU evdev | Verified | QEMU tablet left/right/middle and wheel events captured |
+| uinput self-test | Verified | Virtual keyboard creation and KEY_A press/release readback |
+| Morse map | Verified | 95 printable ASCII entries, 95 unique Morse sequences |
+| Mapping validator | Verified | Completeness, uniqueness, symbol and round-trip checks pass |
+| Userspace reference decoder | Verified | All 95 mapped characters decode and commit |
+| US QWERTY keymap | Verified | All 95 printable ASCII key mappings pass |
+| Independent Morse FSM | Verified | 37 FSM checks pass |
+| Chord cancellation and lockout | Verified in QEMU | Overlap clears sequence; lockout persists until both primary buttons release |
+| Lockout recovery | Verified in QEMU | New Morse input decodes after both buttons are released |
+| uinput keyboard output | Verified in QEMU | Two uppercase-A key sequences observed with `evtest` |
+| Updated Yocto package | Verified | `morse-ref-decoder` built; binary and CSV present in pkgdata |
+| Updated development image | Verified | `core-image-morse-dev` rebuilt on 4 November 2026 |
 
-## Current configuration observed on 2 November 2026
+## Current build configuration
 
 - `MACHINE = "qemuarm64"`
 - `DL_DIR = "/home/rishabh_shah/yocto-cache/downloads"`
 - `SSTATE_DIR = "/home/rishabh_shah/yocto-cache/sstate-cache"`
 - `BB_NUMBER_THREADS = "10"`
 - `PARALLEL_MAKE = "-j 6"`
-- WSL reported 20 processors, approximately 9.7 GiB memory, and 4 GiB swap.
+- Poky Scarthgap 5.0.21.
+- QEMU guest kernel: `6.6.151-yocto-standard`.
+- QEMU guest DHCP address observed: `10.0.2.15`.
 
-The parallel Make setting is retained because the user reports that it worked for the baseline build. Observe resource use and change it only if measurements or build failures justify doing so.
+## Build observations
 
-## Build and boot warnings/observations
-
-- The final minimal-composition build reported one warning: host kernel process I/O accounting is unavailable because `CONFIG_TASK_IO_ACCOUNTING` is unset. No build task failed.
-- QEMU boot printed `ip: RTNETLINK answers: File exists` during network interface setup, but DHCP succeeded and the guest received `10.0.2.15`.
-- Rootfs reported `19.3M` total, `12.9M` used and `4.9M` available (72% used) inside the guest.
-- `/dev/uinput` was present. This alone does not prove that creating and injecting a virtual device works.
-- `evtest` 1.36 is installed in the separate development image; QEMU button press/release and vertical wheel events have been captured successfully.
-- The `uinput-selftest` Yocto package built into `core-image-morse-dev`; QEMU run verified virtual keyboard registration and `KEY_A` press/release readback through evdev.
+- `bitbake morse-ref-decoder`: 843 tasks attempted; all succeeded.
+- `bitbake core-image-morse-dev`: 4,155 tasks attempted; all succeeded.
+- A non-blocking host warning reported that `CONFIG_TASK_IO_ACCOUNTING` is unset.
+- QEMU networking printed `ip: RTNETLINK answers: File exists` during startup, but DHCP succeeded.
+- The latest QEMU development image was `core-image-morse-dev-qemuarm64.rootfs-20261104074706.ext4`.
 
 ## Not yet complete
 
-- Capture actual Zebronics PULSE receiver capabilities and runtime events on Raspberry Pi hardware.
-- Complete and freeze the gesture grammar and filtering/timing rules (button-identity encoding has been selected; remaining controls are pending).
-- Create the authoritative 95-character mapping and validator.
-- Build and test a userspace reference decoder.
-- Implement the kernel input handler, FSM, virtual keyboard and character-device ABI.
-- Implement `morsed`, `morsectl` and the read-only HUD.
-- Build and validate the Raspberry Pi image and record physical acceptance evidence.
+### QEMU-side implementation still required
+
+- Kernel `input_handler` and reversible selected-device grab lifecycle.
+- Kernel-side bounded event queue and in-kernel v1 FSM.
+- Kernel virtual keyboard using `input_dev`.
+- Versioned `/dev/morse_hid` userspace ABI (`read`, `poll`, `ioctl`).
+- `morsed` daemon and guarded dry-run power policy.
+- Read-only telemetry/HUD client.
+- QEMU integration and recovery testing for the kernel driver, UAPI, daemon and HUD.
+- Runtime `SYN_DROPPED` recovery test for the current reference path.
+
+### Final physical hardware stage — deliberately deferred
+
+Do not start actual Raspberry Pi/Zebronics implementation or acceptance until all QEMU-side kernel and userspace implementation and integration work is complete.
+
+The final stage will cover:
+
+- Build the `raspberrypi4-64` image.
+- Boot the physical Raspberry Pi 4.
+- Capture Zebronics PULSE receiver USB VID/PID and HID descriptors.
+- Verify real left/right/middle button and other relevant input events.
+- Validate device matching, grab/release, unplug/replug and recovery on hardware.
+- Record hardware evidence separately from QEMU evidence.
+
+## Delivery sequence
+
+| Order | Work | Tracking |
+|---|---|---|
+| 1 | QEMU Yocto baseline and development image | Issue #1 — complete |
+| 2 | Approved v1 grammar, map and userspace reference decoder/FSM | Issues #3 and #4 — complete |
+| 3 | Kernel input handler and reversible device lifecycle | Issue #5 |
+| 4 | Kernel v1 FSM and bounded event processing | Issue #6 |
+| 5 | Kernel virtual keyboard synthesis | Issue #7 |
+| 6 | Character-device ABI and diagnostics | Issue #8 |
+| 7 | Daemon and guarded power policy | Issue #9 |
+| 8 | Read-only telemetry and HUD | Issue #10 |
+| 9 | Complete QEMU integration, recovery and security acceptance | Issue #11 — QEMU phase |
+| 10 | **Final only:** Raspberry Pi 4 and physical Zebronics implementation/acceptance | Issues #2 and #11 — hardware phase |
+| 11 | Final course documentation, demonstration and submission | Issue #12 |
 
 ## Sprint plan
 
 | Sprint | Dates | Focus |
 |---|---|---|
-| Sprint 1 | 2–15 Nov 2026 | Platform/build proof, mouse discovery, grammar and reference prototype |
-| Sprint 2 | 16–29 Nov 2026 | Kernel input handler, FSM/timing, virtual keyboard, UAPI |
-| Sprint 3 | 30 Nov–13 Dec 2026 | Daemon, guarded dry-run power policy, HUD, integration, security, physical validation and final demo |
+| Sprint 1 | 2–15 Nov 2026 | Platform/build proof, approved grammar and userspace reference |
+| Sprint 2 | 16–29 Nov 2026 | QEMU kernel input handler, FSM, virtual keyboard and UAPI |
+| Sprint 3 | 30 Nov–13 Dec 2026 | QEMU daemon, HUD, integration, recovery/security; physical hardware only after QEMU acceptance |
 
-Do not close an issue or mark a deliverable complete without implementation and validation evidence. Keep this document, issue descriptions/comments, project board, and course wiki synchronized.
+Do not close an issue or mark a deliverable complete without implementation and validation evidence. QEMU and physical-target results must remain clearly separated.
 
 ## Evidence
 
 - [QEMU ARM64 core-image-morse build](../evidence/builds/2026-11-02-core-image-morse-build.md)
 - [QEMU ARM64 core-image-morse boot](../evidence/boots/2026-11-02-core-image-morse-qemu-boot.md)
-- [QEMU ARM64 development image and evtest](../evidence/builds/2026-11-02-core-image-morse-dev-build.md)
+- [QEMU development image and evtest](../evidence/builds/2026-11-02-core-image-morse-dev-build.md)
 - [QEMU evdev runtime mouse-event test](../evidence/input/2026-11-02-qemu-evdev-runtime-events.md)
-- [QEMU `uinput` virtual-keyboard self-test](../evidence/input/2026-11-02-uinput-virtual-keyboard-selftest.md)
+- [QEMU uinput virtual-keyboard self-test](../evidence/input/2026-11-02-uinput-virtual-keyboard-selftest.md)
+- [QEMU Morse-to-uinput reference decoder validation](../evidence/input/2026-11-03-qemu-uinput-keyboard.md)
+- [QEMU FSM, chord lockout, recovery and uinput integration](../evidence/input/2026-11-04-qemu-fsm-integration.md)
