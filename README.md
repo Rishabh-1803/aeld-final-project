@@ -9,41 +9,42 @@
 - **Physical demonstration target:** Raspberry Pi 4, 64-bit (`raspberrypi4-64`)
 - **Build system:** Yocto Project / Poky, Scarthgap 5.0.21 LTS
 
-## Current status — 3 November 2026
+## Current status — 4 November 2026
 
-The project is in **Sprint 1 (2–15 November 2026)**.
+The QEMU-side userspace reference implementation and its integration tests are working.
 
-### Verified
+### Implemented and verified
 
-- Poky Scarthgap 5.0.21 is checked out at `4fb7016a07507683359ebd620f1951fd5ea44bfa`.
-- `meta-raspberrypi` Scarthgap is checked out at `018d44467c4f09eb63f8ea5e86e85d755250cf89`.
-- The `qemuarm64` `core-image-minimal` baseline was built and booted successfully.
-- The baseline QEMU guest reported `aarch64` and kernel `6.6.151-yocto-standard`.
-- The custom `meta-morse-mouse` layer is registered in the QEMU build.
-- BitBake discovers both project recipes and metadata parsing succeeds.
-- The minimal-composition `core-image-morse` build completed: 4,083 tasks attempted, all successful, no failed tasks.
-- Its package manifest matches the baseline package-name set plus `packagegroup-morse-mouse`.
-- The project image booted in QEMU using its generated `.qemuboot.conf`; root login succeeded.
-- A separate `core-image-morse-dev` image built and booted with `evtest` 1.36; the minimal `core-image-morse` image recipe remains unchanged.
-- `evtest` enumerated the QEMU tablet and reported left/right/middle button, vertical wheel, and absolute X/Y capabilities.
-- Runtime QEMU evdev testing confirmed left/right/middle button press/release events and vertical wheel up/down events.
-- The `uinput-selftest` utility successfully created a virtual keyboard and verified `KEY_A` press/release readback through evdev.
-- The guest reported `aarch64`, kernel `6.6.151-yocto-standard`, and DHCP address `10.0.2.15`.
-- The userspace C reference decoder reads Linux evdev mouse events and optionally emits decoded characters through a virtual keyboard using `/dev/uinput`.
-- The 95-character Morse map and US QWERTY keymap pass host-side tests. QEMU testing verified A, e, 5, !, SPACE, repeated characters, invalid-sequence recovery, and virtual-device cleanup.
-- The `morse-ref-decoder` Yocto recipe and updated `core-image-morse-dev` image built successfully.
+- Yocto Scarthgap `qemuarm64` development image builds and boots.
+- QEMU exposes an emulated USB tablet with left, right and middle button events.
+- Approved v1 grammar: left = DOT, right = DASH, middle = explicit COMMIT; scroll-wheel gestures are disabled.
+- Overlapping left/right input clears the current sequence and locks input until both primary buttons are released.
+- `config/morse_map.csv` contains 95 unique printable ASCII mappings.
+- The mapping validator and US QWERTY Linux keymap tests pass.
+- The C reference decoder reads evdev input and decodes committed Morse sequences.
+- The independent userspace FSM passes all 37 unit checks.
+- QEMU tests verify empty COMMIT, normal decoding, chord cancellation, lockout and recovery.
+- The decoder creates a virtual keyboard through `/dev/uinput`.
+- `evtest` confirmed two complete uppercase-A key sequences, including modifier and key press/release events.
+- The updated Yocto decoder recipe and `core-image-morse-dev` image build successfully with FSM integration.
 
 ### Not yet implemented or validated
 
-- Physical Zebronics PULSE receiver event discovery remains pending.
-- The physical Morse gesture grammar remains to be frozen. The 95-character Morse map and US QWERTY key translation pass host-side tests; userspace keyboard-event behavior has been validated in QEMU.
-- The Raspberry Pi image and physical acceptance tests remain pending.
+- Linux kernel input handler and in-kernel FSM.
+- Kernel virtual `input_dev` keyboard and `/dev/morse_hid` UAPI.
+- `morsed`, `morsectl` and the read-only HUD.
+- QEMU integration of the future kernel driver, UAPI, daemon and HUD.
+- Raspberry Pi 4 and physical Zebronics PULSE receiver validation.
+- Visible text insertion into a graphical application.
+- Runtime `SYN_DROPPED` recovery integration testing.
 
-A successful project image build and QEMU boot establish the platform baseline, not completed MorseMouse functionality.
+The QEMU integration establishes the userspace reference behavior. It does not establish completion of the kernel driver or physical hardware acceptance.
+
+See [QEMU FSM integration evidence](evidence/input/2026-11-04-qemu-fsm-integration.md) and [Project status](docs/project-status.md).
 
 ## Project goal
 
-Use the left and right mouse buttons as Morse dit/dah inputs, with the middle button and scroll wheel providing documented layer, commit, navigation, and guarded local-control gestures. A kernel input handler will process the selected mouse and synthesize keyboard events through a virtual Linux `input_dev`. A userspace daemon will consume structured driver events for diagnostics, service coordination, and telemetry. A read-only HUD will display status.
+The approved v1 grammar uses the left and right mouse buttons for DOT/DASH input and the middle button for explicit COMMIT. Scroll-wheel gestures are disabled in v1. The userspace reference decoder and FSM have been validated in QEMU. The planned kernel input handler will eventually provide the kernel-side implementation. A userspace daemon and read-only HUD remain planned.
 
 The core target is **95 printable ASCII characters (decimal 32–126)** under a declared US QWERTY acceptance layout. All mappings and custom extensions must be documented and tested.
 
@@ -80,11 +81,11 @@ Power-control behavior is separate from text entry. It is dry-run/disabled by de
 
 | Component | Role | Status |
 |---|---|---|
-| QEMU ARM64, `qemuarm64` | Reproducible development and integration tests | Minimal and diagnostics images built/booted; QEMU input capabilities discovered; QEMU runtime evdev and `uinput` virtual-keyboard tests verified; physical mouse and MorseMouse integration pending |
+| QEMU ARM64, `qemuarm64` | Reproducible development and integration tests | Minimal and development images built/booted; QEMU evdev input verified; userspace Morse FSM, chord lockout, recovery and `uinput` keyboard integration verified; kernel driver and physical mouse validation pending |
 | Raspberry Pi 4, `raspberrypi4-64` | Physical demonstration target | Selected; project image not built |
 | Zebronics PULSE mouse + 2.4 GHz USB receiver | Physical input device | Available; Linux event capabilities not yet captured |
 
-The QEMU `uinput-selftest` validates virtual keyboard creation and evdev event readback. It does not validate MorseMouse driver/FSM behavior and does not replace physical receiver and Raspberry Pi acceptance tests.
+The QEMU MorseMouse integration test validates the userspace reference decoder/FSM behavior and virtual keyboard event delivery. It does not validate the planned kernel input handler or replace physical receiver and Raspberry Pi acceptance tests.
 
 ## Repository layout
 
