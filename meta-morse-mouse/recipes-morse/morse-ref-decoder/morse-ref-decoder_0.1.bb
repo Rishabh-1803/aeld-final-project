@@ -7,6 +7,8 @@ FILESEXTRAPATHS:prepend := "${THISDIR}/../../../tools:${THISDIR}/../../../config
 
 SRC_URI = " \
     file://morse_ref_decoder.c \
+    file://morse_fsm.c \
+    file://morse_fsm.h \
     file://morse_keymap.c \
     file://morse_keymap.h \
     file://morse_uinput.c \
@@ -24,6 +26,7 @@ do_compile() {
         -std=c11 -Wall -Wextra -Wpedantic -Werror \
         -o ${B}/morse-ref-decoder \
         ${S}/morse_ref_decoder.c \
+        ${S}/morse_fsm.c \
         ${S}/morse_keymap.c \
         ${S}/morse_uinput.c
 }

@@ -47,3 +47,4 @@ Thumbs.db
 
 # Locally compiled test binaries
 /tools/test-morse-keymap
+/tools/test-morse-fsm

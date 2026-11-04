@@ -13,6 +13,7 @@
 #include <unistd.h>
 
 #include "morse_uinput.h"
+#include "morse_fsm.h"
 
 #define ASCII_MIN 32
 #define ASCII_MAX 126
@@ -495,6 +496,23 @@ static bool bit_is_set(const unsigned long *bits, unsigned int bit)
     return (bits[BIT_WORD(bit)] & BIT_MASK(bit)) != 0;
 }
 
+static bool sync_evdev_button_state(int fd, MorseFsm *fsm)
+{
+    unsigned long key_bits[BIT_WORDS(KEY_MAX)];
+
+    memset(key_bits, 0, sizeof(key_bits));
+
+    if (ioctl(fd, EVIOCGKEY(sizeof(key_bits)), key_bits) < 0)
+        return false;
+
+    morse_fsm_sync_buttons(
+        fsm,
+        bit_is_set(key_bits, BTN_LEFT),
+        bit_is_set(key_bits, BTN_RIGHT));
+
+    return true;
+}
+
 static bool verify_mouse_device(int fd, char *name, size_t name_capacity)
 {
     unsigned long event_bits[BIT_WORDS(EV_MAX)];
@@ -551,6 +569,44 @@ static void append_event_symbol(MorseDecoder *decoder, char symbol,
 }
 
 
+static bool commit_event(const MorseMap *map,
+                         MorseDecoder *decoder,
+                         MorseUinputKeyboard *keyboard,
+                         bool enable_uinput)
+{
+    unsigned char ascii;
+    char rejected[MAX_MORSE_LEN + 1];
+
+    (void)snprintf(rejected, sizeof(rejected), "%s", decoder->symbols);
+
+    if (decoder_commit(map, decoder, &ascii)) {
+        puts("INPUT: BTN_MIDDLE down -> COMMIT");
+        print_decoded(ascii);
+
+        if (enable_uinput) {
+            if (morse_uinput_emit_ascii(keyboard, ascii) < 0) {
+                fprintf(stderr,
+                        "ERROR: failed to emit ASCII %u: %s\n",
+                        (unsigned int)ascii, strerror(errno));
+                return false;
+            }
+
+            printf("UINPUT: emitted ASCII %u successfully.\n",
+                   (unsigned int)ascii);
+        }
+    } else if (rejected[0] == '\0') {
+        puts("INPUT: BTN_MIDDLE down -> COMMIT; "
+             "ignored because sequence is empty.");
+    } else {
+        puts("INPUT: BTN_MIDDLE down -> COMMIT");
+        printf("ERROR: unmapped Morse sequence '%s'; buffer cleared.\n",
+               rejected);
+    }
+
+    fflush(stdout);
+    return true;
+}
+
 static volatile sig_atomic_t stop_requested = 0;
 
 static void handle_stop_signal(int signal_number)
@@ -566,6 +622,7 @@ static int run_evdev(const MorseMap *map,
     int fd = -1;
     char device_name[256] = {0};
     MorseDecoder decoder;
+    MorseFsm fsm;
     MorseUinputKeyboard keyboard;
     struct input_event events[16];
     bool dropping_events = false;
@@ -597,10 +654,11 @@ static int run_evdev(const MorseMap *map,
     }
 
     decoder_reset(&decoder);
+    morse_fsm_init(&fsm);
 
     printf("Listening to %s (%s).\n", device_path, device_name);
     puts("Left down = DOT; right down = DASH; middle down = COMMIT.");
-    puts("Release events and key-repeat events are ignored.");
+    puts("Release events update button state; key-repeat events are ignored.");
 
     if (enable_uinput) {
         puts("Virtual keyboard output is ENABLED.");
@@ -651,58 +709,73 @@ static int run_evdev(const MorseMap *map,
 
             if (event->type == EV_SYN && event->code == SYN_DROPPED) {
                 decoder_reset(&decoder);
+                morse_fsm_resync_begin(&fsm);
                 dropping_events = true;
                 puts("WARNING: evdev queue overflow (SYN_DROPPED); "
-                     "sequence reset; ignoring events until SYN_REPORT.");
+                     "sequence reset; synchronizing button state at SYN_REPORT.");
                 fflush(stdout);
                 continue;
             }
 
             if (dropping_events) {
-                if (event->type == EV_SYN && event->code == SYN_REPORT)
+                if (event->type == EV_SYN && event->code == SYN_REPORT) {
+                    if (!sync_evdev_button_state(fd, &fsm)) {
+                        fprintf(stderr,
+                                "ERROR: EVIOCGKEY resynchronization failed: %s\n",
+                                strerror(errno));
+                        goto cleanup;
+                    }
+
                     dropping_events = false;
+                    puts("INPUT: evdev button state synchronized.");
+                    fflush(stdout);
+                }
                 continue;
             }
 
-            if (event->type != EV_KEY || event->value != 1)
+            if (event->type != EV_KEY)
                 continue;
 
+            MorseFsmButton button;
+            MorseFsmAction action;
+
             if (event->code == BTN_LEFT) {
-                append_event_symbol(&decoder, '.', "BTN_LEFT");
+                button = MORSE_FSM_BUTTON_LEFT;
             } else if (event->code == BTN_RIGHT) {
-                append_event_symbol(&decoder, '-', "BTN_RIGHT");
+                button = MORSE_FSM_BUTTON_RIGHT;
             } else if (event->code == BTN_MIDDLE) {
-                unsigned char ascii;
-                char rejected[MAX_MORSE_LEN + 1];
+                button = MORSE_FSM_BUTTON_MIDDLE;
+            } else {
+                continue;
+            }
 
-                (void)snprintf(rejected, sizeof(rejected), "%s",
-                               decoder.symbols);
+            action = morse_fsm_handle(&fsm, button, event->value);
 
-                if (decoder_commit(map, &decoder, &ascii)) {
-                    puts("INPUT: BTN_MIDDLE down -> COMMIT");
-                    print_decoded(ascii);
+            switch (action) {
+            case MORSE_FSM_ACTION_APPEND_DOT:
+                append_event_symbol(&decoder, '.', "BTN_LEFT");
+                break;
 
-                    if (enable_uinput) {
-                        if (morse_uinput_emit_ascii(&keyboard, ascii) < 0) {
-                            fprintf(stderr,
-                                    "ERROR: failed to emit ASCII %u: %s\n",
-                                    (unsigned int)ascii, strerror(errno));
-                            goto cleanup;
-                        }
+            case MORSE_FSM_ACTION_APPEND_DASH:
+                append_event_symbol(&decoder, '-', "BTN_RIGHT");
+                break;
 
-                        printf("UINPUT: emitted ASCII %u successfully.\n",
-                               (unsigned int)ascii);
-                    }
-                } else if (rejected[0] == '\0') {
-                    puts("INPUT: BTN_MIDDLE down -> COMMIT; "
-                         "ignored because sequence is empty.");
-                } else {
-                    puts("INPUT: BTN_MIDDLE down -> COMMIT");
-                    printf("ERROR: unmapped Morse sequence '%s'; buffer cleared.\n",
-                           rejected);
-                }
+            case MORSE_FSM_ACTION_COMMIT:
+                if (!commit_event(map, &decoder, &keyboard, enable_uinput))
+                    goto cleanup;
+                break;
 
+            case MORSE_FSM_ACTION_CANCEL:
+                decoder_reset(&decoder);
+                puts("INPUT: overlapping BTN_LEFT/BTN_RIGHT presses -> "
+                     "sequence cleared; chord lockout active.");
                 fflush(stdout);
+                break;
+
+            case MORSE_FSM_ACTION_NONE:
+            case MORSE_FSM_ACTION_IGNORE:
+            default:
+                break;
             }
         }
     }
