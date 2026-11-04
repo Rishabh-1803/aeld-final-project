@@ -150,3 +150,38 @@ The network startup printed `ip: RTNETLINK answers: File exists`, but DHCP compl
 ## Baseline notes
 
 The earlier `core-image-minimal` guest also reported `aarch64` and kernel `6.6.151-yocto-standard`. Its lack of `/etc/os-release` and `tree` was expected for the minimal image and did not indicate a boot failure.
+
+## Latest QEMU MorseMouse FSM integration
+
+The 4 November 2026 development image includes the v1 userspace FSM in `morse-ref-decoder`.
+
+After boot, identify the tablet by its sysfs device name (QEMU reports `QEMU QEMU USB Tablet`; do not assume an event number):
+
+```bash
+MOUSE_NODE=""
+for p in /sys/class/input/event*/device/name; do
+    [ -r "$p" ] || continue
+    case "$(cat "$p")" in
+        *"USB Tablet"*)
+            EVENT_SYS="${p%/device/name}"
+            MOUSE_NODE="/dev/input/${EVENT_SYS##*/}"
+            break
+            ;;
+    esac
+done
+```
+
+Start the reference decoder and uinput keyboard:
+
+```bash
+morse-ref-decoder \
+    --map /usr/share/morsemouse/morse_map.csv \
+    --evdev "$MOUSE_NODE" \
+    --uinput
+```
+
+In the QEMU HMP monitor, `mouse_button 1` holds left, `mouse_button 2` holds right, `mouse_button 4` holds middle, `mouse_button 3` holds left+right, and `mouse_button 0` releases all buttons.
+
+The 4 November 2026 integration run verified empty COMMIT, `.-` decoding as ASCII `A`, left/right overlap cancellation, lockout until both buttons were released, successful recovery, and virtual-keyboard Shift+A press/release events.
+
+See [QEMU FSM integration evidence](../evidence/input/2026-11-04-qemu-fsm-integration.md). This remains QEMU emulated-tablet evidence; physical Zebronics/Pi validation is deferred to the final hardware stage.
