@@ -1,6 +1,6 @@
 # Project status
 
-**Snapshot:** 4 November 2026  
+**Snapshot:** 5 November 2026  
 **Owner:** Rishabh Shah (solo)  
 **Current sprint:** Sprint 1 — QEMU reference implementation; Sprint 2 begins 16 November 2026
 
@@ -29,6 +29,11 @@
 | uinput keyboard output | Verified in QEMU | Two uppercase-A key sequences observed with `evtest` |
 | Updated Yocto package | Verified | `morse-ref-decoder` built; binary and CSV present in pkgdata |
 | Updated development image | Verified | `core-image-morse-dev` rebuilt on 4 November 2026 |
+| Kernel input-handler build and packaging | Verified | Commit `ed88aa9`; QEMU development image contains the module | 
+| Kernel input-handler binding and button events | Verified in QEMU | Tablet matched; left/right/middle press and release callbacks received | 
+| Reversible exclusive grab | Verified in QEMU | `grab_on_bind=1` suppresses competing evdev delivery; module unload restores normal input | 
+| Linux HID unbind/rebind | Verified in QEMU | Handler disconnects and automatically reattaches while module remains loaded | 
+| QEMU USB hot-unplug/hot-replug | Verified in QEMU | `device_del` and `device_add` cause clean disconnect and automatic reconnect |
 
 ## Current build configuration
 
@@ -53,7 +58,6 @@
 
 ### QEMU-side implementation still required
 
-- Kernel `input_handler` and reversible selected-device grab lifecycle.
 - Kernel-side bounded event queue and in-kernel v1 FSM.
 - Kernel virtual keyboard using `input_dev`.
 - Versioned `/dev/morse_hid` userspace ABI (`read`, `poll`, `ioctl`).
@@ -81,7 +85,7 @@ The final stage will cover:
 |---|---|---|
 | 1 | QEMU Yocto baseline and development image | Issue #1 — complete |
 | 2 | Approved v1 grammar, map and userspace reference decoder/FSM | Issues #3 and #4 — complete |
-| 3 | Kernel input handler and reversible device lifecycle | Issue #5 |
+| 3 | Kernel input handler and reversible device lifecycle | Issue #5 — implementation committed; QEMU runtime acceptance passed |
 | 4 | Kernel v1 FSM and bounded event processing | Issue #6 |
 | 5 | Kernel virtual keyboard synthesis | Issue #7 |
 | 6 | Character-device ABI and diagnostics | Issue #8 |
@@ -110,3 +114,4 @@ Do not close an issue or mark a deliverable complete without implementation and 
 - [QEMU uinput virtual-keyboard self-test](../evidence/input/2026-11-02-uinput-virtual-keyboard-selftest.md)
 - [QEMU Morse-to-uinput reference decoder validation](../evidence/input/2026-11-03-qemu-uinput-keyboard.md)
 - [QEMU FSM, chord lockout, recovery and uinput integration](../evidence/input/2026-11-04-qemu-fsm-integration.md)
+- [QEMU kernel input-handler build, binding, grab/recovery and USB hotplug evidence](../evidence/input/2026-11-05-qemu-kernel-input-handler.md)
