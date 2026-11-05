@@ -185,3 +185,41 @@ In the QEMU HMP monitor, `mouse_button 1` holds left, `mouse_button 2` holds rig
 The 4 November 2026 integration run verified empty COMMIT, `.-` decoding as ASCII `A`, left/right overlap cancellation, lockout until both buttons were released, successful recovery, and virtual-keyboard Shift+A press/release events.
 
 See [QEMU FSM integration evidence](../evidence/input/2026-11-04-qemu-fsm-integration.md). This remains QEMU emulated-tablet evidence; physical Zebronics/Pi validation is deferred to the final hardware stage.
+
+
+## QEMU kernel input-handler build and lifecycle validation — 5 November 2026
+
+The development image was extended with the out-of-tree `hid_morse_kbd` Linux input handler. The Yocto recipe is `meta-morse-mouse/recipes-kernel/hid-morse-kbd/hid-morse-kbd_0.1.bb`; the development image installs the `hid-morse-kbd` package, which depends on the versioned kernel module package.
+
+Build and inspect the image:
+
+```bash
+source poky/oe-init-build-env build-qemu
+bitbake hid-morse-kbd
+bitbake core-image-morse-dev
+```
+
+The validated image was `core-image-morse-dev-qemuarm64.rootfs-20261104100611.ext4`, using kernel `6.6.151-yocto-standard`. Its manifest included `hid-morse-kbd` and `kernel-module-hid-morse-kbd-6.6.151-yocto-standard`.
+
+To run the QEMU USB hotplug lifecycle test, copy the generated `.qemuboot.conf` and add an explicit ID to the tablet device in the `[config_bsp]` `qb_opt_append` line. For the captured run, the option was:
+
+```ini
+qb_opt_append = -device qemu-xhci -device usb-tablet,id=morse-tablet -device usb-kbd
+```
+
+Boot that separate configuration with:
+
+```bash
+../poky/scripts/runqemu /path/to/core-image-morse-dev-hotplug.qemuboot.conf nographic slirp
+```
+
+The tablet can then be removed and re-added in the QEMU HMP monitor:
+
+```text
+device_del morse-tablet
+device_add usb-tablet,bus=usb-bus.0,port=1,id=morse-tablet-replug1
+```
+
+The 5 November 2026 runtime acceptance verified automatic handler binding, all three button press/release callbacks, exclusive grab and restoration, Linux HID unbind/rebind, and genuine QEMU USB hot-unplug/hot-replug. The keyboard remained connected during tablet removal. The module stayed loaded through the USB remove/re-add sequence and automatically bound to the newly enumerated tablet input device.
+
+See [QEMU kernel input-handler runtime evidence](../evidence/input/2026-11-05-qemu-kernel-input-handler.md) and [commit `ed88aa9`](https://github.com/Rishabh-1803/aeld-final-project/commit/ed88aa9).
