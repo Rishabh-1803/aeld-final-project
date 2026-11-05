@@ -11,7 +11,7 @@
 
 ## Current status — 4 November 2026
 
-The QEMU-side userspace reference implementation and its integration tests are working.
+The QEMU-side userspace reference implementation and the first kernel input-handler lifecycle implementation have passed their current QEMU runtime tests.
 
 ### Implemented and verified
 
@@ -27,20 +27,23 @@ The QEMU-side userspace reference implementation and its integration tests are w
 - The decoder creates a virtual keyboard through `/dev/uinput`.
 - `evtest` confirmed two complete uppercase-A key sequences, including modifier and key press/release events.
 - The updated Yocto decoder recipe and `core-image-morse-dev` image build successfully with FSM integration.
+- The `hid_morse_kbd` kernel input-handler module builds, packages and autoloads in the QEMU development image.
+- QEMU runtime tests verify tablet matching, keyboard exclusion, left/right/middle press/release receipt, exclusive grab, and restoration of ordinary input after module unload.
+- Linux HID unbind/rebind and genuine QEMU USB hot-unplug/hot-replug trigger clean disconnect and automatic reconnect callbacks.
 
 ### Not yet implemented or validated
 
-- Linux kernel input handler and in-kernel FSM.
+- In-kernel Morse FSM, bounded event queue and deferred event processing.
 - Kernel virtual `input_dev` keyboard and `/dev/morse_hid` UAPI.
 - `morsed`, `morsectl` and the read-only HUD.
-- QEMU integration of the future kernel driver, UAPI, daemon and HUD.
+- Kernel virtual keyboard, `/dev/morse_hid` UAPI, daemon and HUD integration in QEMU.
 - Raspberry Pi 4 and physical Zebronics PULSE receiver validation.
 - Visible text insertion into a graphical application.
 - Runtime `SYN_DROPPED` recovery integration testing.
 
 The QEMU integration establishes the userspace reference behavior. It does not establish completion of the kernel driver or physical hardware acceptance.
 
-See [QEMU FSM integration evidence](evidence/input/2026-11-04-qemu-fsm-integration.md) and [Project status](docs/project-status.md).
+See [QEMU FSM integration evidence](evidence/input/2026-11-04-qemu-fsm-integration.md), [kernel input-handler evidence](evidence/input/2026-11-05-qemu-kernel-input-handler.md), and [Project status](docs/project-status.md).
 
 ## Project goal
 
@@ -85,7 +88,7 @@ Power-control behavior is separate from text entry. It is dry-run/disabled by de
 | Raspberry Pi 4, `raspberrypi4-64` | Physical demonstration target | Selected; project image not built |
 | Zebronics PULSE mouse + 2.4 GHz USB receiver | Physical input device | Available; Linux event capabilities not yet captured |
 
-The QEMU MorseMouse integration test validates the userspace reference decoder/FSM behavior and virtual keyboard event delivery. It does not validate the planned kernel input handler or replace physical receiver and Raspberry Pi acceptance tests.
+The QEMU integration tests validate the userspace reference decoder/FSM and the first kernel input-handler lifecycle implementation. They do not replace physical receiver and Raspberry Pi acceptance tests.
 
 ## Repository layout
 
@@ -139,3 +142,5 @@ A repository license has not yet been selected. Do not assume that the Yocto rec
 - [2 Nov 2026 — QEMU evdev runtime mouse-event test](evidence/input/2026-11-02-qemu-evdev-runtime-events.md)
 - [2 Nov 2026 — QEMU `uinput` virtual-keyboard self-test](evidence/input/2026-11-02-uinput-virtual-keyboard-selftest.md)
 - [3 Nov 2026 — QEMU Morse-to-uinput reference decoder validation](evidence/input/2026-11-03-qemu-uinput-keyboard.md)
+
+- [5 Nov 2026 — QEMU kernel input-handler build and lifecycle evidence](evidence/input/2026-11-05-qemu-kernel-input-handler.md)
