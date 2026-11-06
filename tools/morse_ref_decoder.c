@@ -508,7 +508,8 @@ static bool sync_evdev_button_state(int fd, MorseFsm *fsm)
     morse_fsm_sync_buttons(
         fsm,
         bit_is_set(key_bits, BTN_LEFT),
-        bit_is_set(key_bits, BTN_RIGHT));
+        bit_is_set(key_bits, BTN_RIGHT),
+        bit_is_set(key_bits, BTN_MIDDLE));
 
     return true;
 }

@@ -9,6 +9,7 @@ SRC_URI = " \
     file://morse_ref_decoder.c \
     file://morse_fsm.c \
     file://morse_fsm.h \
+    file://morse_fsm_core.h \
     file://morse_keymap.c \
     file://morse_keymap.h \
     file://morse_uinput.c \
