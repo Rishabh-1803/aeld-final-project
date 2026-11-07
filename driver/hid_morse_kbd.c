@@ -7,6 +7,7 @@
 #include <linux/ktime.h>
 #include <linux/mod_devicetable.h>
 #include <linux/module.h>
+#include <linux/mutex.h>
 #include <linux/printk.h>
 #include <linux/slab.h>
 #include <linux/spinlock.h>
@@ -14,6 +15,7 @@
 #include <linux/workqueue.h>
 
 #include "morse_fsm_core.h"
+#include "morse_keymap_shared.h"
 
 #define DRIVER_NAME "hid_morse_kbd"
 
@@ -175,8 +177,177 @@ static const char *morse_button_name(unsigned int code)
 }
 
 
+
+/*
+ * Kernel-owned virtual keyboard.
+ * This device exposes EV_KEY capabilities only. It cannot match
+ * the physical Morse handler, which requires mouse buttons and EV_ABS.
+ */
+static struct input_dev *morse_virtual_keyboard;
+static DEFINE_MUTEX(morse_keyboard_lock);
+
+static unsigned short morse_active_keycode;
+static bool morse_key_down;
+static bool morse_shift_down;
+
+
+static void morse_keyboard_release_locked(void)
+{
+    bool changed = false;
+
+    if (!morse_virtual_keyboard)
+        return;
+
+    if (morse_key_down) {
+        input_report_key(morse_virtual_keyboard,
+                         morse_active_keycode, 0);
+        morse_active_keycode = 0;
+        morse_key_down = false;
+        changed = true;
+    }
+
+    if (morse_shift_down) {
+        input_report_key(morse_virtual_keyboard, KEY_LEFTSHIFT, 0);
+        morse_shift_down = false;
+        changed = true;
+    }
+
+    if (changed)
+        input_sync(morse_virtual_keyboard);
+}
+
+
+static void morse_keyboard_release(void)
+{
+    mutex_lock(&morse_keyboard_lock);
+    morse_keyboard_release_locked();
+    mutex_unlock(&morse_keyboard_lock);
+}
+
+
+static int morse_keyboard_emit_ascii(u8 ascii)
+{
+    unsigned short keycode = 0;
+    unsigned char shift = 0;
+    int error = 0;
+
+    mutex_lock(&morse_keyboard_lock);
+
+    if (!morse_virtual_keyboard) {
+        error = -ENODEV;
+        goto out;
+    }
+
+    morse_keyboard_release_locked();
+
+    if (!morse_shared_ascii_to_key(ascii, &keycode, &shift)) {
+        error = -EINVAL;
+        goto out;
+    }
+
+    if (shift) {
+        input_report_key(morse_virtual_keyboard, KEY_LEFTSHIFT, 1);
+        morse_shift_down = true;
+    }
+
+    input_report_key(morse_virtual_keyboard, keycode, 1);
+    morse_active_keycode = keycode;
+    morse_key_down = true;
+    input_sync(morse_virtual_keyboard);
+
+    input_report_key(morse_virtual_keyboard, keycode, 0);
+    morse_active_keycode = 0;
+    morse_key_down = false;
+
+    if (shift) {
+        input_report_key(morse_virtual_keyboard, KEY_LEFTSHIFT, 0);
+        morse_shift_down = false;
+    }
+
+    input_sync(morse_virtual_keyboard);
+
+out:
+    mutex_unlock(&morse_keyboard_lock);
+    return error;
+}
+
+
+static int morse_register_virtual_keyboard(void)
+{
+    struct input_dev *keyboard;
+    unsigned int ascii;
+    bool needs_shift = false;
+    int error;
+
+    keyboard = input_allocate_device();
+    if (!keyboard)
+        return -ENOMEM;
+
+    keyboard->name = "MorseMouse Virtual Keyboard";
+    keyboard->phys = "morse-mouse/virtual-keyboard0";
+    keyboard->id.bustype = BUS_VIRTUAL;
+    keyboard->id.vendor = 0x1209;
+    keyboard->id.product = 0x0007;
+    keyboard->id.version = 0x0001;
+
+    for (ascii = 32; ascii <= 126; ascii++) {
+        unsigned short keycode = 0;
+        unsigned char shift = 0;
+
+        if (!morse_shared_ascii_to_key((unsigned char)ascii,
+                                       &keycode, &shift)) {
+            input_free_device(keyboard);
+            return -EINVAL;
+        }
+
+        input_set_capability(keyboard, EV_KEY, keycode);
+
+        if (shift)
+            needs_shift = true;
+    }
+
+    if (needs_shift)
+        input_set_capability(keyboard, EV_KEY, KEY_LEFTSHIFT);
+
+    error = input_register_device(keyboard);
+    if (error) {
+        input_free_device(keyboard);
+        return error;
+    }
+
+    mutex_lock(&morse_keyboard_lock);
+    morse_virtual_keyboard = keyboard;
+    mutex_unlock(&morse_keyboard_lock);
+
+    pr_info(DRIVER_NAME
+            ": virtual keyboard registered; printable_ascii=95\n");
+
+    return 0;
+}
+
+
+static void morse_unregister_virtual_keyboard(void)
+{
+    struct input_dev *keyboard;
+
+    mutex_lock(&morse_keyboard_lock);
+
+    morse_keyboard_release_locked();
+    keyboard = morse_virtual_keyboard;
+    morse_virtual_keyboard = NULL;
+
+    mutex_unlock(&morse_keyboard_lock);
+
+    if (keyboard) {
+        input_unregister_device(keyboard);
+        pr_info(DRIVER_NAME ": virtual keyboard unregistered\n");
+    }
+}
+
 static void morse_sequence_reset(struct morse_input_state *state)
 {
+    morse_keyboard_release();
+
     state->sequence_len = 0;
     state->sequence[0] = '\0';
 }
@@ -226,6 +397,7 @@ static void morse_commit_sequence(struct morse_input_state *state,
 {
     u8 ascii;
     char committed[MORSE_MAX_SEQUENCE_LEN + 1];
+    int keyboard_error;
 
     if (state->sequence_len == 0) {
         atomic64_inc(&state->empty_commits);
@@ -253,6 +425,18 @@ static void morse_commit_sequence(struct morse_input_state *state,
             committed,
             (unsigned int)ascii,
             (unsigned int)ascii);
+
+        keyboard_error = morse_keyboard_emit_ascii(ascii);
+
+        if (keyboard_error) {
+            pr_warn(DRIVER_NAME
+                    ": virtual keyboard output failed ascii=%u error=%d\n",
+                    (unsigned int)ascii, keyboard_error);
+        } else {
+            pr_info(DRIVER_NAME
+                    ": virtual keyboard emitted ascii=%u\n",
+                    (unsigned int)ascii);
+        }
     } else {
         atomic64_inc(&state->invalid_commits);
 
@@ -659,6 +843,8 @@ static void morse_disconnect(struct input_handle *handle)
      */
     cancel_work_sync(&state->event_work);
 
+    morse_keyboard_release();
+
     pr_info(
         DRIVER_NAME
         ": disconnected from \"%s\""
@@ -695,10 +881,18 @@ static int __init morse_init(void)
 {
     int error;
 
+    error = morse_register_virtual_keyboard();
+    if (error) {
+        pr_err(DRIVER_NAME
+               ": virtual keyboard registration failed: %d\n", error);
+        return error;
+    }
+
     error = input_register_handler(&morse_handler);
     if (error) {
         pr_err(DRIVER_NAME ": handler registration failed: %d\n",
                error);
+        morse_unregister_virtual_keyboard();
         return error;
     }
 
@@ -719,6 +913,7 @@ static int __init morse_init(void)
 static void __exit morse_exit(void)
 {
     input_unregister_handler(&morse_handler);
+    morse_unregister_virtual_keyboard();
     pr_info(DRIVER_NAME ": unloaded\n");
 }
 
@@ -727,6 +922,6 @@ module_init(morse_init);
 module_exit(morse_exit);
 
 MODULE_AUTHOR("MorseMouse Project");
-MODULE_DESCRIPTION("MorseMouse QEMU input handler and kernel FSM");
+MODULE_DESCRIPTION("MorseMouse input handler and virtual keyboard");
 MODULE_LICENSE("GPL");
-MODULE_VERSION("0.2");
+MODULE_VERSION("0.3");

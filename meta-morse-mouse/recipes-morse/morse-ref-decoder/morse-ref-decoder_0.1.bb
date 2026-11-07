@@ -12,6 +12,7 @@ SRC_URI = " \
     file://morse_fsm_core.h \
     file://morse_keymap.c \
     file://morse_keymap.h \
+    file://morse_keymap_shared.h \
     file://morse_uinput.c \
     file://morse_uinput.h \
     file://morse_map.csv \

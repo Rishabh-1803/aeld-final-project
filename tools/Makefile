@@ -3,11 +3,11 @@ CFLAGS ?= -std=c11 -O2 -Wall -Wextra -Wpedantic -Werror
 
 TARGET := morse-ref-decoder
 SOURCES := morse_ref_decoder.c morse_fsm.c morse_keymap.c morse_uinput.c
-HEADERS := morse_fsm.h morse_keymap.h morse_uinput.h morse_fsm_core.h
+HEADERS := morse_fsm.h morse_keymap.h morse_keymap_shared.h morse_uinput.h morse_fsm_core.h
 
 KEYMAP_TEST := test-morse-keymap
 KEYMAP_SOURCES := morse_keymap.c morse_keymap_test.c
-KEYMAP_HEADERS := morse_keymap.h
+KEYMAP_HEADERS := morse_keymap.h morse_keymap_shared.h
 
 FSM_TEST := test-morse-fsm
 FSM_SOURCES := morse_fsm.c morse_fsm_test.c
