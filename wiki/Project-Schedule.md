@@ -23,7 +23,7 @@ Sprint dates follow the project plan. Issue status below reflects the current Gi
 
 ## GitHub Project Board Layout
 
-The intended GitHub Projects V2 board is **MorseMouse — Project Schedule**. Its table view should mirror the course example, with the following columns and sprint grouping:
+Create a GitHub Projects V2 project named **MorseMouse** and add a table view named **Project-Schedule**. Configure the view to match the course example, with the following columns and sprint grouping:
 
 | Board field | Type / configuration |
 |---|---|
