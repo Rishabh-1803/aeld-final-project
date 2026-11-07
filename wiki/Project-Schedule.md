@@ -21,6 +21,31 @@
 
 Sprint dates follow the project plan. Issue status below reflects the current GitHub issue tracker; completed Sprint 2 work was accepted ahead of the formal Sprint 2 date.
 
+## GitHub Project Board Layout
+
+The intended GitHub Projects V2 board is **MorseMouse — Project Schedule**. Its table view should mirror the course example, with the following columns and sprint grouping:
+
+| Board field | Type / configuration |
+|---|---|
+| Title | Built-in item title (GitHub issue title) |
+| Repository | Built-in repository field |
+| Assignees | Built-in assignees field |
+| Status | Built-in status field: Todo, In Progress, Done |
+| Sprint | Single-select custom field: Sprint 1, Sprint 2, Sprint 3 |
+| Grouping | Group rows by the Sprint field |
+
+### Issue-to-board mapping
+
+| Sprint group | Issue | Assignee | Status |
+|---|---|---|---|
+| Sprint 1 | [#1](https://github.com/Rishabh-1803/aeld-final-project/issues/1), [#3](https://github.com/Rishabh-1803/aeld-final-project/issues/3), [#4](https://github.com/Rishabh-1803/aeld-final-project/issues/4) | Rishabh-1803 | Done |
+| Sprint 2 | [#5](https://github.com/Rishabh-1803/aeld-final-project/issues/5), [#6](https://github.com/Rishabh-1803/aeld-final-project/issues/6) | Rishabh-1803 | Done |
+| Sprint 2 | [#7](https://github.com/Rishabh-1803/aeld-final-project/issues/7) | Rishabh-1803 | In Progress |
+| Sprint 2 | [#8](https://github.com/Rishabh-1803/aeld-final-project/issues/8) | Rishabh-1803 | Todo |
+| Sprint 3 | [#2](https://github.com/Rishabh-1803/aeld-final-project/issues/2), [#9](https://github.com/Rishabh-1803/aeld-final-project/issues/9), [#10](https://github.com/Rishabh-1803/aeld-final-project/issues/10), [#11](https://github.com/Rishabh-1803/aeld-final-project/issues/11), [#12](https://github.com/Rishabh-1803/aeld-final-project/issues/12) | Rishabh-1803 | Todo (issue #2 remains hardware-gated) |
+
+All twelve project issues are assigned to Rishabh-1803. The issue-to-sprint mapping above is the intended board configuration; it does not claim that the Projects V2 board has already been created.
+
 ## Sprint 1 — Platform and Reference Implementation
 
 **Dates:** 2–15 November 2026  
@@ -100,6 +125,7 @@ The following upcoming-sprint issues are assigned to **Rishabh-1803** and have e
 
 | Issue | Student issue | Status |
 |---|---|---|
+| [#2](https://github.com/Rishabh-1803/aeld-final-project/issues/2) | Physical Zebronics PULSE receiver and Raspberry Pi 4 input validation (Phase B; gated by issue #11 Phase A) | Open — intentionally blocked until QEMU gate |
 | [#9](https://github.com/Rishabh-1803/aeld-final-project/issues/9) | `morsed` daemon and guarded power-control policy | Open |
 | [#10](https://github.com/Rishabh-1803/aeld-final-project/issues/10) | Read-only telemetry and live HUD client | Open |
 | [#11](https://github.com/Rishabh-1803/aeld-final-project/issues/11) | QEMU integration gate, then Raspberry Pi 4 and Zebronics hardware validation | Open |
