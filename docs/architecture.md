@@ -142,6 +142,9 @@ Implemented and QEMU-validated: Yocto development image, userspace reference,
 kernel virtual keyboard and diagnostic UAPI. See the evidence directory
 and [character-device contract](character-device.md).
 
-Pending: daemon, read-only HUD, final integration and physical Pi/receiver
-validation. Power execution is deferred until after final submission by the
+Daemon and read-only HUD are implemented and QEMU-validated. The integrated
+QEMU gate has recorded ABI, lifecycle and stress acceptance. Physical Pi/receiver
+validation and final demonstration remain pending. Power execution is deferred until after final submission by the
 owner's November 17 decision; it must remain disabled in the submitted system.
+
+The 0.4 handler supports relative and absolute X/Y mouse devices with all three buttons. Exact optional vendor/product selectors must be a complete pair; an empty name requires that pair. The Pi configuration uses Windows-observed VID 3151/PID 1020, with physical Linux confirmation still pending.

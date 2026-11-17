@@ -8,3 +8,5 @@ IMAGE_INSTALL:append = " evtest uinput-selftest morse-ref-decoder morse-hid-test
 IMAGE_INSTALL:append = " hid-morse-kbd"
 
 IMAGE_INSTALL:append = " morsed"
+
+IMAGE_INSTALL:append = " morsed-tests"

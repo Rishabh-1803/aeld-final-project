@@ -8,3 +8,5 @@ inherit packagegroup
 # Allow an initially empty package group.
 # Additional MorseMouse packages will be added as they are implemented.
 ALLOW_EMPTY:${PN} = "1"
+
+RDEPENDS:${PN} = "hid-morse-kbd morsed"

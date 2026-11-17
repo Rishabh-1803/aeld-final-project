@@ -17,7 +17,7 @@
 |---|---|---|---|
 | Sprint 1 | 2–15 November 2026 | Yocto/QEMU baseline, approved Morse grammar, reference decoder and userspace keyboard proof of concept | **Complete** |
 | Sprint 2 | 16–29 November 2026 | Kernel input handler, kernel FSM, virtual keyboard and versioned character-device interface | **In progress / implementation ahead of sprint start** |
-| Sprint 3 | 30 November–13 December 2026 | Daemon, guarded power policy, telemetry/HUD, full integration, recovery, documentation and final demonstration | **Planned** |
+| Sprint 3 | 30 November–13 December 2026 | Daemon, guarded power policy, telemetry/HUD, full integration, recovery, documentation and final demonstration | **In progress** |
 
 Sprint dates follow the project plan. Issue status below reflects the current GitHub issue tracker; completed Sprint 2 work was accepted ahead of the formal Sprint 2 date.
 
@@ -121,13 +121,13 @@ The following upcoming-sprint issues are assigned to **Rishabh-1803** and have e
 ## Sprint 3 — System Integration and Final Demonstration
 
 **Dates:** 30 November–13 December 2026  
-**Status:** Planned
+**Status:** In progress — daemon/HUD QEMU acceptance complete
 
 | Issue | Student issue | Status |
 |---|---|---|
-| [#2](https://github.com/Rishabh-1803/aeld-final-project/issues/2) | Physical Zebronics PULSE receiver and Raspberry Pi 4 input validation (Phase B; gated by issue #11 Phase A) | Open — intentionally blocked until QEMU gate |
-| [#9](https://github.com/Rishabh-1803/aeld-final-project/issues/9) | `morsed` daemon and guarded power-control policy | Open |
-| [#10](https://github.com/Rishabh-1803/aeld-final-project/issues/10) | Read-only telemetry and live HUD client | Open |
+| [#2](https://github.com/Rishabh-1803/aeld-final-project/issues/2) | Physical Zebronics PULSE receiver and Raspberry Pi 4 input validation (Phase B; gated by issue #11 Phase A) | Open — physical session pending |
+| [#9](https://github.com/Rishabh-1803/aeld-final-project/issues/9) | `morsed` diagnostic daemon (power execution deferred) | Closed |
+| [#10](https://github.com/Rishabh-1803/aeld-final-project/issues/10) | Read-only telemetry and live HUD client | Closed |
 | [#11](https://github.com/Rishabh-1803/aeld-final-project/issues/11) | QEMU integration gate, then Raspberry Pi 4 and Zebronics hardware validation | Open |
 | [#12](https://github.com/Rishabh-1803/aeld-final-project/issues/12) | Final documentation, demonstration and submission evidence | Open |
 
@@ -185,11 +185,11 @@ Dependencies are linked below. Closed dependencies are historical prerequisites;
 |---|---|---|---|
 | [#7 Virtual keyboard](https://github.com/Rishabh-1803/aeld-final-project/issues/7) | [#3 grammar/keymap](https://github.com/Rishabh-1803/aeld-final-project/issues/3), [#5 input handler](https://github.com/Rishabh-1803/aeld-final-project/issues/5), [#6 kernel FSM](https://github.com/Rishabh-1803/aeld-final-project/issues/6) | All closed | Requires approved mapping, device selection and kernel event-processing foundation. |
 | [#8 Character-device UAPI](https://github.com/Rishabh-1803/aeld-final-project/issues/8) | [#6 kernel FSM/queue](https://github.com/Rishabh-1803/aeld-final-project/issues/6) | Closed dependency | UAPI exposes diagnostics from the established event/queue model. |
-| [#9 Daemon](https://github.com/Rishabh-1803/aeld-final-project/issues/9) | [#8 UAPI](https://github.com/Rishabh-1803/aeld-final-project/issues/8) | Open dependency | Daemon consumes the versioned driver interface. |
-| [#10 HUD](https://github.com/Rishabh-1803/aeld-final-project/issues/10) | [#8 UAPI](https://github.com/Rishabh-1803/aeld-final-project/issues/8), [#9 daemon](https://github.com/Rishabh-1803/aeld-final-project/issues/9) | Open dependencies | HUD consumes the agreed telemetry exposed by the daemon/driver. |
-| [#11 Phase A — QEMU gate](https://github.com/Rishabh-1803/aeld-final-project/issues/11) | Issues [#5](https://github.com/Rishabh-1803/aeld-final-project/issues/5) through [#10](https://github.com/Rishabh-1803/aeld-final-project/issues/10) | #5/#6 closed; #7–#10 open | Full QEMU integration requires every kernel/userspace component. |
-| [#2 Physical receiver validation](https://github.com/Rishabh-1803/aeld-final-project/issues/2) | [#11 Phase A](https://github.com/Rishabh-1803/aeld-final-project/issues/11) | Open, intentionally gated | Do not begin physical receiver acceptance until the QEMU integration gate passes. |
-| [#11 Phase B — Raspberry Pi/hardware](https://github.com/Rishabh-1803/aeld-final-project/issues/11) | #11 Phase A and [#2](https://github.com/Rishabh-1803/aeld-final-project/issues/2) | Open, intentionally gated | Requires accepted QEMU implementation and actual physical hardware evidence. |
+| [#9 Daemon](https://github.com/Rishabh-1803/aeld-final-project/issues/9) | [#8 UAPI](https://github.com/Rishabh-1803/aeld-final-project/issues/8) | Closed dependency | Daemon consumes the versioned driver interface. |
+| [#10 HUD](https://github.com/Rishabh-1803/aeld-final-project/issues/10) | [#8 UAPI](https://github.com/Rishabh-1803/aeld-final-project/issues/8), [#9 daemon](https://github.com/Rishabh-1803/aeld-final-project/issues/9) | Closed dependencies | HUD consumes the agreed telemetry exposed by the daemon/driver. |
+| [#11 Phase A — QEMU gate](https://github.com/Rishabh-1803/aeld-final-project/issues/11) | Issues [#5](https://github.com/Rishabh-1803/aeld-final-project/issues/5) through [#10](https://github.com/Rishabh-1803/aeld-final-project/issues/10) | #5–#10 closed | Full QEMU integration requires every kernel/userspace component. |
+| [#2 Physical receiver validation](https://github.com/Rishabh-1803/aeld-final-project/issues/2) | [#11 Phase A](https://github.com/Rishabh-1803/aeld-final-project/issues/11) | QEMU gate passed; physical session pending | Do not begin physical receiver acceptance until the QEMU integration gate passes. |
+| [#11 Phase B — Raspberry Pi/hardware](https://github.com/Rishabh-1803/aeld-final-project/issues/11) | #11 Phase A and [#2](https://github.com/Rishabh-1803/aeld-final-project/issues/2) | QEMU gate passed; physical session pending | Requires accepted QEMU implementation and actual physical hardware evidence. |
 | [#12 Final submission](https://github.com/Rishabh-1803/aeld-final-project/issues/12) | Issues #1–#11, including the final hardware gate | Several complete; several open | Final docs and demo must describe the actual completed system and evidence. |
 
 ## Final Hardware Sequencing Rule
@@ -201,7 +201,7 @@ Raspberry Pi image build, physical receiver inspection and hardware acceptance a
 | Submission | Git tag | Status |
 |---|---|---|
 | Sprint 1 | [`coursera-sprint-1`](https://github.com/Rishabh-1803/aeld-final-project/tree/coursera-sprint-1) | Created and pushed |
-| Sprint 2 | `coursera-sprint-2` | Create after issues #5–#8 are implemented, built and validated |
+| Sprint 2 | `coursera-sprint-2` | Published at 1e3ded6 |
 | Sprint 3 | `coursera-sprint-3` | Create after final integration, hardware stage and documentation are complete |
 
 A tag is a frozen source snapshot. Do not move a previously submitted tag to a later commit.
@@ -219,8 +219,10 @@ The owner confirmed on November 17 that power execution and shutdown
 gestures are deferred until after the final submission. The daemon must
 keep execution disabled. The Zebronics mouse is available; Raspberry Pi 4
 will be borrowed for a limited test session after QEMU acceptance.
-Daemon and HUD now have November 17 QEMU acceptance evidence. Final integration, physical validation and final demonstration remain pending.
+Daemon and HUD now have November 17 QEMU acceptance evidence. QEMU integration is accepted; physical validation and final demonstration remain pending.
 
 See [daemon/HUD usage and policy](https://github.com/Rishabh-1803/aeld-final-project/blob/main/docs/daemon-hud.md) and November 17 daemon/HUD evidence. Power execution is deferred until after submission.
 
 Integrated overflow/recovery and teardown pressure passed on November 17. The physical Pi is an 8 GB borrowed board; hardware tests and card writing remain pending.
+
+QEMU Phase A is accepted with the November 17 evidence; Phase B remains pending. The receiver Windows VID/PID is 3151/1020. Linux descriptors and physical input behavior are not yet validated.

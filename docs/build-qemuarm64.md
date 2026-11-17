@@ -1,3 +1,15 @@
+# Current build/run checkpoint — 17 November 2026
+
+Both production and development images now include hid-morse-kbd and morsed
+through packagegroup-morse-mouse. Development additionally includes diagnostic
+utilities and the separate morsed-tests stress package. Use the explicit
+development qemuboot.conf shown below. Stop `/etc/init.d/morsed` before using
+the exclusive morse-hid-test reader. Earlier dated sections retain the
+historical baseline build results and package composition.
+
+See [diagnostic ABI](character-device.md), [daemon/HUD](daemon-hud.md), and
+[physical session preparation](physical-test-session.md).
+
 # Build and run on QEMU ARM64
 
 ## Host and source versions

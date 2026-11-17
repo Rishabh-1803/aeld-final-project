@@ -18,8 +18,8 @@ physical hardware and final demonstration remain outstanding.
 
 ## Remaining gates
 
-1. Complete and record Issue #11 Phase A integration review, including remaining
-   stress/recovery checks against the integrated service image.
+1. Issue #11 Phase A is accepted with the integrated service-image stress/recovery
+   evidence. Preserve that software checkpoint while preparing hardware.
 2. Borrow Raspberry Pi 4 after QEMU acceptance; build its image, inspect the
    owner's Zebronics PULSE receiver and validate actual hardware separately.
 3. Complete final documentation, public-link checks, demonstration video and

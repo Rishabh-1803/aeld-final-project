@@ -70,7 +70,8 @@ QEMU is the current development and validation target. Raspberry Pi 4 and the ph
 | `/dev/morse_hid` UAPI | Complete; QEMU acceptance recorded |
 | `morsed` diagnostic daemon | QEMU validated; power deferred |
 | Read-only telemetry/HUD | QEMU validated |
-| Final QEMU integration and physical Pi/receiver validation | Planned |
+| QEMU integration | Passed; November 17 evidence |
+| Physical Pi/receiver validation | Pending; image preparation underway |
 
 Sprint 1 snapshot: [`coursera-sprint-1`](https://github.com/Rishabh-1803/aeld-final-project/tree/coursera-sprint-1). The tag is a frozen submission boundary, not a claim that later Sprint 2 work is complete.
 
@@ -108,7 +109,7 @@ bitbake core-image-morse-dev
 - The current Morse grammar is explicit-commit and button-identity based; it is not a timed Morse-gap decoder.
 - QEMU validation is not evidence of physical receiver compatibility.
 - The final Raspberry Pi 4 and Zebronics hardware stage starts only after the QEMU integration gate.
-- Visible text insertion into a graphical application, the daemon, HUD and power policy are not claimed as complete until implemented and tested.
+- Daemon/HUD have QEMU acceptance evidence. Physical text entry and the final demonstration remain pending; power execution is deferred.
 
 ## 8. Course Submission Links
 
@@ -132,6 +133,8 @@ The owner confirmed on November 17 that power execution and shutdown
 gestures are deferred until after the final submission. The daemon must
 keep execution disabled. The Zebronics mouse is available; Raspberry Pi 4
 will be borrowed for a limited test session after QEMU acceptance.
-Daemon and HUD now have November 17 QEMU acceptance evidence. Final integration, physical validation and final demonstration remain pending.
+Daemon and HUD now have November 17 QEMU acceptance evidence. QEMU integration is accepted; physical validation and final demonstration remain pending.
 
 See [daemon/HUD usage and policy](https://github.com/Rishabh-1803/aeld-final-project/blob/main/docs/daemon-hud.md) and November 17 daemon/HUD evidence. Power execution is deferred until after submission.
+
+Physical session: [checklist](docs/physical-test-session.md). Final demonstration: [recording/submission plan](docs/final-demo-plan.md).

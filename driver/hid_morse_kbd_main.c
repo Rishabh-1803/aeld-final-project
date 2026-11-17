@@ -127,8 +127,7 @@ static const struct input_device_id morse_input_ids[] = {
                  INPUT_DEVICE_ID_MATCH_ABSBIT,
 
         .evbit = {
-            [BIT_WORD(EV_KEY)] = BIT_MASK(EV_KEY),
-            [BIT_WORD(EV_ABS)] = BIT_MASK(EV_ABS),
+            [BIT_WORD(EV_KEY)] = BIT_MASK(EV_KEY) | BIT_MASK(EV_ABS),
         },
 
         .keybit = {
@@ -144,21 +143,44 @@ static const struct input_device_id morse_input_ids[] = {
                 BIT_MASK(ABS_Y),
         },
     },
+    {
+        .flags = INPUT_DEVICE_ID_MATCH_EVBIT |
+                 INPUT_DEVICE_ID_MATCH_KEYBIT |
+                 INPUT_DEVICE_ID_MATCH_RELBIT,
+        .evbit = {
+            [BIT_WORD(EV_KEY)] = BIT_MASK(EV_KEY) | BIT_MASK(EV_REL),
+        },
+        .keybit = {
+            [BIT_WORD(BTN_LEFT)] = BIT_MASK(BTN_LEFT) |
+                BIT_MASK(BTN_RIGHT) | BIT_MASK(BTN_MIDDLE),
+        },
+        .relbit = {
+            [BIT_WORD(REL_X)] = BIT_MASK(REL_X) | BIT_MASK(REL_Y),
+        },
+    },
     { }
 };
 
 MODULE_DEVICE_TABLE(input, morse_input_ids);
 
 
-static bool morse_match(struct input_handler *handler,
-                        struct input_dev *dev)
+static ushort target_vendor;
+static ushort target_product;
+module_param(target_vendor, ushort, 0444);
+module_param(target_product, ushort, 0444);
+MODULE_PARM_DESC(target_vendor, "Optional exact input vendor ID; requires product ID");
+MODULE_PARM_DESC(target_product, "Optional exact input product ID; requires vendor ID");
+
+static bool morse_match(struct input_handler *handler, struct input_dev *dev)
 {
     (void)handler;
-
-    if (!dev->name || !target_name[0])
-        return false;
-
-    return strstr(dev->name, target_name) != NULL;
+    if (target_vendor || target_product) {
+        if (dev->id.vendor != target_vendor || dev->id.product != target_product)
+            return false;
+    }
+    if (target_name[0])
+        return dev->name && strstr(dev->name, target_name) != NULL;
+    return target_vendor && target_product;
 }
 
 
@@ -1021,6 +1043,12 @@ static int __init morse_init(void)
 {
     int error;
 
+    if (!!target_vendor != !!target_product ||
+        (!target_name[0] && !target_vendor)) {
+        pr_err(DRIVER_NAME ": specify a name or complete vendor/product pair\n");
+        return -EINVAL;
+    }
+
     error = morse_register_virtual_keyboard();
     if (error) {
         pr_err(DRIVER_NAME
@@ -1074,4 +1102,4 @@ module_exit(morse_exit);
 MODULE_AUTHOR("MorseMouse Project");
 MODULE_DESCRIPTION("MorseMouse input handler and virtual keyboard");
 MODULE_LICENSE("GPL");
-MODULE_VERSION("0.3");
+MODULE_VERSION("0.4");

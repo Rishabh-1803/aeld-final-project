@@ -19,3 +19,6 @@ do_install() {
     install -m 0644 ${S}/morsed.conf ${D}${sysconfdir}/morsemouse/
     install -m 0755 ${S}/morsed.init ${D}${sysconfdir}/init.d/morsed
 }
+
+PACKAGES =+ "${PN}-tests"
+FILES:${PN}-tests = "${bindir}/morse-input-stress"

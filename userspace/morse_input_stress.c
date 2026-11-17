@@ -20,12 +20,19 @@ static void event(int fd,unsigned code,int value) {
 }
 static void click(int fd,unsigned code) { event(fd,code,1);pause_ms(30);event(fd,code,0);pause_ms(30); }
 int main(int argc,char **argv) {
-    int teardown=argc==2 && !strcmp(argv[1],"--teardown");
-    if(argc>1 && !teardown)return 2;
+    int teardown=0,relative=0;
+    for(int i=1;i<argc;i++) {
+        if(!strcmp(argv[i],"--teardown")) teardown=1;
+        else if(!strcmp(argv[i],"--relative")) relative=1;
+        else return 2;
+    }
     int fd=open("/dev/uinput",O_WRONLY|O_CLOEXEC);check(fd,"uinput");
-    check(ioctl(fd,UI_SET_EVBIT,EV_KEY),"EV_KEY");check(ioctl(fd,UI_SET_EVBIT,EV_ABS),"EV_ABS");
+    check(ioctl(fd,UI_SET_EVBIT,EV_KEY),"EV_KEY");check(ioctl(fd,UI_SET_EVBIT,relative?EV_REL:EV_ABS),"axis event");
     for(unsigned c=BTN_LEFT;c<=BTN_MIDDLE;c++)check(ioctl(fd,UI_SET_KEYBIT,c),"keybit");
-    for(unsigned c=ABS_X;c<=ABS_Y;c++) {
+    if(relative) {
+        check(ioctl(fd,UI_SET_RELBIT,REL_X),"REL_X");
+        check(ioctl(fd,UI_SET_RELBIT,REL_Y),"REL_Y");
+    } else for(unsigned c=ABS_X;c<=ABS_Y;c++) {
         check(ioctl(fd,UI_SET_ABSBIT,c),"absbit");
         struct uinput_abs_setup a={.code=c,.absinfo={.minimum=0,.maximum=65535}};
         check(ioctl(fd,UI_ABS_SETUP,&a),"abs setup");

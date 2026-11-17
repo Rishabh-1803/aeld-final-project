@@ -104,7 +104,7 @@ The course's [Supported Hardware Platforms](https://github.com/cu-ecen-aeld/aesd
 
 ### Hardware status boundary
 
-QEMU ARM64 image builds, QEMU input-event tests and kernel-driver tests are the current development evidence. Raspberry Pi 4 image build, physical boot, receiver VID/PID inspection and real mouse-event validation remain pending until the QEMU integration gate is passed. QEMU results are not presented as physical-hardware results.
+QEMU ARM64 image builds, QEMU input-event tests and kernel-driver tests are the current development evidence. The QEMU gate has passed. Raspberry Pi image preparation is underway; physical boot, Linux descriptor inspection and real mouse-event validation remain pending. Windows observed receiver VID/PID 3151/1020. QEMU results are not presented as physical-hardware results.
 
 ## Open Source Projects Used
 
@@ -152,10 +152,10 @@ The project extends course material and includes additional Linux driver and sys
 - A versioned character-device UAPI with `read()`, `poll()` and a constrained `ioctl()` interface.
 - A userspace `morsed` daemon, service lifecycle management and a read-only telemetry/HUD client.
 - Fail-safe design for queue overflow, disconnect/reconnect, module unload, stale state and unavailable services.
-- A guarded, dry-run-by-default power-control policy with local physical confirmation; remote telemetry must not be able to trigger power actions.
+- A disabled power policy for submission; power gestures/execution and any local physical confirmation are deferred until afterward. Remote telemetry cannot trigger power actions.
 - Porting and validating the project layer on the Raspberry Pi 4 BSP, including real USB receiver identification and HID capability inspection.
 
-The kernel input handler and bounded FSM have QEMU evidence. Kernel virtual keyboard implementation, UAPI, daemon, HUD and physical-hardware acceptance must be marked complete only after their respective builds and tests pass.
+The kernel handler/FSM, virtual keyboard, UAPI, daemon and HUD have QEMU acceptance evidence. Physical hardware acceptance remains pending.
 
 ## Shared Material
 
@@ -224,7 +224,7 @@ The owner confirmed on November 17 that power execution and shutdown
 gestures are deferred until after the final submission. The daemon must
 keep execution disabled. The Zebronics mouse is available; Raspberry Pi 4
 will be borrowed for a limited test session after QEMU acceptance.
-Daemon and HUD now have November 17 QEMU acceptance evidence. Final integration, physical validation and final demonstration remain pending.
+Daemon and HUD now have November 17 QEMU acceptance evidence. QEMU integration is accepted; physical validation and final demonstration remain pending.
 
 See [daemon/HUD usage and policy](https://github.com/Rishabh-1803/aeld-final-project/blob/main/docs/daemon-hud.md) and November 17 daemon/HUD evidence. Power execution is deferred until after submission.
 

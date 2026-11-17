@@ -24,3 +24,9 @@ CLEANBROKEN = "1"
 KERNEL_MODULE_AUTOLOAD += "hid_morse_kbd"
 
 COMPATIBLE_MACHINE = "(qemuarm64|raspberrypi4-64)"
+
+SRC_URI:append:raspberrypi4-64 = " file://morse-mouse.conf"
+do_install:append:raspberrypi4-64() {
+    install -d ${D}${sysconfdir}/modprobe.d
+    install -m 0644 ${WORKDIR}/morse-mouse.conf ${D}${sysconfdir}/modprobe.d/
+}
