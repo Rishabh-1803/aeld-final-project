@@ -49,3 +49,5 @@ excluded from Git. Public/default builds remain credential-free and opt-in
 access is disabled. Card writing and physical tests are deferred by the owner.
 
 VM test runners now use QEMU snapshot disks and keep logs under build-qemu/test-results. The verified SSH regression left the base image SHA-256 unchanged. Both public wiki pages returned HTTP 200 with the expected page titles in an unauthenticated check.
+
+Online Coursera enrollment is confirmed. Status and Sprint assignments are synchronized on the public project board. Browser control stopped because the current URL could not be verified; the saved table currently has no grouping. Applying Group by Sprint remains a UI step when computer control is available.

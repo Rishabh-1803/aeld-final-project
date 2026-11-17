@@ -228,3 +228,5 @@ Integrated overflow/recovery and teardown pressure passed on November 17. The ph
 QEMU Phase A is accepted with the November 17 evidence; Phase B remains pending. The receiver Windows VID/PID is 3151/1020. Linux descriptors and physical input behavior are not yet validated.
 
 Pi image build: all 4,864 tasks passed. Offline artifact verification passed; physical boot is not yet claimed. See the [Pi build report](https://github.com/Rishabh-1803/aeld-final-project/blob/main/evidence/builds/2026-11-17-rpi4-build.md).
+
+The [live Project-Schedule board](https://github.com/users/Rishabh-1803/projects/2) now has a dedicated Sprint field populated for all 12 issues. The enrollment is online Coursera.

@@ -27,3 +27,13 @@ The course master record and original assignment attachments were not present
 in the supplied HTML. Repository/course-template requirements were used for
 preparation; any additional course-only submission fields must be checked in
 the actual assignment before final submission.
+
+
+## Confirmed course mode
+
+The enrollment is online Coursera (confirmed 17 November 2026). The course's
+[source-reference guidance](https://github.com/cu-ecen-aeld/aesd-assignments/wiki/HOWTO-Reference-Use-of-ChatGPT-or-Other-Web-Content-in-Source-Code)
+suggests shared-chat references for Coursera and requires them for on-campus
+sections. Keep all authorship/testing statements accurate; no sole-manual-work
+or unperformed-test claim is made. Do not expose private network configuration
+when preparing any optional public reference.
