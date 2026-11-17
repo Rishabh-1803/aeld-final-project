@@ -2,169 +2,134 @@
 
 **A Yocto-based Embedded Linux project that turns a three-button mouse into a Morse-code keyboard.**
 
-[![Build System](https://img.shields.io/badge/Build%20System-Yocto%20%2F%20Poky-blue)](https://www.yoctoproject.org/)
-[![Development Target](https://img.shields.io/badge/Development-QEMU%20ARM64-green)](https://www.qemu.org/)
-[![Sprint 1](https://img.shields.io/badge/Coursera-Sprint%201%20submitted-success)](https://github.com/Rishabh-1803/aeld-final-project/tree/coursera-sprint-1)
+[![Build System](https://img.shields.io/badge/Build%20System-Yocto%20%2F%20Poky-blue)](https://www.yoctoproject.org/) [![Development Target](https://img.shields.io/badge/Development-QEMU%20ARM64-green)](https://www.qemu.org/) [![Sprint 1](https://img.shields.io/badge/Coursera-Sprint%201%20submitted-success)](https://github.com/Rishabh-1803/aeld-final-project/tree/coursera-sprint-1) [![Project Issues](https://img.shields.io/badge/Tracking-GitHub%20Issues-purple)](https://github.com/Rishabh-1803/aeld-final-project/issues)
 
-**Course:** Advanced Embedded Linux Development (ECEN 5013)  
-**Owner:** Rishabh Shah (individual project)  
-**Repository:** `Rishabh-1803/aeld-final-project`
+**Student:** Rishabh Shah · **Course:** Advanced Embedded Linux Development · **Project type:** Individual
 
-## Course Project Pages
-
-| Page | Purpose |
+| Documentation | Link |
 |---|---|
-| [Project Overview Wiki](https://github.com/Rishabh-1803/aeld-final-project/wiki/Project-Overview) | Project proposal, Yocto build system, hardware, connectivity, open-source dependencies, previous/new/shared content and source organization |
-| [Project Schedule Wiki](https://github.com/Rishabh-1803/aeld-final-project/wiki/Project-Schedule) | Sprint milestones, assigned issues, blockers, dependencies and Definitions of Done |
-| [GitHub Issues](https://github.com/Rishabh-1803/aeld-final-project/issues) | Implementation tasks and acceptance evidence |
-| [Sprint 1 submission snapshot](https://github.com/Rishabh-1803/aeld-final-project/tree/coursera-sprint-1) | Frozen Sprint 1 source snapshot |
+| Project Overview (course wiki) | [Open Project Overview](https://github.com/Rishabh-1803/aeld-final-project/wiki/Project-Overview) |
+| Project Schedule (course wiki) | [Open Project Schedule](https://github.com/Rishabh-1803/aeld-final-project/wiki/Project-Schedule) |
+| GitHub Issues | [Open issue tracker](https://github.com/Rishabh-1803/aeld-final-project/issues) |
+| Architecture and project status | [`docs/architecture.md`](docs/architecture.md) · [`docs/project-status.md`](docs/project-status.md) |
+| Build instructions | [`docs/build-qemuarm64.md`](docs/build-qemuarm64.md) |
+| Source pins | [`manifest/source-pins.md`](manifest/source-pins.md) |
 
 ---
 
-## Current Status — 6 November 2026
+## 1. Project Overview
 
-The QEMU-side reference implementation, Linux input handler and kernel Morse FSM/bounded event processing have been implemented and validated. The kernel virtual keyboard, UAPI, daemon and HUD remain in progress or planned and are not represented as QEMU-accepted yet.
+MorseMouse uses a three-button mouse as a discrete Morse input device:
 
-### Implemented and verified
+| Mouse input | Morse action |
+|---|---|
+| Left button press | DOT (`.`) |
+| Right button press | DASH (`-`) |
+| Middle button press | COMMIT current character |
+| Button release | Rearm; does not append a symbol |
+| Left + right held together | Cancel current sequence and lock out until both are released |
+| Scroll wheel | Disabled in v1 |
 
-- Yocto Project / Poky Scarthgap 5.0.21 `qemuarm64` development image builds and boots.
-- QEMU exposes an emulated USB Tablet with left, right and middle mouse-button events.
-- Approved v1 grammar: left = DOT, right = DASH, middle = explicit COMMIT; scroll-wheel gestures are disabled.
-- Left/right overlap clears the current sequence and locks input until both primary buttons are released.
-- `config/morse_map.csv` contains all 95 printable ASCII mappings (decimal 32–126).
-- The userspace reference decoder and US-QWERTY keymap pass host regression tests.
-- The shared FSM core is used by both the userspace reference and kernel input handler.
-- Kernel FSM and bounded event processing are implemented with a 64-event queue, spinlock-protected event capture, deferred worker processing, explicit overflow accounting and synchronized teardown.
-- Host validation: 52 C FSM checks, 58 shared FSM vectors, all 95 keymap entries and all 95 generated kernel Morse-map entries passed.
-- The kernel input-handler module builds, packages and autoloads in the QEMU development image.
-- QEMU verifies device matching, physical keyboard exclusion, button event receipt, reversible exclusive grab, module unload, HID unbind/rebind and USB hot-unplug/hot-replug.
-- Queue overflow stress recorded 250,008 received events, 3,846 queue overflows and 250,000 dropped events; a fresh `.-` decoded to uppercase A after recovery.
-- Disconnect teardown under queue pressure completed; no kernel BUG, Oops, warning or hung-task report was observed in the collected logs.
+The authoritative Morse map covers all **95 printable ASCII characters** (decimal 32–126), with a declared US-QWERTY output mapping.
 
-### Not yet implemented or validated
+## 2. Architecture at a Glance
 
-- Kernel virtual keyboard registered through `input_dev`, including end-to-end key event traces from the kernel Morse commit path.
-- Versioned `/dev/morse_hid` UAPI (`read`, `poll`, `ioctl`).
-- `morsed` daemon, guarded dry-run power policy and `morsectl`.
-- Read-only telemetry/HUD client.
-- Complete QEMU integration/recovery/security acceptance for issues #7–#10.
-- Raspberry Pi 4 image build/boot and physical Zebronics PULSE receiver validation.
-- Visible text insertion into a graphical application.
-- Runtime `SYN_DROPPED` recovery integration test.
-
-QEMU validation is not presented as proof of physical Raspberry Pi or Zebronics hardware acceptance.
-
-See [Project status](docs/project-status.md), [QEMU kernel input-handler evidence](evidence/input/2026-11-05-qemu-kernel-input-handler.md), [queue overflow evidence](evidence/input/2026-11-05-qemu-bounded-queue-overflow.md) and [pending-work teardown evidence](evidence/input/2026-11-06-qemu-pending-work-teardown.md).
-
-## Project Goal
-
-MorseMouse converts a supported three-button mouse into a discrete Morse-code text-entry device. Button identity determines the Morse symbol: left press = DOT, right press = DASH and middle press = COMMIT. Button release rearms the button and appends no symbol. There is no automatic character timeout or duration-based DOT/DASH classification in v1.
-
-The core target is **95 printable ASCII characters (decimal 32–126)** using the documented Morse map and US-QWERTY output mapping.
-
-## Architecture
-
-```text
-Development host
-Windows PC -> WSL2 Ubuntu -> Yocto / BitBake
-                              |
-                              v
-                         QEMU ARM64
-                        qemuarm64
-                              |
-                       QEMU USB Tablet
-                              |
-                       Linux input core
-                              |
-                    hid_morse_kbd.ko
-                  input_handler + FSM
-                   bounded event queue
-                              |
-                  [kernel virtual input_dev]
-                              |
-                  Linux input consumers
-
-Planned physical target
-Zebronics PULSE mouse
-        |
-   2.4 GHz link
-        |
-   USB receiver
-        |
-   USB HID
-        |
-Raspberry Pi 4 / 64-bit Yocto
-        |
-   Linux input core
-        |
-   MorseMouse kernel path
+```mermaid
+flowchart LR
+    M["Three-button mouse"] -->|"2.4 GHz radio"| R["USB receiver"]
+    R -->|"USB HID"| P["Raspberry Pi 4<br/>(planned physical target)"]
+    Q["QEMU USB Tablet<br/>(development input)"] --> L["Linux input subsystem"]
+    P --> L
+    L --> D["MorseMouse input handler<br/>+ FSM + bounded event worker"]
+    D --> V["Kernel virtual keyboard<br/>input_dev"]
+    V --> O["Linux input consumers<br/>evtest / applications"]
+    H["WSL2 Ubuntu + Yocto/BitBake"] -->|"builds QEMU image"| QEMU["QEMU ARM64<br/>qemuarm64"]
+    QEMU --> Q
 ```
 
-The kernel input callback remains bounded and non-sleeping. Morse processing runs in deferred worker context. The virtual keyboard is intended to be a separate keyboard-only input device and must not match the physical Morse input handler.
+QEMU is the current development and validation target. Raspberry Pi 4 and the physical receiver are the planned final hardware target and remain gated by QEMU integration acceptance.
 
-Power-control behavior is separate from text entry. It must remain dry-run/disabled by default, use a fixed allowlist and require local physical confirmation. It is not cryptographic authentication. The HUD is read-only and must not initiate reboot or shutdown.
+## 3. Target Build System and Hardware
 
-## Target Build System and Hardware
+- **Build system:** Yocto Project / Poky, Scarthgap 5.0.21.
+- **QEMU development target:** `MACHINE = "qemuarm64"`.
+- **Planned physical target:** Raspberry Pi 4 64-bit, `MACHINE = "raspberrypi4-64"`, supported through the [`meta-raspberrypi` BSP layer](https://github.com/agherzan/meta-raspberrypi).
+- **Physical input peripheral:** Zebronics PULSE mouse with 2.4 GHz USB receiver.
+- **Current status:** QEMU image/build and input-handler/FSM validation have evidence. Raspberry Pi physical build/boot and receiver validation are deferred until the QEMU gate passes.
 
-**Build system:** Yocto Project / Poky, Scarthgap 5.0.21. Buildroot is not used.
+## 4. Current Progress
 
-| Component | Role | Status |
-|---|---|---|
-| QEMU ARM64, `qemuarm64` | Reproducible development and integration | Development image built and booted; kernel input handler and kernel FSM/queue validated |
-| Raspberry Pi 4, `raspberrypi4-64` | Final physical demonstration target | Planned; project image not yet built or booted |
-| Zebronics PULSE mouse + 2.4 GHz USB receiver | Physical input peripheral | Intended for final stage; physical VID/PID and input capabilities not yet captured |
+| Workstream | Status |
+|---|---|
+| Yocto QEMU baseline and development image | Complete |
+| Approved v1 grammar and 95-character map | Complete |
+| Userspace reference decoder and `uinput` proof of concept | Complete |
+| QEMU kernel input handler and reversible grab lifecycle | Complete |
+| Kernel Morse FSM, bounded queue and teardown stress testing | Complete |
+| Kernel virtual keyboard (`input_dev`) | Complete; QEMU evidence recorded |
+| `/dev/morse_hid` UAPI | Complete; QEMU acceptance recorded |
+| `morsed` daemon and guarded power policy | Planned |
+| Read-only telemetry/HUD | Planned |
+| Final QEMU integration and physical Pi/receiver validation | Planned |
 
-The physical build is planned through the `meta-raspberrypi` Yocto BSP layer. Do not copy a QEMU-built kernel module to the Raspberry Pi; build separately for each target kernel.
+Sprint 1 snapshot: [`coursera-sprint-1`](https://github.com/Rishabh-1803/aeld-final-project/tree/coursera-sprint-1). The tag is a frozen submission boundary, not a claim that later Sprint 2 work is complete.
 
-## Repository Layout
+## 5. Repository Layout
 
 ```text
-.
-├── config/                 # Authoritative Morse map
-├── docs/                   # Architecture, build, grammar and project status
-├── driver/                 # Kernel input handler and generated kernel map
-├── evidence/               # Build, boot, QEMU runtime and stress-test evidence
-├── manifest/               # Pinned upstream Yocto/BSP revisions
-├── meta-morse-mouse/       # Project Yocto layer, recipes and image definitions
-├── tests/                  # Shared FSM vectors and validation scripts
-└── tools/                  # Reference decoder, shared FSM, keymap and host tests
+meta-morse-mouse/   Project Yocto layer, recipes and image configuration
+driver/             Kernel input handler and generated kernel Morse map
+tools/              Reference decoder, shared FSM, keymap and host tests
+config/             Authoritative Morse mapping
+tests/              Shared FSM vectors and validators
+docs/               Architecture, grammar, build and project status
+manifest/           Pinned upstream layer/source revisions
+evidence/            Build, boot and QEMU test reports
 ```
 
-Upstream Poky/BSP checkouts, BitBake build output, downloads and shared-state caches are not committed. See [Build: QEMU ARM64](docs/build-qemuarm64.md) and [Source pins](manifest/source-pins.md).
+## 6. Build and Test
 
-## Sprint Schedule
+The reproducible QEMU build instructions are in [`docs/build-qemuarm64.md`](docs/build-qemuarm64.md).
 
-| Sprint | Dates | Goal |
-|---|---|---|
-| Sprint 1 | 2–15 Nov 2026 | Yocto/QEMU baseline, approved grammar, reference decoder and userspace keyboard proof of concept |
-| Sprint 2 | 16–29 Nov 2026 | Kernel input handler, FSM, virtual keyboard and character-device ABI |
-| Sprint 3 | 30 Nov–13 Dec 2026 | Daemon, guarded power policy, HUD, integration, recovery, physical stage and demo |
+Typical host regression command:
 
-Implementation status and acceptance evidence are tracked in [GitHub Issues](https://github.com/Rishabh-1803/aeld-final-project/issues) and the [Project Schedule Wiki](https://github.com/Rishabh-1803/aeld-final-project/wiki/Project-Schedule).
+```bash
+make -C tools clean all test
+```
 
-## Safety and Engineering Constraints
+Yocto image build (from the repository root, after sourcing the build environment):
 
-- Do not hard-code `/dev/input/eventN`; select the intended device by identity/capabilities.
-- Exclude the virtual keyboard from physical-mouse matching.
-- Release all held keys/modifiers on reset, unplug, error and unload.
-- Use a bounded event queue and account for overflow.
-- Do not sleep, perform user-copy, filesystem/socket I/O or execute commands in input callbacks.
-- Never route arbitrary text or unauthenticated network messages to shell commands.
-- Do not claim zero latency, cryptographic authentication or timing precision without implemented measurements.
-- Keep physical hardware results separate from QEMU results.
+```bash
+bitbake core-image-morse-dev
+```
 
-## License
+## 7. Scope and Validation Boundaries
 
-A repository-wide license has not yet been selected. Do not assume that an individual Yocto recipe's `LICENSE` declaration settles the licensing of every project source file.
+- The current Morse grammar is explicit-commit and button-identity based; it is not a timed Morse-gap decoder.
+- QEMU validation is not evidence of physical receiver compatibility.
+- The final Raspberry Pi 4 and Zebronics hardware stage starts only after the QEMU integration gate.
+- Visible text insertion into a graphical application, the daemon, HUD and power policy are not claimed as complete until implemented and tested.
 
-## Latest Evidence
+## 8. Course Submission Links
 
-- [2 Nov 2026 — QEMU ARM64 core-image-morse build](evidence/builds/2026-11-02-core-image-morse-build.md)
-- [2 Nov 2026 — QEMU ARM64 core-image-morse boot](evidence/boots/2026-11-02-core-image-morse-qemu-boot.md)
-- [2 Nov 2026 — QEMU development image and evtest](evidence/builds/2026-11-02-core-image-morse-dev-build.md)
-- [2 Nov 2026 — QEMU evdev runtime mouse-event test](evidence/input/2026-11-02-qemu-evdev-runtime-events.md)
-- [3 Nov 2026 — QEMU Morse-to-uinput reference decoder validation](evidence/input/2026-11-03-qemu-uinput-keyboard.md)
-- [4 Nov 2026 — QEMU FSM, chord lockout, recovery and uinput integration](evidence/input/2026-11-04-qemu-fsm-integration.md)
-- [5 Nov 2026 — QEMU kernel input-handler build and lifecycle](evidence/input/2026-11-05-qemu-kernel-input-handler.md)
-- [5 Nov 2026 — QEMU bounded-queue overflow stress](evidence/input/2026-11-05-qemu-bounded-queue-overflow.md)
-- [6 Nov 2026 — QEMU pending-work teardown stress](evidence/input/2026-11-06-qemu-pending-work-teardown.md)
+- [Project Overview Wiki Page](https://github.com/Rishabh-1803/aeld-final-project/wiki/Project-Overview)
+- [Project Schedule Wiki Page](https://github.com/Rishabh-1803/aeld-final-project/wiki/Project-Schedule)
+- [Sprint 1 submission tag](https://github.com/Rishabh-1803/aeld-final-project/tree/coursera-sprint-1)
+- [Sprint 2 issues](https://github.com/Rishabh-1803/aeld-final-project/issues?q=is%3Aissue+label%3Asprint-2)
+- [All project issues](https://github.com/Rishabh-1803/aeld-final-project/issues)
+
+
+## Verified continuation checkpoint — 17 November 2026
+
+Kernel virtual keyboard (issue #7) is complete with November 7 QEMU
+evidence. The character-device implementation (issue #8) has passed the
+November 17 QEMU runtime checks; see
+[character-device contract](https://github.com/Rishabh-1803/aeld-final-project/blob/main/docs/character-device.md)
+and [acceptance evidence](https://github.com/Rishabh-1803/aeld-final-project/blob/main/evidence/input/2026-11-17-qemu-character-device.md).
+Earlier dated tables above are historical snapshots.
+
+The owner confirmed on November 17 that power execution and shutdown
+gestures are deferred until after the final submission. The daemon must
+keep execution disabled. The Zebronics mouse is available; Raspberry Pi 4
+will be borrowed for a limited test session after QEMU acceptance.
+Daemon, HUD, final integration and physical validation remain pending.

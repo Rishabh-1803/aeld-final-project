@@ -210,3 +210,18 @@ The shared project schedule, sprint milestones, assigned student issues, blocker
 **[MorseMouse — Project Schedule](https://github.com/Rishabh-1803/aeld-final-project/wiki/Project-Schedule)**
 
 The schedule page is the source of truth for Sprint 1, Sprint 2 and Sprint 3 tracking.
+
+## Verified continuation checkpoint — 17 November 2026
+
+Kernel virtual keyboard (issue #7) is complete with November 7 QEMU
+evidence. The character-device implementation (issue #8) has passed the
+November 17 QEMU runtime checks; see
+[character-device contract](https://github.com/Rishabh-1803/aeld-final-project/blob/main/docs/character-device.md)
+and [acceptance evidence](https://github.com/Rishabh-1803/aeld-final-project/blob/main/evidence/input/2026-11-17-qemu-character-device.md).
+Earlier dated tables above are historical snapshots.
+
+The owner confirmed on November 17 that power execution and shutdown
+gestures are deferred until after the final submission. The daemon must
+keep execution disabled. The Zebronics mouse is available; Raspberry Pi 4
+will be borrowed for a limited test session after QEMU acceptance.
+Daemon, HUD, final integration and physical validation remain pending.

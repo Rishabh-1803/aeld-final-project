@@ -1,9 +1,9 @@
 # Project Status
 
-**Snapshot:** 6 November 2026  
-**Owner:** Rishabh Shah (individual project)  
-**Build system:** Yocto Project / Poky Scarthgap 5.0.21  
-**Current work:** Sprint 2 kernel input path; Sprint 1 accepted and tagged
+**Snapshot:** 17 November 2026
+**Owner:** Rishabh Shah (individual project)
+**Build system:** Yocto Project / Poky Scarthgap 5.0.21
+**Current work:** Issue #8 acceptance complete; daemon/HUD next
 
 ## Verified
 
@@ -55,8 +55,8 @@
 
 ### QEMU-side implementation still required
 
-- Kernel virtual keyboard registered through `input_dev` and event-level Morse-to-keyboard verification.
-- Versioned `/dev/morse_hid` UAPI (`read`, `poll`, `ioctl`).
+- Kernel virtual keyboard: complete; November 7 evidence.
+- Versioned `/dev/morse_hid` UAPI: complete; November 17 evidence.
 - `morsed` daemon and guarded dry-run power policy.
 - Read-only telemetry/HUD client.
 - QEMU integration/recovery/security testing for issues #7–#10.
@@ -83,8 +83,8 @@ The final stage will cover:
 | 2 | Approved v1 grammar, map and userspace reference decoder/FSM | Issues #3 and #4 | Complete |
 | 3 | Kernel input handler and reversible device lifecycle | Issue #5 | Complete |
 | 4 | Kernel v1 FSM and bounded event processing | Issue #6 | Complete |
-| 5 | Kernel virtual keyboard synthesis | Issue #7 | In progress |
-| 6 | Character-device ABI and diagnostics | Issue #8 | Planned |
+| 5 | Kernel virtual keyboard synthesis | Issue #7 | Complete |
+| 6 | Character-device ABI and diagnostics | Issue #8 | Complete |
 | 7 | Daemon and guarded power policy | Issue #9 | Planned |
 | 8 | Read-only telemetry and HUD | Issue #10 | Planned |
 | 9 | Complete QEMU integration, recovery and security acceptance | Issue #11 Phase A | Pending |
@@ -113,3 +113,19 @@ The final stage will cover:
 - [QEMU pending-work teardown stress](../evidence/input/2026-11-06-qemu-pending-work-teardown.md)
 
 QEMU and physical-target results must remain clearly separated. Do not mark a feature complete without implementation and corresponding validation evidence.
+
+
+## Verified continuation checkpoint — 17 November 2026
+
+Kernel virtual keyboard (issue #7) is complete with November 7 QEMU
+evidence. The character-device implementation (issue #8) has passed the
+November 17 QEMU runtime checks; see
+[character-device contract](https://github.com/Rishabh-1803/aeld-final-project/blob/main/docs/character-device.md)
+and [acceptance evidence](https://github.com/Rishabh-1803/aeld-final-project/blob/main/evidence/input/2026-11-17-qemu-character-device.md).
+Earlier dated tables above are historical snapshots.
+
+The owner confirmed on November 17 that power execution and shutdown
+gestures are deferred until after the final submission. The daemon must
+keep execution disabled. The Zebronics mouse is available; Raspberry Pi 4
+will be borrowed for a limited test session after QEMU acceptance.
+Daemon, HUD, final integration and physical validation remain pending.

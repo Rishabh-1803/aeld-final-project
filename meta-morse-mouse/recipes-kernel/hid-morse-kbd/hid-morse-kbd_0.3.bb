@@ -3,14 +3,17 @@ DESCRIPTION = "Linux input handler with kernel virtual keyboard output for Morse
 LICENSE = "GPL-2.0-only"
 LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/GPL-2.0-only;md5=801f80980d171dd6425610833a22dbe6"
 
-FILESEXTRAPATHS:prepend := "${THISDIR}/../../../driver:${THISDIR}/../../../tools:"
+FILESEXTRAPATHS:prepend := "${THISDIR}/../../../driver:${THISDIR}/../../../tools:${THISDIR}/../../../include:"
 
 SRC_URI = " \
     file://Makefile \
-    file://hid_morse_kbd.c \
+    file://hid_morse_kbd_main.c \
+    file://morse_hid_chrdev.c \
+    file://morse_hid_chrdev.h \
     file://morse_fsm_core.h \
     file://morse_map_kernel.h \
     file://morse_keymap_shared.h \
+    file://morse_hid_uapi.h \
 "
 
 S = "${WORKDIR}"

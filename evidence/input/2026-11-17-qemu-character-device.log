@@ -1,0 +1,1445 @@
+runqemu - INFO - Continuing with the following parameters:
+KERNEL: [/home/rishabh_shah/projects/morsemouse/build-qemu/tmp/deploy/images/qemuarm64/Image]
+MACHINE: [qemuarm64]
+FSTYPE: [ext4]
+ROOTFS: [/home/rishabh_shah/projects/morsemouse/build-qemu/tmp/deploy/images/qemuarm64/core-image-morse-dev-qemuarm64.rootfs-20261107183017.ext4]
+CONFFILE: [/home/rishabh_shah/projects/morsemouse/build-qemu/tmp/deploy/images/qemuarm64/core-image-morse-dev-qemuarm64.rootfs.qemuboot.conf]
+
+runqemu - INFO - Network configuration: ip=dhcp
+runqemu - INFO - Port forward: hostfwd=tcp:127.0.0.1:2222-:22 hostfwd=tcp:127.0.0.1:2323-:23
+runqemu - INFO - Running /home/rishabh_shah/projects/morsemouse/build-qemu/tmp/work/x86_64-linux/qemu-helper-native/1.0/recipe-sysroot-native/usr/bin/qemu-system-aarch64 -device virtio-net-pci,netdev=net0,mac=52:54:00:12:35:02 -netdev user,id=net0,hostfwd=tcp:127.0.0.1:2222-:22,hostfwd=tcp:127.0.0.1:2323-:23,tftp=/home/rishabh_shah/projects/morsemouse/build-qemu/tmp/deploy/images/qemuarm64 -object rng-random,filename=/dev/urandom,id=rng0 -device virtio-rng-pci,rng=rng0 -drive id=disk0,file=/home/rishabh_shah/projects/morsemouse/build-qemu/tmp/deploy/images/qemuarm64/core-image-morse-dev-qemuarm64.rootfs-20261107183017.ext4,if=none,format=raw -device virtio-blk-pci,drive=disk0 -device qemu-xhci -device usb-tablet -device usb-kbd  -machine virt -cpu cortex-a57 -smp 4 -m 256  -qmp unix:/tmp/morse-acceptance-qmp.sock,server=on,wait=off -serial mon:stdio -serial null -nographic -device virtio-gpu-pci -kernel /home/rishabh_shah/projects/morsemouse/build-qemu/tmp/deploy/images/qemuarm64/Image -append 'root=/dev/vda rw  mem=256M ip=dhcp console=ttyAMA0 console=hvc0 swiotlb=0 '
+
+runqemu - INFO - Host uptime: 618.68
+
+[    0.000000] Booting Linux on physical CPU 0x0000000000 [0x411fd070]
+
+[    0.000000] Linux version 6.6.151-yocto-standard (oe-user@oe-host) (aarch64-poky-linux-gcc (GCC) 13.5.0, GNU ld (GNU Binutils) 2.42.0.20240723) #1 SMP PREEMPT Tue Aug 18 18:50:33 UTC 2026
+
+[    0.000000] random: crng init done
+
+[    0.000000] Machine model: linux,dummy-virt
+
+[    0.000000] Memory limited to 256MB
+
+[    0.000000] efi: UEFI not found.
+
+[    0.000000] Zone ranges:
+
+[    0.000000]   DMA      [mem 0x0000000040000000-0x000000004fffffff]
+
+[    0.000000]   DMA32    empty
+
+[    0.000000]   Normal   empty
+
+[    0.000000] Movable zone start for each node
+
+[    0.000000] Early memory node ranges
+
+[    0.000000]   node   0: [mem 0x0000000040000000-0x000000004fffffff]
+
+[    0.000000] Initmem setup node 0 [mem 0x0000000040000000-0x000000004fffffff]
+
+[    0.000000] psci: probing for conduit method from DT.
+
+[    0.000000] psci: PSCIv1.1 detected in firmware.
+
+[    0.000000] psci: Using standard PSCI v0.2 function IDs
+
+[    0.000000] psci: Trusted OS migration not required
+
+[    0.000000] psci: SMC Calling Convention v1.0
+
+[    0.000000] percpu: Embedded 28 pages/cpu s73768 r8192 d32728 u114688
+
+[    0.000000] Detected PIPT I-cache on CPU0
+
+[    0.000000] CPU features: detected: Spectre-v2
+
+[    0.000000] CPU features: detected: Spectre-v4
+
+[    0.000000] CPU features: detected: Spectre-BHB
+
+[    0.000000] CPU features: detected: ARM erratum 1742098
+
+[    0.000000] CPU features: detected: ARM erratum 832075
+
+[    0.000000] CPU features: detected: ARM errata 1165522, 1319367, or 1530923
+
+[    0.000000] alternatives: applying boot alternatives
+
+[    0.000000] Kernel command line: root=/dev/vda rw  mem=256M ip=dhcp console=ttyAMA0 console=hvc0 swiotlb=0 
+
+[    0.000000] Dentry cache hash table entries: 32768 (order: 6, 262144 bytes, linear)
+
+[    0.000000] Inode-cache hash table entries: 16384 (order: 5, 131072 bytes, linear)
+
+[    0.000000] Built 1 zonelists, mobility grouping on.  Total pages: 64512
+
+[    0.000000] mem auto-init: stack:all(zero), heap alloc:off, heap free:off
+
+[    0.000000] software IO TLB: area num 4.
+
+[    0.000000] software IO TLB: SWIOTLB bounce buffer size roundup to 1MB
+
+[    0.000000] software IO TLB: mapped [mem 0x000000004f700000-0x000000004f800000] (1MB)
+
+[    0.000000] Memory: 228244K/262144K available (13440K kernel code, 2004K rwdata, 3164K rodata, 4608K init, 557K bss, 33900K reserved, 0K cma-reserved)
+
+[    0.000000] SLUB: HWalign=64, Order=0-3, MinObjects=0, CPUs=4, Nodes=1
+
+[    0.000000] ftrace: allocating 41062 entries in 162 pages
+
+[    0.000000] ftrace: allocated 162 pages with 3 groups
+
+[    0.000000] rcu: Preemptible hierarchical RCU implementation.
+
+[    0.000000] rcu: 	RCU event tracing is enabled.
+
+[    0.000000] rcu: 	RCU restricting CPUs from NR_CPUS=256 to nr_cpu_ids=4.
+
+[    0.000000] 	Trampoline variant of Tasks RCU enabled.
+
+[    0.000000] 	Rude variant of Tasks RCU enabled.
+
+[    0.000000] 	Tracing variant of Tasks RCU enabled.
+
+[    0.000000] rcu: RCU calculated value of scheduler-enlistment delay is 25 jiffies.
+
+[    0.000000] rcu: Adjusting geometry for rcu_fanout_leaf=16, nr_cpu_ids=4
+
+[    0.000000] NR_IRQS: 64, nr_irqs: 64, preallocated irqs: 0
+
+[    0.000000] Root IRQ handler: gic_handle_irq
+
+[    0.000000] GICv2m: range[mem 0x08020000-0x08020fff], SPI[80:143]
+
+[    0.000000] rcu: srcu_init: Setting srcu_struct sizes based on contention.
+
+[    0.000000] arch_timer: cp15 timer(s) running at 62.50MHz (virt).
+
+[    0.000000] clocksource: arch_sys_counter: mask: 0x1ffffffffffffff max_cycles: 0x1cd42e208c, max_idle_ns: 881590405314 ns
+
+[    0.000054] sched_clock: 57 bits at 63MHz, resolution 16ns, wraps every 4398046511096ns
+
+[    0.009418] kfence: initialized - using 2097152 bytes for 255 objects at 0x(____ptrval____)-0x(____ptrval____)
+
+[    0.015539] Console: colour dummy device 80x25
+
+[    0.016442] Calibrating delay loop (skipped), value calculated using timer frequency.. 125.00 BogoMIPS (lpj=250000)
+
+[    0.016585] pid_max: default: 32768 minimum: 301
+
+[    0.017991] LSM: initializing lsm=capability,landlock,integrity
+
+[    0.018361] landlock: Up and running.
+
+[    0.020435] Mount-cache hash table entries: 512 (order: 0, 4096 bytes, linear)
+
+[    0.020469] Mountpoint-cache hash table entries: 512 (order: 0, 4096 bytes, linear)
+
+[    0.041301] cacheinfo: Unable to detect cache hierarchy for CPU 0
+
+[    0.050774] RCU Tasks: Setting shift to 2 and lim to 1 rcu_task_cb_adjust=1 rcu_task_cpu_ids=4.
+
+[    0.050994] RCU Tasks Rude: Setting shift to 2 and lim to 1 rcu_task_cb_adjust=1 rcu_task_cpu_ids=4.
+
+[    0.051384] RCU Tasks Trace: Setting shift to 2 and lim to 1 rcu_task_cb_adjust=1 rcu_task_cpu_ids=4.
+
+[    0.052911] rcu: Hierarchical SRCU implementation.
+
+[    0.052952] rcu: 	Max phase no-delay instances is 1000.
+
+[    0.055744] EFI services will not be available.
+
+[    0.057600] smp: Bringing up secondary CPUs ...
+
+[    0.061030] Detected PIPT I-cache on CPU1
+
+[    0.062015] CPU1: Booted secondary processor 0x0000000001 [0x411fd070]
+
+[    0.065511] Detected PIPT I-cache on CPU2
+
+[    0.065691] CPU2: Booted secondary processor 0x0000000002 [0x411fd070]
+
+[    0.067725] Detected PIPT I-cache on CPU3
+
+[    0.067906] CPU3: Booted secondary processor 0x0000000003 [0x411fd070]
+
+[    0.068290] smp: Brought up 1 node, 4 CPUs
+
+[    0.068325] SMP: Total of 4 processors activated.
+
+[    0.068393] CPU features: detected: 32-bit EL0 Support
+
+[    0.068437] CPU features: detected: CRC32 instructions
+
+[    0.072325] CPU: All CPU(s) started at EL1
+
+[    0.072358] alternatives: applying system-wide alternatives
+
+[    0.092339] devtmpfs: initialized
+
+[    0.099427] clocksource: jiffies: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 7645041785100000 ns
+
+[    0.099593] futex hash table entries: 1024 (order: 4, 65536 bytes, linear)
+
+[    0.104079] DMI not present or invalid.
+
+[    0.110439] NET: Registered PF_NETLINK/PF_ROUTE protocol family
+
+[    0.115359] DMA: preallocated 128 KiB GFP_KERNEL pool for atomic allocations
+
+[    0.115522] DMA: preallocated 128 KiB GFP_KERNEL|GFP_DMA pool for atomic allocations
+
+[    0.115621] DMA: preallocated 128 KiB GFP_KERNEL|GFP_DMA32 pool for atomic allocations
+
+[    0.119131] hw-breakpoint: found 6 breakpoint and 4 watchpoint registers.
+
+[    0.120489] ASID allocator initialised with 65536 entries
+
+[    0.121018] Serial: AMBA PL011 UART driver
+
+[    0.142314] 9000000.pl011: ttyAMA0 at MMIO 0x9000000 (irq = 13, base_baud = 0) is a PL011 rev1
+
+[    0.143300] printk: console [ttyAMA0] enabled
+
+[    0.225079] Modules: 26768 pages in range for non-PLT usage
+
+[    0.225122] Modules: 518288 pages in range for PLT usage
+
+[    0.305628] raid6: neonx8   gen()  4771 MB/s
+
+[    0.377157] raid6: neonx4   gen()  3946 MB/s
+
+[    0.448093] raid6: neonx2   gen()  2751 MB/s
+
+[    0.519102] raid6: neonx1   gen()  1152 MB/s
+
+[    0.589257] raid6: int64x8  gen()  2803 MB/s
+
+[    0.659765] raid6: int64x4  gen()  1865 MB/s
+
+[    0.730893] raid6: int64x2  gen()  3522 MB/s
+
+[    0.801864] raid6: int64x1  gen()  2657 MB/s
+
+[    0.802091] raid6: using algorithm neonx8 gen() 4771 MB/s
+
+[    0.871802] raid6: .... xor() 2168 MB/s, rmw enabled
+
+[    0.872353] raid6: using neon recovery algorithm
+
+[    0.874099] iommu: Default domain type: Translated
+
+[    0.874421] iommu: DMA domain TLB invalidation policy: strict mode
+
+[    0.875993] SCSI subsystem initialized
+
+[    0.876847] usbcore: registered new interface driver usbfs
+
+[    0.877217] usbcore: registered new interface driver hub
+
+[    0.877800] usbcore: registered new device driver usb
+
+[    0.878454] pps_core: LinuxPPS API ver. 1 registered
+
+[    0.878890] pps_core: Software ver. 5.3.6 - Copyright 2005-2007 Rodolfo Giometti <giometti@linux.it>
+
+[    0.880791] PTP clock support registered
+
+[    0.891523] vgaarb: loaded
+
+[    0.892457] clocksource: Switched to clocksource arch_sys_counter
+
+[    0.925275] NET: Registered PF_INET protocol family
+
+[    0.926307] IP idents hash table entries: 4096 (order: 3, 32768 bytes, linear)
+
+[    0.931787] tcp_listen_portaddr_hash hash table entries: 256 (order: 0, 4096 bytes, linear)
+
+[    0.932238] Table-perturb hash table entries: 65536 (order: 6, 262144 bytes, linear)
+
+[    0.934525] TCP established hash table entries: 2048 (order: 2, 16384 bytes, linear)
+
+[    0.935316] TCP bind hash table entries: 2048 (order: 4, 65536 bytes, linear)
+
+[    0.936872] TCP: Hash tables configured (established 2048 bind 2048)
+
+[    0.938379] UDP hash table entries: 256 (order: 1, 8192 bytes, linear)
+
+[    0.938917] UDP-Lite hash table entries: 256 (order: 1, 8192 bytes, linear)
+
+[    0.940952] NET: Registered PF_UNIX/PF_LOCAL protocol family
+
+[    0.943901] RPC: Registered named UNIX socket transport module.
+
+[    0.944088] RPC: Registered udp transport module.
+
+[    0.944424] RPC: Registered tcp transport module.
+
+[    0.945862] RPC: Registered tcp-with-tls transport module.
+
+[    0.946299] RPC: Registered tcp NFSv4.1 backchannel transport module.
+
+[    0.946873] PCI: CLS 0 bytes, default 64
+
+[    0.955480] workingset: timestamp_bits=46 max_order=16 bucket_order=0
+
+[    0.959334] NFS: Registering the id_resolver key type
+
+[    0.960442] Key type id_resolver registered
+
+[    0.961482] Key type id_legacy registered
+
+[    0.965364] Key type cifs.idmap registered
+
+[    1.009067] xor: measuring software checksum speed
+
+[    1.010392]    8regs           :  3002 MB/sec
+
+[    1.011243]    32regs          :  5296 MB/sec
+
+[    1.012179]    arm64_neon      :  3964 MB/sec
+
+[    1.012294] xor: using function: 32regs (5296 MB/sec)
+
+[    1.013178] Block layer SCSI generic (bsg) driver version 0.4 loaded (major 250)
+
+[    1.013864] io scheduler mq-deadline registered
+
+[    1.014198] io scheduler kyber registered
+
+[    1.017957] pci-host-generic 4010000000.pcie: host bridge /pcie@10000000 ranges:
+
+[    1.019077] pci-host-generic 4010000000.pcie:       IO 0x003eff0000..0x003effffff -> 0x0000000000
+
+[    1.019788] pci-host-generic 4010000000.pcie:      MEM 0x0010000000..0x003efeffff -> 0x0010000000
+
+[    1.020185] pci-host-generic 4010000000.pcie:      MEM 0x8000000000..0xffffffffff -> 0x8000000000
+
+[    1.021232] pci-host-generic 4010000000.pcie: Memory resource size exceeds max for 32 bits
+
+[    1.022053] pci-host-generic 4010000000.pcie: ECAM at [mem 0x4010000000-0x401fffffff] for [bus 00-ff]
+
+[    1.023408] pci-host-generic 4010000000.pcie: PCI host bridge to bus 0000:00
+
+[    1.023729] pci_bus 0000:00: root bus resource [bus 00-ff]
+
+[    1.024278] pci_bus 0000:00: root bus resource [io  0x0000-0xffff]
+
+[    1.025237] pci_bus 0000:00: root bus resource [mem 0x10000000-0x3efeffff]
+
+[    1.025760] pci_bus 0000:00: root bus resource [mem 0x8000000000-0xffffffffff]
+
+[    1.027367] pci 0000:00:00.0: [1b36:0008] type 00 class 0x060000
+
+[    1.030684] pci 0000:00:01.0: [1af4:1000] type 00 class 0x020000
+
+[    1.031381] pci 0000:00:01.0: BAR 0 [io  0x0000-0x001f]
+
+[    1.031842] pci 0000:00:01.0: BAR 1 [mem 0x00000000-0x00000fff]
+
+[    1.032722] pci 0000:00:01.0: BAR 4 [mem 0x00000000-0x00003fff 64bit pref]
+
+[    1.033848] pci 0000:00:01.0: ROM [mem 0x00000000-0x0003ffff pref]
+
+[    1.034903] pci 0000:00:02.0: [1af4:1005] type 00 class 0x00ff00
+
+[    1.035502] pci 0000:00:02.0: BAR 0 [io  0x0000-0x001f]
+
+[    1.035966] pci 0000:00:02.0: BAR 1 [mem 0x00000000-0x00000fff]
+
+[    1.036865] pci 0000:00:02.0: BAR 4 [mem 0x00000000-0x00003fff 64bit pref]
+
+[    1.037755] pci 0000:00:03.0: [1af4:1001] type 00 class 0x010000
+
+[    1.038164] pci 0000:00:03.0: BAR 0 [io  0x0000-0x007f]
+
+[    1.038481] pci 0000:00:03.0: BAR 1 [mem 0x00000000-0x00000fff]
+
+[    1.038844] pci 0000:00:03.0: BAR 4 [mem 0x00000000-0x00003fff 64bit pref]
+
+[    1.039793] pci 0000:00:04.0: [1b36:000d] type 00 class 0x0c0330
+
+[    1.040679] pci 0000:00:04.0: BAR 0 [mem 0x00000000-0x00003fff 64bit]
+
+[    1.041802] pci 0000:00:05.0: [1af4:1050] type 00 class 0x038000
+
+[    1.042438] pci 0000:00:05.0: BAR 1 [mem 0x00000000-0x00000fff]
+
+[    1.042666] pci 0000:00:05.0: BAR 4 [mem 0x00000000-0x00003fff 64bit pref]
+
+[    1.044398] pci 0000:00:01.0: ROM [mem 0x10000000-0x1003ffff pref]: assigned
+
+[    1.046709] pci 0000:00:01.0: BAR 4 [mem 0x8000000000-0x8000003fff 64bit pref]: assigned
+
+[    1.047424] pci 0000:00:02.0: BAR 4 [mem 0x8000004000-0x8000007fff 64bit pref]: assigned
+
+[    1.047755] pci 0000:00:03.0: BAR 4 [mem 0x8000008000-0x800000bfff 64bit pref]: assigned
+
+[    1.048035] pci 0000:00:04.0: BAR 0 [mem 0x800000c000-0x800000ffff 64bit]: assigned
+
+[    1.049475] pci 0000:00:05.0: BAR 4 [mem 0x8000010000-0x8000013fff 64bit pref]: assigned
+
+[    1.050164] pci 0000:00:01.0: BAR 1 [mem 0x10040000-0x10040fff]: assigned
+
+[    1.050671] pci 0000:00:02.0: BAR 1 [mem 0x10041000-0x10041fff]: assigned
+
+[    1.051136] pci 0000:00:03.0: BAR 1 [mem 0x10042000-0x10042fff]: assigned
+
+[    1.051710] pci 0000:00:05.0: BAR 1 [mem 0x10043000-0x10043fff]: assigned
+
+[    1.052301] pci 0000:00:03.0: BAR 0 [io  0x1000-0x107f]: assigned
+
+[    1.053872] pci 0000:00:01.0: BAR 0 [io  0x1080-0x109f]: assigned
+
+[    1.054464] pci 0000:00:02.0: BAR 0 [io  0x10a0-0x10bf]: assigned
+
+[    1.055900] pci 0000:00:04.0: enabling device (0000 -> 0002)
+
+[    1.061096] virtio-pci 0000:00:01.0: enabling device (0000 -> 0003)
+
+[    1.065493] virtio-pci 0000:00:02.0: enabling device (0000 -> 0003)
+
+[    1.067355] virtio-pci 0000:00:03.0: enabling device (0000 -> 0003)
+
+[    1.069303] virtio-pci 0000:00:05.0: enabling device (0000 -> 0002)
+
+[    1.082380] [drm] pci: virtio-gpu-pci detected at 0000:00:05.0
+
+[    1.083294] [drm] features: -virgl +edid -resource_blob -host_visible
+
+[    1.083313] [drm] features: -context_init
+
+[    1.085278] [drm] number of scanouts: 1
+
+[    1.085413] [drm] number of cap sets: 0
+
+[    1.095131] [drm] Initialized virtio_gpu 0.1.0 0 for 0000:00:05.0 on minor 0
+
+[    1.139952] Console: switching to colour frame buffer device 160x50
+
+[    1.146539] virtio-pci 0000:00:05.0: [drm] fb0: virtio_gpudrmfb frame buffer device
+
+[    1.174616] brd: module loaded
+
+[    1.175330] virtio_blk virtio2: 4/0/0 default/read/poll queues
+
+[    1.183117] virtio_blk virtio2: [vda] 107224 512-byte logical blocks (54.9 MB/52.4 MiB)
+
+[    1.198139] xhci_hcd 0000:00:04.0: xHCI Host Controller
+
+[    1.198951] xhci_hcd 0000:00:04.0: new USB bus registered, assigned bus number 1
+
+[    1.202676] xhci_hcd 0000:00:04.0: hcc params 0x00087001 hci version 0x100 quirks 0x0000000000000010
+
+[    1.207308] xhci_hcd 0000:00:04.0: xHCI Host Controller
+
+[    1.207736] xhci_hcd 0000:00:04.0: new USB bus registered, assigned bus number 2
+
+[    1.208697] xhci_hcd 0000:00:04.0: Host supports USB 3.0 SuperSpeed
+
+[    1.217213] hub 1-0:1.0: USB hub found
+
+[    1.217922] hub 1-0:1.0: 4 ports detected
+
+[    1.221918] usb usb2: We don't know the algorithms for LPM for this host, disabling LPM.
+
+[    1.224274] hub 2-0:1.0: USB hub found
+
+[    1.225229] hub 2-0:1.0: 4 ports detected
+
+[    1.231306] rtc-pl031 9010000.pl031: registered as rtc0
+
+[    1.231894] rtc-pl031 9010000.pl031: setting system clock to 2026-11-17T07:23:38 UTC (1794900218)
+
+[    1.235589] device-mapper: ioctl: 4.48.0-ioctl (2023-03-01) initialised: dm-devel@redhat.com
+
+[    1.238845] usbcore: registered new interface driver usbhid
+
+[    1.239432] usbhid: USB HID core driver
+
+[    1.243535] hw perfevents: enabled with armv8_pmuv3 PMU driver, 7 counters available
+
+[    1.245050] u32 classifier
+
+[    1.245332]     input device check on
+
+[    1.245711]     Actions configured
+
+[    1.247677] NET: Registered PF_INET6 protocol family
+
+[    1.257674] Segment Routing with IPv6
+
+[    1.257896] In-situ OAM (IOAM) with IPv6
+
+[    1.258739] sit: IPv6, IPv4 and MPLS over IPv4 tunneling driver
+
+[    1.261282] NET: Registered PF_PACKET protocol family
+
+[    1.261892] Bridge firewalling registered
+
+[    1.263027] Key type dns_resolver registered
+
+[    1.263984] NET: Registered PF_VSOCK protocol family
+
+[    1.275393] registered taskstats version 1
+
+[    1.289875] Key type .fscrypt registered
+
+[    1.290195] Key type fscrypt-provisioning registered
+
+[    1.294033] Btrfs loaded, zoned=no, fsverity=no
+
+[    1.309914] Key type encrypted registered
+
+[    1.311800] printk: console [netcon0] enabled
+
+[    1.311971] netconsole: network logging started
+
+[    1.349038] Sending DHCP requests ., OK
+
+[    1.369774] IP-Config: Got DHCP answer from 10.0.2.2, my address is 10.0.2.15
+
+[    1.370505] IP-Config: Complete:
+
+[    1.370766]      device=eth0, hwaddr=52:54:00:12:35:02, ipaddr=10.0.2.15, mask=255.255.255.0, gw=10.0.2.2
+
+[    1.371193]      host=10.0.2.15, domain=, nis-domain=(none)
+
+[    1.371398]      bootserver=10.0.2.2, rootserver=10.0.2.2, rootpath=
+
+[    1.371427]      nameserver0=10.0.2.3
+
+[    1.375921] clk: Disabling unused clocks
+
+[    1.382466] md: Waiting for all devices to be available before autodetect
+
+[    1.382948] md: If you don't use raid, use raid=noautodetect
+
+[    1.383592] md: Autodetecting RAID arrays.
+
+[    1.383966] md: autorun ...
+
+[    1.384227] md: ... autorun DONE.
+
+[    1.441652] EXT4-fs (vda): recovery complete
+
+[    1.444098] EXT4-fs (vda): mounted filesystem 77cd8eae-fde4-4995-bdfd-95b31898deb2 r/w with ordered data mode. Quota mode: disabled.
+
+[    1.447373] VFS: Mounted root (ext4 filesystem) on device 253:0.
+
+[    1.449943] devtmpfs: mounted
+
+[    1.481201] usb 1-1: new high-speed USB device number 2 using xhci_hcd
+
+[    1.502531] Freeing unused kernel memory: 4608K
+
+[    1.503654] Run /sbin/init as init process
+
+
+INIT: version 3.04 booting
+
+
+[    1.653626] input: QEMU QEMU USB Tablet as /devices/platform/4010000000.pcie/pci0000:00/0000:00:04.0/usb1/1-1/1-1:1.0/0003:0627:0001.0001/input/input0
+
+[    1.657055] hid-generic 0003:0627:0001.0001: input: USB HID v0.01 Mouse [QEMU QEMU USB Tablet] on usb-0000:00:04.0-1/input0
+
+[    1.789423] usb 1-2: new high-speed USB device number 3 using xhci_hcd
+
+[    1.946062] input: QEMU QEMU USB Keyboard as /devices/platform/4010000000.pcie/pci0000:00/0000:00:04.0/usb1/1-2/1-2:1.0/0003:0627:0001.0002/input/input1
+
+[    2.009402] hid-generic 0003:0627:0001.0002: input: USB HID v1.11 Keyboard [QEMU QEMU USB Keyboard] on usb-0000:00:04.0-2/input0
+
+Starting udev
+
+[    2.385168] udevd[114]: starting version 3.2.14
+
+[    2.445361] udevd[115]: starting eudev-3.2.14
+
+[    2.810860] hid_morse_kbd: loading out-of-tree module taints kernel.
+
+[    2.830080] input: MorseMouse Virtual Keyboard as /devices/virtual/input/input2
+
+[    2.832160] hid_morse_kbd: virtual keyboard registered; printable_ascii=95
+
+[    2.835427] hid_morse_kbd: character device registered; name=morse_hid major=10 minor=258
+
+[    2.893048] hid_morse_kbd: connected to "QEMU QEMU USB Tablet"; grab=disabled queue_capacity=64
+
+[    2.895196] hid_morse_kbd: registered; target_name="USB Tablet", grab_on_bind=false queue_capacity=64 sequence_capacity=63 map_entries=95
+
+[    3.097172] EXT4-fs (vda): re-mounted 77cd8eae-fde4-4995-bdfd-95b31898deb2.
+
+
+INIT: Entering runlevel: 5
+
+
+
+Configuring network interfaces... ip: RTNETLINK answers: File exists
+
+
+Starting syslogd/klogd: done
+
+
+
+
+
+Poky (Yocto Project Reference Distro) 5.0.21 qemuarm64 /dev/ttyAMA0
+
+
+
+
+
+qemuarm64 login: root
+root
+
+
+
+WARNING: Poky is a reference Yocto Project distribution that should be used for
+
+testing and development purposes only. It is recommended that you create your
+
+own distribution for production use.
+
+
+
+7[r[999;999H[6nroot@qemuarm64:~# morse-hid-test --self-test; echo MORSE_COMMAND_DONE_1
+morse-hid-test --self-test; echo MORSE_COMMAND_DONE_1
+
+
+
+MorseMouse character-device self-test
+
+Device: /dev/morse_hid
+
+
+
+ABI version: 1
+
+Event size: 104 bytes
+
+Diagnostic capacity: 128
+
+Feature flags: 0x1f
+
+[PASS] GET_INFO and ABI validation
+
+Received: 0, processed: 0, dropped: 0
+
+Input queue: 0, diagnostic queue: 1
+
+[PASS] GET_STATS and statistics structure
+
+[PASS] Exclusive reader enforcement
+
+[PASS] Unsupported ioctl returns ENOTTY
+
+[PASS] Invalid ioctl pointer returns EFAULT
+
+[PASS] Invalid read size returns EINVAL
+
+[PASS] Invalid read pointer returns EFAULT without consuming event
+
+  id=1 timestamp=2824583184 type=9 flags=0x0 value=0 ascii=0 sequence=""
+
+Drained 0 diagnostic records
+
+[PASS] Diagnostic event records validated
+
+[PASS] Empty non-blocking read returns EAGAIN
+
+[PASS] poll timeout on empty diagnostic queue
+
+[PASS] Final GET_STATS ioctl
+
+
+
+====================================
+
+RESULT: ALL EXECUTED TESTS PASSED
+
+MORSE_COMMAND_DONE_1
+
+root@qemuarm64:~# morse-hid-test --wait > /tmp/wakeup.log 2>&1 & echo MORSE_COMMAND_DONE_2
+morse-hid-test --wait > /tmp/wakeup.log 2>&1 & echo MORSE_COMM
+
+
+AND_DONE_2
+
+MORSE_COMMAND_DONE_2
+
+root@qemuarm64:~# cat /tmp/wakeup.log; echo MORSE_COMMAND_DONE_3
+[    9.278025] hid_morse_kbd: FSM action=DOT sequence=. event_ns=9209289888
+
+
+
+[1]+  Done                       morse-hid-test --wait 1>/tmp/wakeup.log 2>&1
+
+root@qemuarm64:~# cat /tmp/wakeup.log; echo MORSE_COMMAND_DONE_3
+
+Waiting for MorseMouse diagnostic events.
+
+Generate mouse input to produce events.
+
+Press Ctrl+C to stop watch mode.
+
+
+
+  id=2 timestamp=9209289888 type=1 flags=0x0 value=46 ascii=0 sequence="."
+
+MORSE_COMMAND_DONE_3
+
+root@qemuarm64:~# morse-hid-test --self-test; echo MORSE_COMMAND_DONE_4
+[    9.416743] hid_morse_kbd: FSM action=DOT sequence=.. event_ns=9347987072
+
+[    9.417603] hid_morse_kbd: FSM chord cancellation; sequence cleared; lockout=1
+
+morse-hid-test --self-test; echo MORSE_COMMAND_DONE_4
+
+
+
+MorseMouse character-device self-test
+
+Device: /dev/morse_hid
+
+
+
+ABI version: 1
+
+Event size: 104 bytes
+
+Diagnostic capacity: 128
+
+Feature flags: 0x1f
+
+[PASS] GET_INFO and ABI validation
+
+Received: 6, processed: 6, dropped: 0
+
+Input queue: 0, diagnostic queue: 2
+
+[PASS] GET_STATS and statistics structure
+
+[PASS] Exclusive reader enforcement
+
+[PASS] Unsupported ioctl returns ENOTTY
+
+[PASS] Invalid ioctl pointer returns EFAULT
+
+[PASS] Invalid read size returns EINVAL
+
+[PASS] Invalid read pointer returns EFAULT without consuming event
+
+  id=3 timestamp=9347987072 type=1 flags=0x0 value=46 ascii=0 sequence=".."
+
+  id=4 timestamp=9348082544 type=6 flags=0x0 value=0 ascii=0 sequence=".."
+
+Drained 1 diagnostic records
+
+[PASS] Diagnostic event records validated
+
+[PASS] Empty non-blocking read returns EAGAIN
+
+[PASS] poll timeout on empty diagnostic queue
+
+[PASS] Final GET_STATS ioctl
+
+
+
+====================================
+
+RESULT: ALL EXECUTED TESTS PASSED
+
+MORSE_COMMAND_DONE_4
+
+root@qemuarm64:~# evtest /dev/input/event2 > /tmp/keyboard.log 2>&1 & echo MORSE_COMMAND_DONE_5
+evtest /dev/input/event2 > /tmp/keyboard.log 2>&1 & echo MORSE
+
+
+_COMMAND_DONE_5
+
+MORSE_COMMAND_DONE_5
+
+root@qemuarm64:~# morse-hid-test --self-test; echo MORSE_COMMAND_DONE_6
+[    9.879067] hid_morse_kbd: FSM action=DOT sequence=. event_ns=9810470480
+
+[    9.939894] hid_morse_kbd: FSM action=DASH sequence=.- event_ns=9871485536
+
+[   10.001449] hid_morse_kbd: FSM COMMIT valid sequence=.- ascii=65 hex=0x41
+
+[   10.003301] hid_morse_kbd: virtual keyboard emitted ascii=65
+
+[   10.062543] hid_morse_kbd: FSM COMMIT empty; ignored event_ns=9994060432
+
+[   10.123904] hid_morse_kbd: FSM action=DOT sequence=. event_ns=10055508496
+
+[   10.186249] hid_morse_kbd: FSM action=DOT sequence=.. event_ns=10117580144
+
+[   10.248070] hid_morse_kbd: FSM action=DOT sequence=... event_ns=10179547968
+
+[   10.309142] hid_morse_kbd: FSM action=DOT sequence=.... event_ns=10240738048
+
+[   10.370906] hid_morse_kbd: FSM action=DOT sequence=..... event_ns=10302489744
+
+[   10.432658] hid_morse_kbd: FSM action=DOT sequence=...... event_ns=10363985440
+
+[   10.741180] hid_morse_kbd: FSM COMMIT invalid sequence=..........; consumed
+
+[   10.864107] hid_morse_kbd: FSM chord cancellation; sequence cleared; lockout=1
+
+[   11.047902] hid_morse_kbd: FSM COMMIT valid sequence=.- ascii=65 hex=0x41
+
+[   11.049313] hid_morse_kbd: virtual keyboard emitted ascii=65
+
+morse-hid-test --self-test; echo MORSE_COMMAND_DONE_6
+
+
+
+MorseMouse character-device self-test
+
+Device: /dev/morse_hid
+
+
+
+ABI version: 1
+
+Event size: 104 bytes
+
+Diagnostic capacity: 128
+
+Feature flags: 0x1f
+
+[PASS] GET_INFO and ABI validation
+
+Received: 48, processed: 48, dropped: 0
+
+Input queue: 0, diagnostic queue: 21
+
+[PASS] GET_STATS and statistics structure
+
+[PASS] Exclusive reader enforcement
+
+[PASS] Unsupported ioctl returns ENOTTY
+
+[PASS] Invalid ioctl pointer returns EFAULT
+
+[PASS] Invalid read size returns EINVAL
+
+[PASS] Invalid read pointer returns EFAULT without consuming event
+
+  id=5 timestamp=9810470480 type=1 flags=0x0 value=46 ascii=0 sequence="."
+
+  id=6 timestamp=9871485536 type=2 flags=0x0 value=45 ascii=0 sequence=".-"
+
+  id=7 timestamp=9932828944 type=3 flags=0x0 value=0 ascii=65 sequence=".-"
+
+  id=8 timestamp=9994060432 type=5 flags=0x0 value=0 ascii=0 sequence=""
+
+  id=9 timestamp=10055508496 type=1 flags=0x0 value=46 ascii=0 sequence="."
+
+  id=10 timestamp=10117580144 type=1 flags=0x0 value=46 ascii=0 sequence=".."
+
+  id=11 timestamp=10179547968 type=1 flags=0x0 value=46 ascii=0 sequence="..."
+
+  id=12 timestamp=10240738048 type=1 flags=0x0 value=46 ascii=0 sequence="...."
+
+  id=13 timestamp=10302489744 type=1 flags=0x0 value=46 ascii=0 sequence="....."
+
+  id=14 timestamp=10363985440 type=1 flags=0x0 value=46 ascii=0 sequence="......"
+
+  id=15 timestamp=10425405728 type=1 flags=0x0 value=46 ascii=0 sequence="......."
+
+  id=16 timestamp=10487742704 type=1 flags=0x0 value=46 ascii=0 sequence="........"
+
+  id=17 timestamp=10548935616 type=1 flags=0x0 value=46 ascii=0 sequence="........."
+
+  id=18 timestamp=10610648128 type=1 flags=0x0 value=46 ascii=0 sequence=".........."
+
+  id=19 timestamp=10672678944 type=4 flags=0x0 value=0 ascii=0 sequence=".........."
+
+  id=20 timestamp=10733915056 type=1 flags=0x0 value=46 ascii=0 sequence="."
+
+  id=21 timestamp=10795600992 type=1 flags=0x0 value=46 ascii=0 sequence=".."
+
+  id=22 timestamp=10795655584 type=6 flags=0x0 value=0 ascii=0 sequence=".."
+
+  id=23 timestamp=10857190352 type=1 flags=0x0 value=46 ascii=0 sequence="."
+
+  id=24 timestamp=10918290720 type=2 flags=0x0 value=45 ascii=0 sequence=".-"
+
+  id=25 timestamp=10979486112 type=3 flags=0x0 value=0 ascii=65 sequence=".-"
+
+Drained 20 diagnostic records
+
+[PASS] Diagnostic event records validated
+
+[PASS] Empty non-blocking read returns EAGAIN
+
+[PASS] poll timeout on empty diagnostic queue
+
+[PASS] Final GET_STATS ioctl
+
+
+
+====================================
+
+RESULT: ALL EXECUTED TESTS PASSED
+
+MORSE_COMMAND_DONE_6
+
+root@qemuarm64:~# kill %1; tail -20 /tmp/keyboard.log; echo MORSE_COMMAND_DONE_7
+kill %1; tail -20 /tmp/keyboard.log; echo MORSE_COMMAND_DONE_7
+
+
+    Event code 49 (KEY_N)
+
+    Event code 50 (KEY_M)
+
+    Event code 51 (KEY_COMMA)
+
+    Event code 52 (KEY_DOT)
+
+    Event code 53 (KEY_SLASH)
+
+    Event code 57 (KEY_SPACE)
+
+Properties:
+
+Testing ... (interrupt to exit)
+
+Event: time 1794900226.145271, type 1 (EV_KEY), code 42 (KEY_LEFTSHIFT), value 1
+
+Event: time 1794900226.145271, type 1 (EV_KEY), code 30 (KEY_A), value 1
+
+Event: time 1794900226.145271, -------------- SYN_REPORT ------------
+
+Event: time 1794900226.145734, type 1 (EV_KEY), code 30 (KEY_A), value 0
+
+Event: time 1794900226.145734, type 1 (EV_KEY), code 42 (KEY_LEFTSHIFT), value 0
+
+Event: time 1794900226.145734, -------------- SYN_REPORT ------------
+
+Event: time 1794900227.191472, type 1 (EV_KEY), code 42 (KEY_LEFTSHIFT), value 1
+
+Event: time 1794900227.191472, type 1 (EV_KEY), code 30 (KEY_A), value 1
+
+Event: time 1794900227.191472, -------------- SYN_REPORT ------------
+
+Event: time 1794900227.191753, type 1 (EV_KEY), code 30 (KEY_A), value 0
+
+Event: time 1794900227.191753, type 1 (EV_KEY), code 42 (KEY_LEFTSHIFT), value 0
+
+Event: time 1794900227.191753, -------------- SYN_REPORT ------------
+
+MORSE_COMMAND_DONE_7
+
+[1]+  Terminated                 evtest /dev/input/event2 1>/tmp/keyboard.log 2>&1
+
+root@qemuarm64:~# morse-hid-test --self-test; echo MORSE_COMMAND_DONE_8
+[   14.288788] morse_append_symbol: 52 callbacks suppressed
+
+[   14.288907] hid_morse_kbd: FSM action=DOT sequence=............................................. event_ns=14219999584
+
+[   14.350840] hid_morse_kbd: FSM action=DOT sequence=.............................................. event_ns=14282384784
+
+[   14.413233] hid_morse_kbd: FSM action=DOT sequence=............................................... event_ns=14344810960
+
+[   14.475795] hid_morse_kbd: FSM action=DOT sequence=................................................ event_ns=14407323568
+
+[   14.538015] hid_morse_kbd: FSM action=DOT sequence=................................................. event_ns=14469544624
+
+[   14.600036] hid_morse_kbd: FSM action=DOT sequence=.................................................. event_ns=14531674112
+
+[   14.662413] hid_morse_kbd: FSM action=DOT sequence=................................................... event_ns=14594005616
+
+[   14.724920] hid_morse_kbd: FSM action=DOT sequence=.................................................... event_ns=14656478624
+
+[   14.786977] hid_morse_kbd: FSM action=DOT sequence=..................................................... event_ns=14718561824
+
+[   14.849057] hid_morse_kbd: FSM action=DOT sequence=...................................................... event_ns=14780617168
+
+[   15.471602] hid_morse_kbd: sequence buffer full; current sequence reset
+
+[   19.302636] morse_append_symbol: 70 callbacks suppressed
+
+[   19.302754] hid_morse_kbd: FSM action=DOT sequence=.............................................................. event_ns=19234054880
+
+[   19.363554] hid_morse_kbd: FSM action=DOT sequence=............................................................... event_ns=19295158656
+
+[   19.425088] hid_morse_kbd: sequence buffer full; current sequence reset
+
+[   19.486194] hid_morse_kbd: FSM action=DOT sequence=. event_ns=19417683472
+
+[   19.547466] hid_morse_kbd: FSM action=DOT sequence=.. event_ns=19479068640
+
+[   19.609064] hid_morse_kbd: FSM action=DOT sequence=... event_ns=19540586384
+
+[   19.670363] hid_morse_kbd: FSM action=DOT sequence=.... event_ns=19601930224
+
+[   19.731650] hid_morse_kbd: FSM action=DOT sequence=..... event_ns=19663212080
+
+[   19.793268] hid_morse_kbd: FSM action=DOT sequence=...... event_ns=19724839552
+
+[   19.854298] hid_morse_kbd: FSM action=DOT sequence=....... event_ns=19785883232
+
+[   19.915979] hid_morse_kbd: FSM action=DOT sequence=........ event_ns=19847548048
+
+morse-hid-test --self-test; echo MORSE_COMMAND_DONE_8
+
+
+
+MorseMouse character-device self-test
+
+Device: /dev/morse_hid
+
+
+
+ABI version: 1
+
+Event size: 104 bytes
+
+Diagnostic capacity: 128
+
+Feature flags: 0x1f
+
+[PASS] GET_INFO and ABI validation
+
+Received: 328, processed: 328, dropped: 0
+
+Input queue: 0, diagnostic queue: 128
+
+[PASS] GET_STATS and statistics structure
+
+[PASS] Exclusive reader enforcement
+
+[PASS] Unsupported ioctl returns ENOTTY
+
+[PASS] Invalid ioctl pointer returns EFAULT
+
+[PASS] Invalid read size returns EINVAL
+
+[PASS] Invalid read pointer returns EFAULT without consuming event
+
+  id=38 timestamp=12225266016 type=1 flags=0x0 value=46 ascii=0 sequence="............."
+
+  id=39 timestamp=12286868816 type=1 flags=0x0 value=46 ascii=0 sequence=".............."
+
+  id=40 timestamp=12348987952 type=1 flags=0x0 value=46 ascii=0 sequence="..............."
+
+  id=41 timestamp=12411877440 type=1 flags=0x0 value=46 ascii=0 sequence="................"
+
+  id=42 timestamp=12474081312 type=1 flags=0x0 value=46 ascii=0 sequence="................."
+
+  id=43 timestamp=12536784768 type=1 flags=0x0 value=46 ascii=0 sequence=".................."
+
+  id=44 timestamp=12599667600 type=1 flags=0x0 value=46 ascii=0 sequence="..................."
+
+  id=45 timestamp=12661940816 type=1 flags=0x0 value=46 ascii=0 sequence="...................."
+
+  id=46 timestamp=12724544272 type=1 flags=0x0 value=46 ascii=0 sequence="....................."
+
+  id=47 timestamp=12786966784 type=1 flags=0x0 value=46 ascii=0 sequence="......................"
+
+  id=48 timestamp=12849179936 type=1 flags=0x0 value=46 ascii=0 sequence="......................."
+
+  id=49 timestamp=12911833696 type=1 flags=0x0 value=46 ascii=0 sequence="........................"
+
+  id=50 timestamp=12974173792 type=1 flags=0x0 value=46 ascii=0 sequence="........................."
+
+  id=51 timestamp=13036598608 type=1 flags=0x0 value=46 ascii=0 sequence=".........................."
+
+  id=52 timestamp=13099056944 type=1 flags=0x0 value=46 ascii=0 sequence="..........................."
+
+  id=53 timestamp=13161041024 type=1 flags=0x0 value=46 ascii=0 sequence="............................"
+
+  id=54 timestamp=13223558832 type=1 flags=0x0 value=46 ascii=0 sequence="............................."
+
+  id=55 timestamp=13285784240 type=1 flags=0x0 value=46 ascii=0 sequence=".............................."
+
+  id=56 timestamp=13347964704 type=1 flags=0x0 value=46 ascii=0 sequence="..............................."
+
+  id=57 timestamp=13409970512 type=1 flags=0x0 value=46 ascii=0 sequence="................................"
+
+  id=58 timestamp=13471960000 type=1 flags=0x0 value=46 ascii=0 sequence="................................."
+
+  id=59 timestamp=13534205184 type=1 flags=0x0 value=46 ascii=0 sequence=".................................."
+
+  id=60 timestamp=13596694336 type=1 flags=0x0 value=46 ascii=0 sequence="..................................."
+
+  id=61 timestamp=13659293440 type=1 flags=0x0 value=46 ascii=0 sequence="...................................."
+
+  id=62 timestamp=13721580928 type=1 flags=0x0 value=46 ascii=0 sequence="....................................."
+
+  id=63 timestamp=13784423344 type=1 flags=0x0 value=46 ascii=0 sequence="......................................"
+
+  id=64 timestamp=13846512480 type=1 flags=0x0 value=46 ascii=0 sequence="......................................."
+
+  id=65 timestamp=13908948848 type=1 flags=0x0 value=46 ascii=0 sequence="........................................"
+
+  id=66 timestamp=13971314496 type=1 flags=0x0 value=46 ascii=0 sequence="........................................."
+
+  id=67 timestamp=14033302640 type=1 flags=0x0 value=46 ascii=0 sequence=".........................................."
+
+  id=68 timestamp=14095472848 type=1 flags=0x0 value=46 ascii=0 sequence="..........................................."
+
+  id=69 timestamp=14157666944 type=1 flags=0x0 value=46 ascii=0 sequence="............................................"
+
+  id=70 timestamp=14219999584 type=1 flags=0x0 value=46 ascii=0 sequence="............................................."
+
+  id=71 timestamp=14282384784 type=1 flags=0x0 value=46 ascii=0 sequence=".............................................."
+
+  id=72 timestamp=14344810960 type=1 flags=0x0 value=46 ascii=0 sequence="..............................................."
+
+  id=73 timestamp=14407323568 type=1 flags=0x0 value=46 ascii=0 sequence="................................................"
+
+  id=74 timestamp=14469544624 type=1 flags=0x0 value=46 ascii=0 sequence="................................................."
+
+  id=75 timestamp=14531674112 type=1 flags=0x0 value=46 ascii=0 sequence=".................................................."
+
+  id=76 timestamp=14594005616 type=1 flags=0x0 value=46 ascii=0 sequence="..................................................."
+
+  id=77 timestamp=14656478624 type=1 flags=0x0 value=46 ascii=0 sequence="...................................................."
+
+  id=78 timestamp=14718561824 type=1 flags=0x0 value=46 ascii=0 sequence="....................................................."
+
+  id=79 timestamp=14780617168 type=1 flags=0x0 value=46 ascii=0 sequence="......................................................"
+
+  id=80 timestamp=14842568096 type=1 flags=0x0 value=46 ascii=0 sequence="......................................................."
+
+  id=81 timestamp=14904732832 type=1 flags=0x0 value=46 ascii=0 sequence="........................................................"
+
+  id=82 timestamp=14966602896 type=1 flags=0x0 value=46 ascii=0 sequence="........................................................."
+
+  id=83 timestamp=15028862560 type=1 flags=0x0 value=46 ascii=0 sequence=".........................................................."
+
+  id=84 timestamp=15091128800 type=1 flags=0x0 value=46 ascii=0 sequence="..........................................................."
+
+  id=85 timestamp=15153491808 type=1 flags=0x0 value=46 ascii=0 sequence="............................................................"
+
+  id=86 timestamp=15215974640 type=1 flags=0x0 value=46 ascii=0 sequence="............................................................."
+
+  id=87 timestamp=15278243216 type=1 flags=0x0 value=46 ascii=0 sequence=".............................................................."
+
+  id=88 timestamp=15340726672 type=1 flags=0x0 value=46 ascii=0 sequence="..............................................................."
+
+  id=89 timestamp=15403104080 type=8 flags=0x0 value=0 ascii=0 sequence=""
+
+  id=90 timestamp=15465082288 type=1 flags=0x0 value=46 ascii=0 sequence="."
+
+  id=91 timestamp=15527196288 type=1 flags=0x0 value=46 ascii=0 sequence=".."
+
+  id=92 timestamp=15589361088 type=1 flags=0x0 value=46 ascii=0 sequence="..."
+
+  id=93 timestamp=15651705184 type=1 flags=0x0 value=46 ascii=0 sequence="...."
+
+  id=94 timestamp=15714003504 type=1 flags=0x0 value=46 ascii=0 sequence="....."
+
+  id=95 timestamp=15776472208 type=1 flags=0x0 value=46 ascii=0 sequence="......"
+
+  id=96 timestamp=15838279760 type=1 flags=0x0 value=46 ascii=0 sequence="......."
+
+  id=97 timestamp=15900888848 type=1 flags=0x0 value=46 ascii=0 sequence="........"
+
+  id=98 timestamp=15962928576 type=1 flags=0x0 value=46 ascii=0 sequence="........."
+
+  id=99 timestamp=16024967712 type=1 flags=0x0 value=46 ascii=0 sequence=".........."
+
+  id=100 timestamp=16087381968 type=1 flags=0x0 value=46 ascii=0 sequence="..........."
+
+  id=101 timestamp=16149998288 type=1 flags=0x0 value=46 ascii=0 sequence="............"
+
+  id=102 timestamp=16213176256 type=1 flags=0x0 value=46 ascii=0 sequence="............."
+
+  id=103 timestamp=16275200128 type=1 flags=0x0 value=46 ascii=0 sequence=".............."
+
+  id=104 timestamp=16337325696 type=1 flags=0x0 value=46 ascii=0 sequence="..............."
+
+  id=105 timestamp=16399613072 type=1 flags=0x0 value=46 ascii=0 sequence="................"
+
+  id=106 timestamp=16461715440 type=1 flags=0x0 value=46 ascii=0 sequence="................."
+
+  id=107 timestamp=16524326032 type=1 flags=0x0 value=46 ascii=0 sequence=".................."
+
+  id=108 timestamp=16586548448 type=1 flags=0x0 value=46 ascii=0 sequence="..................."
+
+  id=109 timestamp=16648823360 type=1 flags=0x0 value=46 ascii=0 sequence="...................."
+
+  id=110 timestamp=16711023440 type=1 flags=0x0 value=46 ascii=0 sequence="....................."
+
+  id=111 timestamp=16773055312 type=1 flags=0x0 value=46 ascii=0 sequence="......................"
+
+  id=112 timestamp=16835294592 type=1 flags=0x0 value=46 ascii=0 sequence="......................."
+
+  id=113 timestamp=16897245248 type=1 flags=0x0 value=46 ascii=0 sequence="........................"
+
+  id=114 timestamp=16959694256 type=1 flags=0x0 value=46 ascii=0 sequence="........................."
+
+  id=115 timestamp=17021631952 type=1 flags=0x0 value=46 ascii=0 sequence=".........................."
+
+  id=116 timestamp=17083681664 type=1 flags=0x0 value=46 ascii=0 sequence="..........................."
+
+  id=117 timestamp=17145046080 type=1 flags=0x0 value=46 ascii=0 sequence="............................"
+
+  id=118 timestamp=17206835680 type=1 flags=0x0 value=46 ascii=0 sequence="............................."
+
+  id=119 timestamp=17269449296 type=1 flags=0x0 value=46 ascii=0 sequence=".............................."
+
+  id=120 timestamp=17330943792 type=1 flags=0x0 value=46 ascii=0 sequence="..............................."
+
+  id=121 timestamp=17392692560 type=1 flags=0x0 value=46 ascii=0 sequence="................................"
+
+  id=122 timestamp=17454015936 type=1 flags=0x0 value=46 ascii=0 sequence="................................."
+
+  id=123 timestamp=17516808432 type=1 flags=0x0 value=46 ascii=0 sequence=".................................."
+
+  id=124 timestamp=17577961344 type=1 flags=0x0 value=46 ascii=0 sequence="..................................."
+
+  id=125 timestamp=17639742704 type=1 flags=0x0 value=46 ascii=0 sequence="...................................."
+
+  id=126 timestamp=17700996288 type=1 flags=0x0 value=46 ascii=0 sequence="....................................."
+
+  id=127 timestamp=17762152816 type=1 flags=0x0 value=46 ascii=0 sequence="......................................"
+
+  id=128 timestamp=17823397520 type=1 flags=0x0 value=46 ascii=0 sequence="......................................."
+
+  id=129 timestamp=17884992080 type=1 flags=0x0 value=46 ascii=0 sequence="........................................"
+
+  id=130 timestamp=17946202896 type=1 flags=0x0 value=46 ascii=0 sequence="........................................."
+
+  id=131 timestamp=18007388304 type=1 flags=0x0 value=46 ascii=0 sequence=".........................................."
+
+  id=132 timestamp=18068927408 type=1 flags=0x0 value=46 ascii=0 sequence="..........................................."
+
+  id=133 timestamp=18130269696 type=1 flags=0x0 value=46 ascii=0 sequence="............................................"
+
+  id=134 timestamp=18191318704 type=1 flags=0x0 value=46 ascii=0 sequence="............................................."
+
+  id=135 timestamp=18252736000 type=1 flags=0x0 value=46 ascii=0 sequence=".............................................."
+
+  id=136 timestamp=18313962144 type=1 flags=0x0 value=46 ascii=0 sequence="..............................................."
+
+  id=137 timestamp=18375075408 type=1 flags=0x0 value=46 ascii=0 sequence="................................................"
+
+  id=138 timestamp=18436874064 type=1 flags=0x0 value=46 ascii=0 sequence="................................................."
+
+  id=139 timestamp=18498359552 type=1 flags=0x0 value=46 ascii=0 sequence=".................................................."
+
+  id=140 timestamp=18559739120 type=1 flags=0x0 value=46 ascii=0 sequence="..................................................."
+
+  id=141 timestamp=18621181872 type=1 flags=0x0 value=46 ascii=0 sequence="...................................................."
+
+  id=142 timestamp=18682429216 type=1 flags=0x0 value=46 ascii=0 sequence="....................................................."
+
+  id=143 timestamp=18743838112 type=1 flags=0x0 value=46 ascii=0 sequence="......................................................"
+
+  id=144 timestamp=18804992400 type=1 flags=0x0 value=46 ascii=0 sequence="......................................................."
+
+  id=145 timestamp=18866173008 type=1 flags=0x0 value=46 ascii=0 sequence="........................................................"
+
+  id=146 timestamp=18927417152 type=1 flags=0x0 value=46 ascii=0 sequence="........................................................."
+
+  id=147 timestamp=18988622576 type=1 flags=0x0 value=46 ascii=0 sequence=".........................................................."
+
+  id=148 timestamp=19050017856 type=1 flags=0x0 value=46 ascii=0 sequence="..........................................................."
+
+  id=149 timestamp=19111235952 type=1 flags=0x0 value=46 ascii=0 sequence="............................................................"
+
+  id=150 timestamp=19172824656 type=1 flags=0x0 value=46 ascii=0 sequence="............................................................."
+
+  id=151 timestamp=19234054880 type=1 flags=0x0 value=46 ascii=0 sequence=".............................................................."
+
+  id=152 timestamp=19295158656 type=1 flags=0x0 value=46 ascii=0 sequence="..............................................................."
+
+  id=153 timestamp=19356582848 type=8 flags=0x0 value=0 ascii=0 sequence=""
+
+  id=154 timestamp=19417683472 type=1 flags=0x1 value=46 ascii=0 sequence="."
+
+  id=155 timestamp=19479068640 type=1 flags=0x1 value=46 ascii=0 sequence=".."
+
+  id=156 timestamp=19540586384 type=1 flags=0x1 value=46 ascii=0 sequence="..."
+
+  id=157 timestamp=19601930224 type=1 flags=0x1 value=46 ascii=0 sequence="...."
+
+  id=158 timestamp=19663212080 type=1 flags=0x1 value=46 ascii=0 sequence="....."
+
+  id=159 timestamp=19724839552 type=1 flags=0x1 value=46 ascii=0 sequence="......"
+
+  id=160 timestamp=19785883232 type=1 flags=0x1 value=46 ascii=0 sequence="......."
+
+  id=161 timestamp=19847548048 type=1 flags=0x1 value=46 ascii=0 sequence="........"
+
+  id=162 timestamp=19908638384 type=1 flags=0x1 value=46 ascii=0 sequence="........."
+
+  id=163 timestamp=19969764160 type=1 flags=0x1 value=46 ascii=0 sequence=".........."
+
+  id=164 timestamp=20031023856 type=1 flags=0x1 value=46 ascii=0 sequence="..........."
+
+  id=165 timestamp=20092557696 type=1 flags=0x1 value=46 ascii=0 sequence="............"
+
+Drained 127 diagnostic records
+
+[PASS] Diagnostic event records validated
+
+[PASS] Empty non-blocking read returns EAGAIN
+
+[PASS] poll timeout on empty diagnostic queue
+
+[PASS] Final GET_STATS ioctl
+
+
+
+====================================
+
+RESULT: ALL EXECUTED TESTS PASSED
+
+MORSE_COMMAND_DONE_8
+
+root@qemuarm64:~# rmmod hid_morse_kbd; test ! -e /dev/morse_hid && echo NODE_REMOVED; modprobe hid_morse_kbd; morse-hid-test --self-test; echo MORSE_COMMAND_DONE_9
+rmmod hid_morse_kbd; test ! -e /dev/morse_hid && echo NODE_REM
+
+
+OVED; modprobe hid_morse_kbd; morse-hid-test --self-test; echo MORSE_COMMAND_DON
+
+
+E_9
+
+[   20.816746] hid_morse_kbd: disconnected from "QEMU QEMU USB Tablet" received=328 processed=328 queue_overflows=0 dropped=0 sequence_overflows=2 commits_valid=2 commits_empty=1 commits_invalid=1
+
+[   20.819966] hid_morse_kbd: character device unregistered
+
+[   20.881290] hid_morse_kbd: virtual keyboard unregistered
+
+[   20.882240] hid_morse_kbd: unloaded
+
+NODE_REMOVED
+
+[   20.964202] input: MorseMouse Virtual Keyboard as /devices/virtual/input/input3
+
+[   20.966328] hid_morse_kbd: virtual keyboard registered; printable_ascii=95
+
+[   20.968263] hid_morse_kbd: character device registered; name=morse_hid major=10 minor=258
+
+[   21.029208] hid_morse_kbd: connected to "QEMU QEMU USB Tablet"; grab=disabled queue_capacity=64
+
+[   21.030872] hid_morse_kbd: registered; target_name="USB Tablet", grab_on_bind=false queue_capacity=64 sequence_capacity=63 map_entries=95
+
+
+
+MorseMouse character-device self-test
+
+Device: /dev/morse_hid
+
+
+
+ABI version: 1
+
+Event size: 104 bytes
+
+Diagnostic capacity: 128
+
+Feature flags: 0x1f
+
+[PASS] GET_INFO and ABI validation
+
+Received: 0, processed: 0, dropped: 0
+
+Input queue: 0, diagnostic queue: 1
+
+[PASS] GET_STATS and statistics structure
+
+[PASS] Exclusive reader enforcement
+
+[PASS] Unsupported ioctl returns ENOTTY
+
+[PASS] Invalid ioctl pointer returns EFAULT
+
+[PASS] Invalid read size returns EINVAL
+
+[PASS] Invalid read pointer returns EFAULT without consuming event
+
+  id=1 timestamp=20960620336 type=9 flags=0x0 value=0 ascii=0 sequence=""
+
+Drained 0 diagnostic records
+
+[PASS] Diagnostic event records validated
+
+[PASS] Empty non-blocking read returns EAGAIN
+
+[PASS] poll timeout on empty diagnostic queue
+
+[PASS] Final GET_STATS ioctl
+
+
+
+====================================
+
+RESULT: ALL EXECUTED TESTS PASSED
+
+MORSE_COMMAND_DONE_9
+
+root@qemuarm64:~# dmesg | grep -iE 'BUG:|Oops:|WARNING:|hung task' || true; echo MORSE_COMMAND_DONE_10
+dmesg | grep -iE 'BUG:|Oops:|WARNING:|hung task' || true; echo
+
+
+ MORSE_COMMAND_DONE_10
+
+MORSE_COMMAND_DONE_10
+
+root@qemuarm64:~# sync; echo MORSE_COMMAND_DONE_11
+sync; echo MORSE_COMMAND_DONE_11
+
+MORSE_COMMAND_DONE_11
+
+root@qemuarm64:~# poweroff
+poweroff
+
+
+
+
+Broadcast message from root@qemuarm64 (ttyAMA0) (Tue Nov 17 07:23:57 2026):
+
+
+
+
+
+
+The system is going down for system halt NOW!
+
+
+
+INIT: Switching to runlevel: 0
+
+
+
+INIT: Sending processes configured via /etc/inittab the TERM signalroot@qemuarm64:~# 
+
+
+Stopping syslogd/klogd: stopped syslogd (pid 232)
+
+stopped klogd (pid 235)
+
+done
+
+Unmounting remote filesystems...
+
+Deconfiguring network interfaces... ifdown: interface lo not configured
+
+done.
+
+Sending all processes the TERM signal...
+
+Sending all processes the KILL signal...
+
+Deactivating swap...
+
+Unmounting local filesystems...
+
+[   27.306800] EXT4-fs (vda): re-mounted 77cd8eae-fde4-4995-bdfd-95b31898deb2 ro.
+
+[   27.421804] reboot: Power down
+
+runqemu - INFO - Cleaning up
+runqemu - INFO - Host uptime: 648.69
+
+[?7h

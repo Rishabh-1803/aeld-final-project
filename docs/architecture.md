@@ -80,16 +80,12 @@ The independent FSM has 37 passing unit checks. The integrated decoder and virtu
 
 The `hid_morse_kbd.ko` module is implemented and committed. It registers a targeted Linux `input_handler`, matches the QEMU USB Tablet by name substring and event capabilities, logs button transitions, supports the `target_name` and `grab_on_bind` module parameters, and handles connect/disconnect and module lifecycle. The QEMU acceptance evidence verifies automatic binding, keyboard exclusion, left/right/middle press/release events, exclusive grab, grab release on unload, HID unbind/rebind, and actual QEMU USB hot-unplug/hot-replug.
 
-Source: `driver/hid_morse_kbd.c`; Yocto recipe: `meta-morse-mouse/recipes-kernel/hid-morse-kbd/hid-morse-kbd_0.1.bb`. See [QEMU kernel input-handler runtime evidence](../evidence/input/2026-11-05-qemu-kernel-input-handler.md).
+Source: `driver/hid_morse_kbd_main.c`; Yocto recipe: `meta-morse-mouse/recipes-kernel/hid-morse-kbd/hid-morse-kbd_0.3.bb`. See [QEMU kernel input-handler runtime evidence](../evidence/input/2026-11-05-qemu-kernel-input-handler.md).
 
-The remaining kernel work will add:
-
-- Record input events and monotonic timestamps in a bounded queue with synchronization and overflow accounting.
-- Keep input and timer callbacks bounded and non-sleeping.
-- Defer state processing that may sleep to an ordered workqueue.
-- Register a virtual `input_dev` keyboard and emit balanced key-down/key-up events.
-- Release held keys and modifiers on every reset, mode exit, disconnect, error, and unload path.
-- Expose a planned `/dev/morse_hid` character device with a versioned userspace ABI.
+The kernel path now includes the bounded queue, shared FSM, virtual keyboard
+and versioned diagnostic character device. Issue #7 evidence is dated
+November 7; Issue #8 acceptance is dated November 17. The input callback
+queues transitions without sleeping; per-device work processes them in order.
 
 Input/timer callbacks must not perform filesystem or socket I/O, user-copy, arbitrary command execution, or unbounded processing. Timer/workqueue teardown must be synchronized before associated objects are freed.
 
@@ -124,7 +120,7 @@ The authoritative mapping is `config/morse_map.csv`. It contains all 95 printabl
 
 The userspace reference decoder uses this mapping and a separate US QWERTY Linux keymap. The standalone FSM is implemented in `tools/morse_fsm.c` and tested in `tools/morse_fsm_test.c`.
 
-The kernel-side input handler and in-kernel FSM remain future work. They must follow the approved grammar and reproduce the verified reference behavior.
+The kernel handler uses the shared FSM core and approved grammar. Host tests cover 52 FSM checks and 58 shared vectors.
 
 ## Targets and validation boundary
 
@@ -139,27 +135,13 @@ Build kernel modules independently for each target. Never copy a QEMU-built `.ko
 
 Power control is separate from ordinary text entry. The development default is dry-run or disabled. Any future power intent requires a dedicated two-stage local physical confirmation and independent userspace policy validation. This is not cryptographic authentication. Network telemetry/HUD input must never cause reboot or shutdown.
 
-## Current implementation status
+## Current implementation status — 17 November 2026
 
-As of 5 November 2026, the following QEMU-side userspace functionality is implemented and validated:
+Implemented and QEMU-validated: Yocto development image, userspace reference,
+95-character map/keymap, kernel input-handler lifecycle, bounded queue/FSM,
+kernel virtual keyboard and diagnostic UAPI. See the evidence directory
+and [character-device contract](character-device.md).
 
-- Yocto Scarthgap QEMU ARM64 development image.
-- Approved v1 input grammar and 95-character Morse mapping.
-- Morse mapping validator and US QWERTY keymap.
-- C userspace reference decoder with evdev input.
-- Independent Morse FSM with 37 passing unit checks.
-- Chord cancellation, lockout and recovery.
-- Optional `/dev/uinput` virtual keyboard output.
-- QEMU integration tests for normal decoding, empty COMMIT, chord handling, recovery and uppercase keyboard events.
-- QEMU kernel input-handler lifecycle tests, including exclusive grab, unload recovery and actual USB hot-unplug/hot-replug.
-
-See [QEMU FSM integration evidence](../evidence/input/2026-11-04-qemu-fsm-integration.md).
-
-The following components are not yet implemented:
-
-- Kernel-side bounded event queue and in-kernel FSM.
-- Kernel virtual `input_dev` keyboard.
-- Versioned `/dev/morse_hid` userspace ABI.
-- `morsed`, `morsectl` and the read-only HUD.
-- QEMU integration of these future kernel/userspace components.
-- Raspberry Pi 4 and physical Zebronics validation, deliberately deferred to the final hardware stage.
+Pending: daemon, read-only HUD, final integration and physical Pi/receiver
+validation. Power execution is deferred until after final submission by the
+owner's November 17 decision; it must remain disabled in the submitted system.

@@ -7,6 +7,8 @@ ifneq ($(KERNELRELEASE),)
 # Linux Kbuild section.
 obj-m += hid_morse_kbd.o
 
+hid_morse_kbd-y := hid_morse_kbd_main.o morse_hid_chrdev.o
+
 else
 
 # External module build entry points.

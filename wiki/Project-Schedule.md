@@ -75,8 +75,8 @@ All twelve project issues are assigned to Rishabh-1803. The issue-to-sprint mapp
 |---|---|---|
 | [#5](https://github.com/Rishabh-1803/aeld-final-project/issues/5) | QEMU-tested Linux input handler and reversible mouse-grab lifecycle | Closed |
 | [#6](https://github.com/Rishabh-1803/aeld-final-project/issues/6) | Kernel Morse FSM and bounded event processing | Closed |
-| [#7](https://github.com/Rishabh-1803/aeld-final-project/issues/7) | Kernel virtual keyboard event synthesis | Open — assigned |
-| [#8](https://github.com/Rishabh-1803/aeld-final-project/issues/8) | `/dev/morse_hid` character device and versioned UAPI | Open — assigned |
+| [#7](https://github.com/Rishabh-1803/aeld-final-project/issues/7) | Kernel virtual keyboard event synthesis | Complete — QEMU validated |
+| [#8](https://github.com/Rishabh-1803/aeld-final-project/issues/8) | `/dev/morse_hid` character device and versioned UAPI | Complete — QEMU validated |
 
 ### Student Issues
 
@@ -205,3 +205,18 @@ Raspberry Pi image build, physical receiver inspection and hardware acceptance a
 | Sprint 3 | `coursera-sprint-3` | Create after final integration, hardware stage and documentation are complete |
 
 A tag is a frozen source snapshot. Do not move a previously submitted tag to a later commit.
+
+## Verified continuation checkpoint — 17 November 2026
+
+Kernel virtual keyboard (issue #7) is complete with November 7 QEMU
+evidence. The character-device implementation (issue #8) has passed the
+November 17 QEMU runtime checks; see
+[character-device contract](https://github.com/Rishabh-1803/aeld-final-project/blob/main/docs/character-device.md)
+and [acceptance evidence](https://github.com/Rishabh-1803/aeld-final-project/blob/main/evidence/input/2026-11-17-qemu-character-device.md).
+Earlier dated tables above are historical snapshots.
+
+The owner confirmed on November 17 that power execution and shutdown
+gestures are deferred until after the final submission. The daemon must
+keep execution disabled. The Zebronics mouse is available; Raspberry Pi 4
+will be borrowed for a limited test session after QEMU acceptance.
+Daemon, HUD, final integration and physical validation remain pending.

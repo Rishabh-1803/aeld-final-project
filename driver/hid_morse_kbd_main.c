@@ -16,6 +16,15 @@
 
 #include "morse_fsm_core.h"
 #include "morse_keymap_shared.h"
+#include "morse_hid_uapi.h"
+#include "morse_hid_chrdev.h"
+
+/*
+ * Keep kernel compilation tied to the published UAPI v1 layout.
+ */
+static_assert(sizeof(struct morse_hid_event) == 104);
+static_assert(sizeof(struct morse_hid_info) == 32);
+static_assert(sizeof(struct morse_hid_stats) == 104);
 
 #define DRIVER_NAME "hid_morse_kbd"
 
@@ -52,6 +61,8 @@ struct morse_input_state {
 
     bool stopping;
     bool overflow_pending;
+    u64 overflow_dropped;
+    u64 overflow_timestamp_ns;
 
     /*
      * Physical state shadow, maintained by the input callback under
@@ -375,6 +386,10 @@ static void morse_append_symbol(struct morse_input_state *state,
     if (state->sequence_len >= MORSE_MAX_SEQUENCE_LEN) {
         morse_sequence_reset(state);
         atomic64_inc(&state->sequence_overflows);
+        morse_hid_chrdev_note_sequence_overflow();
+        morse_hid_chrdev_push_event(
+            MORSE_HID_EVENT_SEQUENCE_OVERFLOW,
+            event->timestamp_ns, 0, 0, NULL, 0);
 
         pr_warn_ratelimited(
             DRIVER_NAME ": sequence buffer full; current sequence reset\n");
@@ -383,6 +398,11 @@ static void morse_append_symbol(struct morse_input_state *state,
 
     state->sequence[state->sequence_len++] = symbol;
     state->sequence[state->sequence_len] = '\0';
+
+    morse_hid_chrdev_push_event(
+        symbol == '.' ? MORSE_HID_EVENT_DOT : MORSE_HID_EVENT_DASH,
+        event->timestamp_ns, symbol, 0,
+        state->sequence, state->sequence_len);
 
     pr_info_ratelimited(
         DRIVER_NAME ": FSM action=%s sequence=%s event_ns=%llu\n",
@@ -401,6 +421,10 @@ static void morse_commit_sequence(struct morse_input_state *state,
 
     if (state->sequence_len == 0) {
         atomic64_inc(&state->empty_commits);
+        morse_hid_chrdev_note_commit(MORSE_HID_EVENT_COMMIT_EMPTY);
+        morse_hid_chrdev_push_event(
+            MORSE_HID_EVENT_COMMIT_EMPTY,
+            event->timestamp_ns, 0, 0, NULL, 0);
 
         pr_info(
             DRIVER_NAME ": FSM COMMIT empty; ignored event_ns=%llu\n",
@@ -418,6 +442,11 @@ static void morse_commit_sequence(struct morse_input_state *state,
 
     if (morse_map_lookup(committed, &ascii)) {
         atomic64_inc(&state->valid_commits);
+        morse_hid_chrdev_note_commit(MORSE_HID_EVENT_COMMIT_VALID);
+        morse_hid_chrdev_push_event(
+            MORSE_HID_EVENT_COMMIT_VALID,
+            event->timestamp_ns, 0, ascii,
+            committed, strlen(committed));
 
         pr_info(
             DRIVER_NAME
@@ -439,6 +468,11 @@ static void morse_commit_sequence(struct morse_input_state *state,
         }
     } else {
         atomic64_inc(&state->invalid_commits);
+        morse_hid_chrdev_note_commit(MORSE_HID_EVENT_COMMIT_INVALID);
+        morse_hid_chrdev_push_event(
+            MORSE_HID_EVENT_COMMIT_INVALID,
+            event->timestamp_ns, 0, 0,
+            committed, strlen(committed));
 
         pr_info(
             DRIVER_NAME
@@ -488,13 +522,22 @@ static void morse_process_event(struct morse_input_state *state,
         morse_commit_sequence(state, event);
         break;
 
-    case MORSE_CORE_ACTION_CANCEL:
+    case MORSE_CORE_ACTION_CANCEL: {
+        char cancelled[MORSE_MAX_SEQUENCE_LEN + 1];
+
+        strscpy(cancelled, state->sequence, sizeof(cancelled));
         morse_sequence_reset(state);
+
+        morse_hid_chrdev_push_event(
+            MORSE_HID_EVENT_CHORD_CANCEL,
+            event->timestamp_ns, 0, 0,
+            cancelled, strlen(cancelled));
 
         pr_info(
             DRIVER_NAME
             ": FSM chord cancellation; sequence cleared; lockout=1\n");
         break;
+    }
 
     case MORSE_CORE_ACTION_NONE:
         break;
@@ -505,6 +548,7 @@ static void morse_process_event(struct morse_input_state *state,
     }
 
     atomic64_inc(&state->processed_events);
+    morse_hid_chrdev_note_input_processed();
 }
 
 
@@ -532,6 +576,8 @@ static void morse_event_worker(struct work_struct *work)
         bool right_pressed = false;
         bool middle_pressed = false;
         unsigned int discarded = 0;
+        u64 overflow_dropped = 0;
+        u64 overflow_timestamp_ns = 0;
 
         spin_lock_irqsave(&state->queue_lock, flags);
 
@@ -539,6 +585,7 @@ static void morse_event_worker(struct work_struct *work)
             state->queue_head = 0;
             state->queue_tail = 0;
             state->queue_count = 0;
+            morse_hid_chrdev_set_input_queue_depth(0);
             spin_unlock_irqrestore(&state->queue_lock, flags);
             return;
         }
@@ -550,10 +597,18 @@ static void morse_event_worker(struct work_struct *work)
              * of all relevant button transitions observed up to this lock.
              */
             discarded = state->queue_count;
+            state->overflow_dropped += discarded;
+
+            overflow_dropped = state->overflow_dropped;
+            overflow_timestamp_ns = state->overflow_timestamp_ns;
+
+            state->overflow_dropped = 0;
+            state->overflow_timestamp_ns = 0;
 
             state->queue_head = 0;
             state->queue_tail = 0;
             state->queue_count = 0;
+            morse_hid_chrdev_set_input_queue_depth(0);
             state->overflow_pending = false;
 
             left_pressed = state->raw_left_pressed;
@@ -569,14 +624,24 @@ static void morse_event_worker(struct work_struct *work)
                 state->queue_tail = 0;
 
             state->queue_count--;
+            morse_hid_chrdev_set_input_queue_depth(state->queue_count);
             have_event = true;
         }
 
         spin_unlock_irqrestore(&state->queue_lock, flags);
 
         if (do_resync) {
-            if (discarded)
+            if (discarded) {
                 atomic64_add(discarded, &state->dropped_events);
+                morse_hid_chrdev_note_input_dropped(discarded);
+            }
+
+            morse_hid_chrdev_push_event(
+                MORSE_HID_EVENT_INPUT_QUEUE_OVERFLOW,
+                overflow_timestamp_ns ? overflow_timestamp_ns : ktime_get_ns(),
+                (s32)(overflow_dropped > 2147483647ULL
+                          ? 2147483647ULL : overflow_dropped),
+                0, NULL, 0);
 
             /*
              * Overflow invalidates the sequence and previous transition
@@ -630,6 +695,7 @@ static void morse_event(struct input_handle *handle,
     struct morse_input_state *state = handle->private;
     struct morse_queued_event *event;
     unsigned long flags;
+    u32 dropped_now;
 
     if (type != EV_KEY || !morse_is_button(code))
         return;
@@ -659,6 +725,7 @@ static void morse_event(struct input_handle *handle,
     }
 
     atomic64_inc(&state->received_events);
+    morse_hid_chrdev_note_input_received();
 
     if (state->queue_count >= MORSE_EVENT_QUEUE_CAPACITY) {
         /*
@@ -667,15 +734,23 @@ static void morse_event(struct input_handle *handle,
          *   - drop the event that encountered the full queue;
          *   - request worker-side FSM reset and state resynchronization.
          */
-        atomic64_add(state->queue_count + 1,
-                     &state->dropped_events);
+        dropped_now = state->queue_count + 1;
+
+        if (!state->overflow_pending) {
+            state->overflow_timestamp_ns = ktime_get_ns();
+            atomic64_inc(&state->queue_overflows);
+            morse_hid_chrdev_note_input_queue_overflow(dropped_now);
+        } else {
+            morse_hid_chrdev_note_input_dropped(dropped_now);
+        }
+
+        state->overflow_dropped += dropped_now;
+        atomic64_add(dropped_now, &state->dropped_events);
 
         state->queue_head = 0;
         state->queue_tail = 0;
         state->queue_count = 0;
         state->overflow_pending = true;
-
-        atomic64_inc(&state->queue_overflows);
     } else {
         event = &state->queue[state->queue_head];
 
@@ -690,6 +765,8 @@ static void morse_event(struct input_handle *handle,
         state->queue_count++;
     }
 
+    morse_hid_chrdev_set_input_queue_depth(state->queue_count);
+
     spin_unlock_irqrestore(&state->queue_lock, flags);
 
     schedule_work(&state->event_work);
@@ -699,16 +776,67 @@ static void morse_event(struct input_handle *handle,
 static void morse_stop_queue(struct morse_input_state *state)
 {
     unsigned long flags;
+    u32 discarded;
 
     spin_lock_irqsave(&state->queue_lock, flags);
 
     state->stopping = true;
+    discarded = state->queue_count;
+
+    if (state->overflow_pending) {
+        state->overflow_dropped += discarded;
+    } else {
+        state->overflow_dropped = 0;
+        state->overflow_timestamp_ns = 0;
+    }
+
     state->queue_head = 0;
     state->queue_tail = 0;
     state->queue_count = 0;
-    state->overflow_pending = false;
+
+    morse_hid_chrdev_set_input_queue_depth(0);
 
     spin_unlock_irqrestore(&state->queue_lock, flags);
+
+    if (discarded) {
+        atomic64_add(discarded, &state->dropped_events);
+        morse_hid_chrdev_note_input_dropped(discarded);
+    }
+}
+
+
+/*
+ * Publish an overflow incident that was still pending when the
+ * input queue was stopped. The caller must have flushed event_work.
+ */
+static void morse_publish_pending_overflow(
+    struct morse_input_state *state)
+{
+    unsigned long flags;
+    u64 dropped = 0;
+    u64 timestamp_ns = 0;
+
+    spin_lock_irqsave(&state->queue_lock, flags);
+
+    if (state->overflow_pending) {
+        dropped = state->overflow_dropped;
+        timestamp_ns = state->overflow_timestamp_ns;
+
+        state->overflow_pending = false;
+        state->overflow_dropped = 0;
+        state->overflow_timestamp_ns = 0;
+    }
+
+    spin_unlock_irqrestore(&state->queue_lock, flags);
+
+    if (!dropped)
+        return;
+
+    morse_hid_chrdev_push_event(
+        MORSE_HID_EVENT_INPUT_QUEUE_OVERFLOW,
+        timestamp_ns ? timestamp_ns : ktime_get_ns(),
+        dropped > 2147483647ULL ? 2147483647 : (s32)dropped,
+        0, NULL, 0);
 }
 
 
@@ -792,6 +920,11 @@ static int morse_connect(struct input_handler *handler,
         state->grabbed = true;
     }
 
+    morse_hid_chrdev_note_device_connected();
+    morse_hid_chrdev_push_event(
+        MORSE_HID_EVENT_DEVICE_CONNECTED,
+        ktime_get_ns(), 0, 0, NULL, 0);
+
     pr_info(
         DRIVER_NAME
         ": connected to \"%s\"; grab=%s queue_capacity=%u\n",
@@ -809,6 +942,7 @@ err_unregister_handle:
     morse_stop_queue(state);
     input_unregister_handle(&state->handle);
     cancel_work_sync(&state->event_work);
+    morse_publish_pending_overflow(state);
 
 err_put_device:
     input_put_device(state->handle.dev);
@@ -842,6 +976,12 @@ static void morse_disconnect(struct input_handle *handle)
      * Wait for deferred processing to finish before freeing state.
      */
     cancel_work_sync(&state->event_work);
+    morse_publish_pending_overflow(state);
+
+    morse_hid_chrdev_note_device_disconnected();
+    morse_hid_chrdev_push_event(
+        MORSE_HID_EVENT_DEVICE_DISCONNECTED,
+        ktime_get_ns(), 0, 0, NULL, 0);
 
     morse_keyboard_release();
 
@@ -888,10 +1028,19 @@ static int __init morse_init(void)
         return error;
     }
 
+    error = morse_hid_chrdev_init();
+    if (error) {
+        pr_err(DRIVER_NAME
+               ": character device registration failed: %d\n", error);
+        morse_unregister_virtual_keyboard();
+        return error;
+    }
+
     error = input_register_handler(&morse_handler);
     if (error) {
         pr_err(DRIVER_NAME ": handler registration failed: %d\n",
                error);
+        morse_hid_chrdev_exit();
         morse_unregister_virtual_keyboard();
         return error;
     }
@@ -913,6 +1062,7 @@ static int __init morse_init(void)
 static void __exit morse_exit(void)
 {
     input_unregister_handler(&morse_handler);
+    morse_hid_chrdev_exit();
     morse_unregister_virtual_keyboard();
     pr_info(DRIVER_NAME ": unloaded\n");
 }
