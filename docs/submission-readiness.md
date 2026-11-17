@@ -17,8 +17,9 @@
    Confirm audio, readable text and runtime; obtain the actual public video URL.
 3. Update README/wiki/issue #12 with that URL and actual hardware conclusions.
 4. Check the enrolled Coursera assignment page for its precise rubric, submission
-   fields, permitted video hosting and deadline. Course-only requirements are not
-   available in this checkout and have not been assumed complete.
+   fields, permitted video hosting and deadline. The signed-in requirements and fields are now recorded in
+   [Coursera requirements](coursera-submission-requirements.md); detailed scoring
+   and peer-review count still need confirmation.
 5. Verify final repository/wiki/video links without authentication; finish #12.
 6. Create and push coursera-sprint-3 at the verified final commit, then publish a
    GitHub release with tested features, evidence links, limitations and artifact

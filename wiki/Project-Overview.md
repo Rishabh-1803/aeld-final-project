@@ -233,3 +233,7 @@ Integrated overflow/recovery and teardown pressure passed on November 17. The ph
 Pi image build: all 4,864 tasks passed. Offline artifact verification passed; physical boot is not yet claimed. See the [Pi build report](https://github.com/Rishabh-1803/aeld-final-project/blob/main/evidence/builds/2026-11-17-rpi4-build.md).
 
 Owner laptop review: [November 17 results](https://github.com/Rishabh-1803/aeld-final-project/blob/main/evidence/input/2026-11-17-owner-review.md). The saved live schedule is grouped by Sprint.
+
+## Student Video Demos
+
+- [Rishabh Shah Final Project Video](https://github.com/Rishabh-1803/aeld-final-project/wiki/Rishabh-Shah-Final-Project-Video) — outline prepared; recording and public video link pending hardware acceptance.

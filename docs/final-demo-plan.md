@@ -39,3 +39,5 @@ or unperformed-test claim is made. Do not expose private network configuration
 when preparing any optional public reference.
 
 Prepared supporting material: [results sheet and character card](final-session-results.md) · [submission gates](submission-readiness.md).
+
+Course UI checked November 17: submit the student video wiki page URL. The [prepared page](https://github.com/Rishabh-1803/aeld-final-project/wiki/Rishabh-Shah-Final-Project-Video) is linked from the overview. See [verified requirements](coursera-submission-requirements.md); detailed scoring remains unverified.
