@@ -230,3 +230,5 @@ QEMU Phase A is accepted with the November 17 evidence; Phase B remains pending.
 Pi image build: all 4,864 tasks passed. Offline artifact verification passed; physical boot is not yet claimed. See the [Pi build report](https://github.com/Rishabh-1803/aeld-final-project/blob/main/evidence/builds/2026-11-17-rpi4-build.md).
 
 The [live Project-Schedule board](https://github.com/users/Rishabh-1803/projects/2) now has a dedicated Sprint field populated for all 12 issues. The enrollment is online Coursera.
+
+Owner laptop review: [November 17 results](https://github.com/Rishabh-1803/aeld-final-project/blob/main/evidence/input/2026-11-17-owner-review.md). The saved live schedule is grouped by Sprint.

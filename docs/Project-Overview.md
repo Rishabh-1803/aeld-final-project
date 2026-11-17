@@ -16,7 +16,7 @@
 
 MorseMouse is an embedded Linux input system that converts a standard three-button mouse into a Morse-code text-entry device. The left and right mouse buttons represent DOT and DASH, and the middle button commits the entered Morse sequence. The decoded character is translated into a Linux US-QWERTY key event.
 
-The project is developed as a Yocto-based embedded Linux image. QEMU ARM64 is used as the repeatable development and integration platform. After QEMU-side kernel and userspace acceptance is complete, the same project layer will be built for a physical Raspberry Pi 4 and tested with a Zebronics PULSE mouse and its 2.4 GHz USB receiver.
+The project is developed as a Yocto-based embedded Linux image. QEMU ARM64 is used as the repeatable development and integration platform. QEMU-side acceptance is complete and the same project layer has built for Raspberry Pi 4. Physical testing with the Zebronics PULSE mouse and its 2.4 GHz USB receiver remains pending.
 
 The design is event-based rather than time-gap based. Button identity determines DOT or DASH; release rearms the button; the middle button explicitly commits a character. Simultaneous left/right presses cancel the current sequence and lock input until both buttons are released. Scroll-wheel gestures and automatic character timeouts are excluded from v1.
 
@@ -77,7 +77,7 @@ flowchart LR
 - The current development machine is `MACHINE = "qemuarm64"`.
 - The planned physical build machine is `MACHINE = "raspberrypi4-64"` using the Raspberry Pi BSP layer.
 
-Pinned source revisions are recorded in [`manifest/source-pins.md`](https://github.com/Rishabh-1803/aeld-final-project/blob/main/manifest/source-pins.md). The current verified QEMU baseline uses Poky Scarthgap 5.0.21. Raspberry Pi image generation and physical boot are deliberately deferred until the QEMU integration gate is complete.
+Pinned source revisions are recorded in [`manifest/source-pins.md`](https://github.com/Rishabh-1803/aeld-final-project/blob/main/manifest/source-pins.md). The current verified QEMU baseline uses Poky Scarthgap 5.0.21. The QEMU integration gate is complete. Raspberry Pi production and development images are built and offline-verified; physical boot and receiver tests remain pending.
 
 ## Hardware Platform
 
@@ -100,7 +100,7 @@ Pinned source revisions are recorded in [`manifest/source-pins.md`](https://gith
 
 The course's [Supported Hardware Platforms](https://github.com/cu-ecen-aeld/aesd-assignments/wiki/Supported-Hardware-Platforms) page directs Yocto projects to the [course Yocto assignments base wiki](https://github.com/cu-ecen-aeld/yocto-assignments-base/wiki). That course wiki includes a [worked Raspberry Pi Yocto image guide](https://github.com/cu-ecen-aeld/yocto-assignments-base/wiki/Build-basic-YOCTO-image-for-RaspberryPi): it describes adding `meta-raspberrypi` and `meta-openembedded` alongside Poky, selecting the appropriate machine, building an image, flashing an SD card and booting the board. The project-specific BSP is the upstream [meta-raspberrypi layer](https://github.com/agherzan/meta-raspberrypi), which provides the `raspberrypi4-64` machine configuration used in the planned physical build.
 
-**Board availability:** A Raspberry Pi 4 is required for the final physical demonstration. Board sourcing/availability will be confirmed before Phase B. No physical board is claimed as built, booted or tested at this stage.
+**Board availability:** A Raspberry Pi 4 is required for the final physical demonstration. An 8 GB board will be borrowed for a limited session; the session date is not fixed. No physical board is claimed as built, booted or tested at this stage.
 
 ### Hardware status boundary
 
@@ -231,3 +231,5 @@ See [daemon/HUD usage and policy](https://github.com/Rishabh-1803/aeld-final-pro
 Integrated overflow/recovery and teardown pressure passed on November 17. The physical Pi is an 8 GB borrowed board; hardware tests and card writing remain pending.
 
 Pi image build: all 4,864 tasks passed. Offline artifact verification passed; physical boot is not yet claimed. See the [Pi build report](https://github.com/Rishabh-1803/aeld-final-project/blob/main/evidence/builds/2026-11-17-rpi4-build.md).
+
+Owner laptop review: [November 17 results](https://github.com/Rishabh-1803/aeld-final-project/blob/main/evidence/input/2026-11-17-owner-review.md). The saved live schedule is grouped by Sprint.

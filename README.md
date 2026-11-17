@@ -141,3 +141,5 @@ See [daemon/HUD usage and policy](https://github.com/Rishabh-1803/aeld-final-pro
 Physical session: [checklist](docs/physical-test-session.md). Final demonstration: [recording/submission plan](docs/final-demo-plan.md).
 
 [Pi image build and offline verification](evidence/builds/2026-11-17-rpi4-build.md) · [Local Wi-Fi/SSH setup](docs/local-test-access.md). The provisioned SD image is kept local because it contains the private network profile.
+
+Owner laptop review: [November 17 results](https://github.com/Rishabh-1803/aeld-final-project/blob/main/evidence/input/2026-11-17-owner-review.md). The saved live schedule is grouped by Sprint.

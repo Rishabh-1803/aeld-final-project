@@ -51,3 +51,5 @@ access is disabled. Card writing and physical tests are deferred by the owner.
 VM test runners now use QEMU snapshot disks and keep logs under build-qemu/test-results. The verified SSH regression left the base image SHA-256 unchanged. Both public wiki pages returned HTTP 200 with the expected page titles in an unauthenticated check.
 
 Online Coursera enrollment is confirmed. Status and Sprint assignments are synchronized on the public project board. The saved Project-Schedule table is grouped by Sprint: Sprint 1 (3 items), Sprint 2 (4 items), and Sprint 3 (5 items). The grouping was saved through GitHub and verified after reloading the view and through the GitHub API.
+
+Owner review passed: [review report](../evidence/input/2026-11-17-owner-review.md). See [submission readiness](submission-readiness.md) for the remaining gates and [physical results sheet](final-session-results.md) for the borrowed-board session.

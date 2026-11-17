@@ -37,3 +37,5 @@ suggests shared-chat references for Coursera and requires them for on-campus
 sections. Keep all authorship/testing statements accurate; no sole-manual-work
 or unperformed-test claim is made. Do not expose private network configuration
 when preparing any optional public reference.
+
+Prepared supporting material: [results sheet and character card](final-session-results.md) · [submission gates](submission-readiness.md).
