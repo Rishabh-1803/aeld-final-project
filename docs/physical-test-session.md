@@ -55,3 +55,20 @@ filter, and grab_on_bind=0. Reconfirm the actual Linux IDs before changing it.
 Power gestures/execution are excluded from this session and deferred until
 after submission. Plain operating-system shutdown for safe board removal is
 not a claim that the Morse power-control feature exists.
+
+
+## Pinned shallow-source cache
+
+The first build attempted a full Raspberry Pi Linux mirror clone. It was
+interrupted to avoid downloading unused history over the slow connection.
+The source revision was not changed. Run `python3 tools/cache_pi_kernel.py`
+to cache the BSP recipe's exact kernel commit, then add to build-rpi local.conf:
+
+```
+BB_GIT_SHALLOW:pn-linux-raspberrypi = "1"
+BB_GIT_SHALLOW_DEPTH:pn-linux-raspberrypi = "1"
+```
+
+The helper creates the canonical Yocto shallow cache archive; BitBake still
+checks out the recipe's pinned commit. Use --downloads if DL_DIR differs.
+The verified pinned kernel commit is e442e5c1ab6bff5b5460b4fc949beb72aaf77970.

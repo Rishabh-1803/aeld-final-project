@@ -917,6 +917,13 @@ static int morse_connect(struct input_handler *handler,
     state->raw_middle_pressed = test_bit(BTN_MIDDLE, dev->key);
     spin_unlock_irqrestore(&dev->event_lock, flags);
 
+    /* Synchronize with held state already known to the input core. */
+    morse_fsm_core_resync_begin(&state->fsm);
+    morse_fsm_core_sync_buttons(&state->fsm,
+                                state->raw_left_pressed,
+                                state->raw_right_pressed,
+                                state->raw_middle_pressed);
+
     error = input_register_handle(&state->handle);
     if (error) {
         pr_err(DRIVER_NAME ": input_register_handle failed: %d\n",

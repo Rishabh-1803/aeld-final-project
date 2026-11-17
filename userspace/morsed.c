@@ -40,7 +40,7 @@ int main(int argc, char **argv) {
             strcpy(device, value);
         } else if (!strcmp(key, "interval_ms")) {
             char *end; unsigned long n = strtoul(value, &end, 10);
-            if (*end || n < 100 || n > 10000) { fclose(c); return 2; }
+            if (strspn(value, "0123456789") != strlen(value) || *end || n < 100 || n > 10000) { fclose(c); return 2; }
             interval = (unsigned)n;
         } else if (!strcmp(key, "power_mode")) {
             if (strcmp(value, "disabled") && strcmp(value, "dry-run")) {

@@ -20,10 +20,11 @@ static void event(int fd,unsigned code,int value) {
 }
 static void click(int fd,unsigned code) { event(fd,code,1);pause_ms(30);event(fd,code,0);pause_ms(30); }
 int main(int argc,char **argv) {
-    int teardown=0,relative=0;
+    int teardown=0,relative=0,held_start=0;
     for(int i=1;i<argc;i++) {
         if(!strcmp(argv[i],"--teardown")) teardown=1;
         else if(!strcmp(argv[i],"--relative")) relative=1;
+        else if(!strcmp(argv[i],"--held-start")) held_start=1;
         else return 2;
     }
     int fd=open("/dev/uinput",O_WRONLY|O_CLOEXEC);check(fd,"uinput");
@@ -41,6 +42,14 @@ int main(int argc,char **argv) {
     strcpy(setup.name,"Morse Stress Tablet");check(ioctl(fd,UI_DEV_SETUP,&setup),"setup");
     check(ioctl(fd,UI_DEV_CREATE),"create");pause_ms(500);
     event(fd,BTN_LEFT,1);pause_ms(100);
+    if(held_start) {
+        puts("Held LEFT state established before handler binding");fflush(stdout);
+        pause_ms(4000);event(fd,BTN_RIGHT,1);pause_ms(1000);
+        event(fd,BTN_LEFT,0);event(fd,BTN_RIGHT,0);pause_ms(200);
+        click(fd,BTN_LEFT);click(fd,BTN_RIGHT);click(fd,BTN_MIDDLE);pause_ms(500);
+        check(ioctl(fd,UI_DEV_DESTROY),"destroy held-start device");
+        close(fd);puts("PASS: held-start input sequence completed");return 0;
+    }
     size_t count=250000;struct input_event *burst=calloc(count,sizeof(*burst));
     if(!burst)return 1;
     for(size_t i=0;i<count;i++){burst[i].type=EV_KEY;burst[i].code=BTN_LEFT;burst[i].value=2;}
