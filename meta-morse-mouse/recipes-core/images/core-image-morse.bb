@@ -15,3 +15,7 @@ IMAGE_INSTALL:append = " packagegroup-morse-mouse"
 # Match the upstream core-image-minimal filesystem sizing.
 IMAGE_ROOTFS_SIZE ?= "8192"
 IMAGE_ROOTFS_EXTRA_SPACE:append = "${@bb.utils.contains("DISTRO_FEATURES", "systemd", " + 4096", "", d)}"
+
+# Optional local-only provisioning for the owner's borrowed-board session.
+IMAGE_INSTALL:append = "${@bb.utils.contains('MORSE_ENABLE_TEST_ACCESS', '1', ' morse-test-access', '', d)}"
+IMAGE_FEATURES:append = "${@bb.utils.contains('MORSE_ENABLE_TEST_ACCESS', '1', ' ssh-server-dropbear', '', d)}"

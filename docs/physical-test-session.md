@@ -72,3 +72,6 @@ BB_GIT_SHALLOW_DEPTH:pn-linux-raspberrypi = "1"
 The helper creates the canonical Yocto shallow cache archive; BitBake still
 checks out the recipe's pinned commit. Use --downloads if DL_DIR differs.
 The verified pinned kernel commit is e442e5c1ab6bff5b5460b4fc949beb72aaf77970.
+
+
+The owner will use Wi-Fi, not Ethernet. Optional private Wi-Fi/SSH provisioning is enabled locally; see [local test access](local-test-access.md). The radio connection still needs actual board testing. No microSD is connected to the laptop yet; only the internal system disk was observed, so no write has been attempted.

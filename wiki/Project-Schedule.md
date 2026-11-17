@@ -69,7 +69,7 @@ All twelve project issues are assigned to Rishabh-1803. The issue-to-sprint mapp
 ## Sprint 2 — Kernel Input Path
 
 **Dates:** 16–29 November 2026  
-**Status:** In progress
+**Status:** Complete — Sprint 2 tag published
 
 | Issue | Student issue | Status |
 |---|---|---|

@@ -1,0 +1,2 @@
+# Test access uses public-key authentication only.
+DROPBEAR_EXTRA_ARGS="-s -g"

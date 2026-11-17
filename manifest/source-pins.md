@@ -19,3 +19,13 @@ git -C meta-openembedded rev-parse HEAD
 For a reproducible handoff, record any intentional pin changes here and update the build documentation. Keep all layer branches/commits compatible with the selected Yocto release.
 
 The QEMU ARM64 baseline uses Poky core layers. The Raspberry Pi BSP layer is required for the later `raspberrypi4-64` build; it is not necessary to imply that the Pi image has already been built.
+
+
+## Raspberry Pi kernel source preparation
+
+The pinned BSP selects Linux recipe 6.6.63, machine revision
+`e442e5c1ab6bff5b5460b4fc949beb72aaf77970`, and kernel metadata revision
+`52ff0d75713ce61962b325a2090bd55e216f0cf3`. The Pi build uses a depth-one
+source cache to avoid fetching the full Linux history; these revisions are
+unchanged. See `tools/cache_pi_kernel.py` and `docs/physical-test-session.md`.
+Recipe versions are not physical runtime evidence.
