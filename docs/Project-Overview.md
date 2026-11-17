@@ -6,7 +6,9 @@
 > **Development target:** QEMU ARM64 (`qemuarm64`)  
 > **Planned physical target:** Raspberry Pi 4, 64-bit (`raspberrypi4-64`)
 
-[Project Schedule](https://github.com/Rishabh-1803/aeld-final-project/wiki/Project-Schedule) · [Source repository](https://github.com/Rishabh-1803/aeld-final-project) · [Issue tracker](https://github.com/Rishabh-1803/aeld-final-project/issues)
+[Project Schedule](https://github.com/Rishabh-1803/aeld-final-project/wiki/Project-Schedule) ·
+[Source repository](https://github.com/Rishabh-1803/aeld-final-project) ·
+[Issue tracker](https://github.com/Rishabh-1803/aeld-final-project/issues)
 
 ---
 
@@ -96,9 +98,9 @@ Pinned source revisions are recorded in [`manifest/source-pins.md`](https://gith
 - **Connection:** Mouse-to-receiver wireless link; receiver-to-Pi USB connection.
 - **Yocto support:** The `meta-raspberrypi` BSP layer provides Raspberry Pi machine configurations, including `raspberrypi4-64`. The project kernel recipe is intended to support both `qemuarm64` and `raspberrypi4-64`.
 
-The course's [Supported Hardware Platforms](https://github.com/cu-ecen-aeld/aesd-assignments/wiki/Supported-Hardware-Platforms) page directs Yocto users to the [Yocto assignments base wiki](https://github.com/cu-ecen-aeld/yocto-assignments-base/wiki). The Raspberry Pi 4 support path for this project is documented through the upstream [meta-raspberrypi BSP layer](https://github.com/agherzan/meta-raspberrypi). If the instructor's current approved-board list does not include Raspberry Pi 4, this BSP layer and machine configuration provide the explicit support path required for a non-listed board.
+The course's [Supported Hardware Platforms](https://github.com/cu-ecen-aeld/aesd-assignments/wiki/Supported-Hardware-Platforms) page directs Yocto projects to the [course Yocto assignments base wiki](https://github.com/cu-ecen-aeld/yocto-assignments-base/wiki). That course wiki includes a [worked Raspberry Pi Yocto image guide](https://github.com/cu-ecen-aeld/yocto-assignments-base/wiki/Build-basic-YOCTO-image-for-RaspberryPi): it describes adding `meta-raspberrypi` and `meta-openembedded` alongside Poky, selecting the appropriate machine, building an image, flashing an SD card and booting the board. The project-specific BSP is the upstream [meta-raspberrypi layer](https://github.com/agherzan/meta-raspberrypi), which provides the `raspberrypi4-64` machine configuration used in the planned physical build.
 
-**Board sourcing — confirm before submission:** One Raspberry Pi 4 board is required for the final physical demonstration. Replace this line with the actual arrangement: **[student-owned / requested as a department loan]**. The physical board has not yet been claimed as tested or booted.
+**Board availability:** A Raspberry Pi 4 is required for the final physical demonstration. Board sourcing/availability will be confirmed before Phase B. No physical board is claimed as built, booted or tested at this stage.
 
 ### Hardware status boundary
 
@@ -168,7 +170,7 @@ The project uses upstream Yocto, OpenEmbedded, Linux kernel, QEMU and BSP source
 **MorseMouse source, Yocto layer, tests, configuration and documentation:**  
 https://github.com/Rishabh-1803/aeld-final-project
 
-The same repository contains the project-specific application and kernel implementation as well as the `meta-morse-mouse` Yocto layer. A separate application repository is not currently planned.
+The same repository contains the project-specific application and kernel implementation as well as the `meta-morse-mouse` Yocto layer. This is the project source repository; the upstream Yocto/Poky build-system source is maintained separately at [yoctoproject/poky](https://github.com/yoctoproject/poky). A separate application-only repository is not currently planned.
 
 | Path | Contents |
 |---|---|
@@ -177,7 +179,7 @@ The same repository contains the project-specific application and kernel impleme
 | `config/` | Authoritative Morse character-to-sequence mapping |
 | `meta-morse-mouse/` | Project Yocto layer, recipes and image configuration |
 | `tests/` | Shared FSM vectors and validation scripts |
-| `docs/` | Architecture, grammar, build and project-status documentation |
+| `docs/` | Architecture, build, grammar and project-status documentation |
 | `evidence/` | Build, boot and QEMU validation reports |
 | `manifest/` | Pinned external Yocto layer/source revisions |
 
@@ -209,7 +211,6 @@ The shared project schedule, sprint milestones, assigned student issues, blocker
 
 The schedule page is the source of truth for Sprint 1, Sprint 2 and Sprint 3 tracking.
 
-
 ## Verified continuation checkpoint — 17 November 2026
 
 Kernel virtual keyboard (issue #7) is complete with November 7 QEMU
@@ -223,4 +224,8 @@ The owner confirmed on November 17 that power execution and shutdown
 gestures are deferred until after the final submission. The daemon must
 keep execution disabled. The Zebronics mouse is available; Raspberry Pi 4
 will be borrowed for a limited test session after QEMU acceptance.
-Daemon, HUD, final integration and physical validation remain pending.
+Daemon and HUD now have November 17 QEMU acceptance evidence. Final integration, physical validation and final demonstration remain pending.
+
+See [daemon/HUD usage and policy](https://github.com/Rishabh-1803/aeld-final-project/blob/main/docs/daemon-hud.md) and November 17 daemon/HUD evidence. Power execution is deferred until after submission.
+
+Integrated overflow/recovery and teardown pressure passed on November 17. The physical Pi is an 8 GB borrowed board; hardware tests and card writing remain pending.

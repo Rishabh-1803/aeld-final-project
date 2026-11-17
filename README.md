@@ -68,8 +68,8 @@ QEMU is the current development and validation target. Raspberry Pi 4 and the ph
 | Kernel Morse FSM, bounded queue and teardown stress testing | Complete |
 | Kernel virtual keyboard (`input_dev`) | Complete; QEMU evidence recorded |
 | `/dev/morse_hid` UAPI | Complete; QEMU acceptance recorded |
-| `morsed` daemon and guarded power policy | Planned |
-| Read-only telemetry/HUD | Planned |
+| `morsed` diagnostic daemon | QEMU validated; power deferred |
+| Read-only telemetry/HUD | QEMU validated |
 | Final QEMU integration and physical Pi/receiver validation | Planned |
 
 Sprint 1 snapshot: [`coursera-sprint-1`](https://github.com/Rishabh-1803/aeld-final-project/tree/coursera-sprint-1). The tag is a frozen submission boundary, not a claim that later Sprint 2 work is complete.
@@ -132,4 +132,6 @@ The owner confirmed on November 17 that power execution and shutdown
 gestures are deferred until after the final submission. The daemon must
 keep execution disabled. The Zebronics mouse is available; Raspberry Pi 4
 will be borrowed for a limited test session after QEMU acceptance.
-Daemon, HUD, final integration and physical validation remain pending.
+Daemon and HUD now have November 17 QEMU acceptance evidence. Final integration, physical validation and final demonstration remain pending.
+
+See [daemon/HUD usage and policy](https://github.com/Rishabh-1803/aeld-final-project/blob/main/docs/daemon-hud.md) and November 17 daemon/HUD evidence. Power execution is deferred until after submission.

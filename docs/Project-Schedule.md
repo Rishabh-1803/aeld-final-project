@@ -5,7 +5,9 @@
 > **Build system:** Yocto Project / Poky Scarthgap 5.0.21  
 > **Repository:** https://github.com/Rishabh-1803/aeld-final-project
 
-[Project Overview](https://github.com/Rishabh-1803/aeld-final-project/wiki/Project-Overview) · [Source repository](https://github.com/Rishabh-1803/aeld-final-project) · [GitHub Issues](https://github.com/Rishabh-1803/aeld-final-project/issues)
+[Project Overview](https://github.com/Rishabh-1803/aeld-final-project/wiki/Project-Overview) ·
+[Source repository](https://github.com/Rishabh-1803/aeld-final-project) ·
+[GitHub Issues](https://github.com/Rishabh-1803/aeld-final-project/issues)
 
 ---
 
@@ -18,6 +20,31 @@
 | Sprint 3 | 30 November–13 December 2026 | Daemon, guarded power policy, telemetry/HUD, full integration, recovery, documentation and final demonstration | **Planned** |
 
 Sprint dates follow the project plan. Issue status below reflects the current GitHub issue tracker; completed Sprint 2 work was accepted ahead of the formal Sprint 2 date.
+
+## GitHub Project Board Layout
+
+Create a GitHub Projects V2 project named **MorseMouse** and add a table view named **Project-Schedule**. Configure the view to match the course example, with the following columns and sprint grouping:
+
+| Board field | Type / configuration |
+|---|---|
+| Title | Built-in item title (GitHub issue title) |
+| Repository | Built-in repository field |
+| Assignees | Built-in assignees field |
+| Status | Built-in status field: Todo, In Progress, Done |
+| Sprint | Single-select custom field: Sprint 1, Sprint 2, Sprint 3 |
+| Grouping | Group rows by the Sprint field |
+
+### Issue-to-board mapping
+
+| Sprint group | Issue | Assignee | Status |
+|---|---|---|---|
+| Sprint 1 | [#1](https://github.com/Rishabh-1803/aeld-final-project/issues/1), [#3](https://github.com/Rishabh-1803/aeld-final-project/issues/3), [#4](https://github.com/Rishabh-1803/aeld-final-project/issues/4) | Rishabh-1803 | Done |
+| Sprint 2 | [#5](https://github.com/Rishabh-1803/aeld-final-project/issues/5), [#6](https://github.com/Rishabh-1803/aeld-final-project/issues/6) | Rishabh-1803 | Done |
+| Sprint 2 | [#7](https://github.com/Rishabh-1803/aeld-final-project/issues/7) | Rishabh-1803 | In Progress |
+| Sprint 2 | [#8](https://github.com/Rishabh-1803/aeld-final-project/issues/8) | Rishabh-1803 | Todo |
+| Sprint 3 | [#2](https://github.com/Rishabh-1803/aeld-final-project/issues/2), [#9](https://github.com/Rishabh-1803/aeld-final-project/issues/9), [#10](https://github.com/Rishabh-1803/aeld-final-project/issues/10), [#11](https://github.com/Rishabh-1803/aeld-final-project/issues/11), [#12](https://github.com/Rishabh-1803/aeld-final-project/issues/12) | Rishabh-1803 | Todo (issue #2 remains hardware-gated) |
+
+All twelve project issues are assigned to Rishabh-1803. The issue-to-sprint mapping above is the intended board configuration; it does not claim that the Projects V2 board has already been created.
 
 ## Sprint 1 — Platform and Reference Implementation
 
@@ -98,6 +125,7 @@ The following upcoming-sprint issues are assigned to **Rishabh-1803** and have e
 
 | Issue | Student issue | Status |
 |---|---|---|
+| [#2](https://github.com/Rishabh-1803/aeld-final-project/issues/2) | Physical Zebronics PULSE receiver and Raspberry Pi 4 input validation (Phase B; gated by issue #11 Phase A) | Open — intentionally blocked until QEMU gate |
 | [#9](https://github.com/Rishabh-1803/aeld-final-project/issues/9) | `morsed` daemon and guarded power-control policy | Open |
 | [#10](https://github.com/Rishabh-1803/aeld-final-project/issues/10) | Read-only telemetry and live HUD client | Open |
 | [#11](https://github.com/Rishabh-1803/aeld-final-project/issues/11) | QEMU integration gate, then Raspberry Pi 4 and Zebronics hardware validation | Open |
@@ -178,7 +206,6 @@ Raspberry Pi image build, physical receiver inspection and hardware acceptance a
 
 A tag is a frozen source snapshot. Do not move a previously submitted tag to a later commit.
 
-
 ## Verified continuation checkpoint — 17 November 2026
 
 Kernel virtual keyboard (issue #7) is complete with November 7 QEMU
@@ -192,4 +219,8 @@ The owner confirmed on November 17 that power execution and shutdown
 gestures are deferred until after the final submission. The daemon must
 keep execution disabled. The Zebronics mouse is available; Raspberry Pi 4
 will be borrowed for a limited test session after QEMU acceptance.
-Daemon, HUD, final integration and physical validation remain pending.
+Daemon and HUD now have November 17 QEMU acceptance evidence. Final integration, physical validation and final demonstration remain pending.
+
+See [daemon/HUD usage and policy](https://github.com/Rishabh-1803/aeld-final-project/blob/main/docs/daemon-hud.md) and November 17 daemon/HUD evidence. Power execution is deferred until after submission.
+
+Integrated overflow/recovery and teardown pressure passed on November 17. The physical Pi is an 8 GB borrowed board; hardware tests and card writing remain pending.

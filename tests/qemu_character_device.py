@@ -34,6 +34,7 @@ def click(mask): buttons(mask); buttons(0)
 def sequence(s):
     for c in s: click(1 if c=='.' else 2)
     click(4)
+shell('/etc/init.d/morsed stop 2>/dev/null || true')
 shell('morse-hid-test --self-test')
 shell('morse-hid-test --wait > /tmp/wakeup.log 2>&1 &')
 click(1)

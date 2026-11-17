@@ -1,0 +1,1084 @@
+runqemu - INFO - Continuing with the following parameters:
+KERNEL: [/home/rishabh_shah/projects/morsemouse/build-qemu/tmp/deploy/images/qemuarm64/Image]
+MACHINE: [qemuarm64]
+FSTYPE: [ext4]
+ROOTFS: [/home/rishabh_shah/projects/morsemouse/build-qemu/tmp/deploy/images/qemuarm64/core-image-morse-dev-qemuarm64.rootfs-20261117073017.ext4]
+CONFFILE: [/home/rishabh_shah/projects/morsemouse/build-qemu/tmp/deploy/images/qemuarm64/core-image-morse-dev-qemuarm64.rootfs.qemuboot.conf]
+
+runqemu - INFO - Network configuration: ip=dhcp
+runqemu - INFO - Port forward: hostfwd=tcp:127.0.0.1:2222-:22 hostfwd=tcp:127.0.0.1:2323-:23
+runqemu - INFO - Running /home/rishabh_shah/projects/morsemouse/build-qemu/tmp/work/x86_64-linux/qemu-helper-native/1.0/recipe-sysroot-native/usr/bin/qemu-system-aarch64 -device virtio-net-pci,netdev=net0,mac=52:54:00:12:35:02 -netdev user,id=net0,hostfwd=tcp:127.0.0.1:2222-:22,hostfwd=tcp:127.0.0.1:2323-:23,tftp=/home/rishabh_shah/projects/morsemouse/build-qemu/tmp/deploy/images/qemuarm64 -object rng-random,filename=/dev/urandom,id=rng0 -device virtio-rng-pci,rng=rng0 -drive id=disk0,file=/home/rishabh_shah/projects/morsemouse/build-qemu/tmp/deploy/images/qemuarm64/core-image-morse-dev-qemuarm64.rootfs-20261117073017.ext4,if=none,format=raw -device virtio-blk-pci,drive=disk0 -device qemu-xhci -device usb-tablet -device usb-kbd  -machine virt -cpu cortex-a57 -smp 4 -m 256  -qmp unix:/tmp/morse-acceptance-qmp.sock,server=on,wait=off -serial mon:stdio -serial null -nographic -device virtio-gpu-pci -kernel /home/rishabh_shah/projects/morsemouse/build-qemu/tmp/deploy/images/qemuarm64/Image -append 'root=/dev/vda rw  mem=256M ip=dhcp console=ttyAMA0 console=hvc0 swiotlb=0 '
+
+runqemu - INFO - Host uptime: 1078.58
+
+[    0.000000] Booting Linux on physical CPU 0x0000000000 [0x411fd070]
+
+[    0.000000] Linux version 6.6.151-yocto-standard (oe-user@oe-host) (aarch64-poky-linux-gcc (GCC) 13.5.0, GNU ld (GNU Binutils) 2.42.0.20240723) #1 SMP PREEMPT Tue Aug 18 18:50:33 UTC 2026
+
+[    0.000000] random: crng init done
+
+[    0.000000] Machine model: linux,dummy-virt
+
+[    0.000000] Memory limited to 256MB
+
+[    0.000000] efi: UEFI not found.
+
+[    0.000000] Zone ranges:
+
+[    0.000000]   DMA      [mem 0x0000000040000000-0x000000004fffffff]
+
+[    0.000000]   DMA32    empty
+
+[    0.000000]   Normal   empty
+
+[    0.000000] Movable zone start for each node
+
+[    0.000000] Early memory node ranges
+
+[    0.000000]   node   0: [mem 0x0000000040000000-0x000000004fffffff]
+
+[    0.000000] Initmem setup node 0 [mem 0x0000000040000000-0x000000004fffffff]
+
+[    0.000000] psci: probing for conduit method from DT.
+
+[    0.000000] psci: PSCIv1.1 detected in firmware.
+
+[    0.000000] psci: Using standard PSCI v0.2 function IDs
+
+[    0.000000] psci: Trusted OS migration not required
+
+[    0.000000] psci: SMC Calling Convention v1.0
+
+[    0.000000] percpu: Embedded 28 pages/cpu s73768 r8192 d32728 u114688
+
+[    0.000000] Detected PIPT I-cache on CPU0
+
+[    0.000000] CPU features: detected: Spectre-v2
+
+[    0.000000] CPU features: detected: Spectre-v4
+
+[    0.000000] CPU features: detected: Spectre-BHB
+
+[    0.000000] CPU features: detected: ARM erratum 1742098
+
+[    0.000000] CPU features: detected: ARM erratum 832075
+
+[    0.000000] CPU features: detected: ARM errata 1165522, 1319367, or 1530923
+
+[    0.000000] alternatives: applying boot alternatives
+
+[    0.000000] Kernel command line: root=/dev/vda rw  mem=256M ip=dhcp console=ttyAMA0 console=hvc0 swiotlb=0 
+
+[    0.000000] Dentry cache hash table entries: 32768 (order: 6, 262144 bytes, linear)
+
+[    0.000000] Inode-cache hash table entries: 16384 (order: 5, 131072 bytes, linear)
+
+[    0.000000] Built 1 zonelists, mobility grouping on.  Total pages: 64512
+
+[    0.000000] mem auto-init: stack:all(zero), heap alloc:off, heap free:off
+
+[    0.000000] software IO TLB: area num 4.
+
+[    0.000000] software IO TLB: SWIOTLB bounce buffer size roundup to 1MB
+
+[    0.000000] software IO TLB: mapped [mem 0x000000004f700000-0x000000004f800000] (1MB)
+
+[    0.000000] Memory: 228244K/262144K available (13440K kernel code, 2004K rwdata, 3164K rodata, 4608K init, 557K bss, 33900K reserved, 0K cma-reserved)
+
+[    0.000000] SLUB: HWalign=64, Order=0-3, MinObjects=0, CPUs=4, Nodes=1
+
+[    0.000000] ftrace: allocating 41062 entries in 162 pages
+
+[    0.000000] ftrace: allocated 162 pages with 3 groups
+
+[    0.000000] rcu: Preemptible hierarchical RCU implementation.
+
+[    0.000000] rcu: 	RCU event tracing is enabled.
+
+[    0.000000] rcu: 	RCU restricting CPUs from NR_CPUS=256 to nr_cpu_ids=4.
+
+[    0.000000] 	Trampoline variant of Tasks RCU enabled.
+
+[    0.000000] 	Rude variant of Tasks RCU enabled.
+
+[    0.000000] 	Tracing variant of Tasks RCU enabled.
+
+[    0.000000] rcu: RCU calculated value of scheduler-enlistment delay is 25 jiffies.
+
+[    0.000000] rcu: Adjusting geometry for rcu_fanout_leaf=16, nr_cpu_ids=4
+
+[    0.000000] NR_IRQS: 64, nr_irqs: 64, preallocated irqs: 0
+
+[    0.000000] Root IRQ handler: gic_handle_irq
+
+[    0.000000] GICv2m: range[mem 0x08020000-0x08020fff], SPI[80:143]
+
+[    0.000000] rcu: srcu_init: Setting srcu_struct sizes based on contention.
+
+[    0.000000] arch_timer: cp15 timer(s) running at 62.50MHz (virt).
+
+[    0.000000] clocksource: arch_sys_counter: mask: 0x1ffffffffffffff max_cycles: 0x1cd42e208c, max_idle_ns: 881590405314 ns
+
+[    0.000056] sched_clock: 57 bits at 63MHz, resolution 16ns, wraps every 4398046511096ns
+
+[    0.009356] kfence: initialized - using 2097152 bytes for 255 objects at 0x(____ptrval____)-0x(____ptrval____)
+
+[    0.014821] Console: colour dummy device 80x25
+
+[    0.015723] Calibrating delay loop (skipped), value calculated using timer frequency.. 125.00 BogoMIPS (lpj=250000)
+
+[    0.015862] pid_max: default: 32768 minimum: 301
+
+[    0.016956] LSM: initializing lsm=capability,landlock,integrity
+
+[    0.017238] landlock: Up and running.
+
+[    0.018956] Mount-cache hash table entries: 512 (order: 0, 4096 bytes, linear)
+
+[    0.018991] Mountpoint-cache hash table entries: 512 (order: 0, 4096 bytes, linear)
+
+[    0.039855] cacheinfo: Unable to detect cache hierarchy for CPU 0
+
+[    0.047141] RCU Tasks: Setting shift to 2 and lim to 1 rcu_task_cb_adjust=1 rcu_task_cpu_ids=4.
+
+[    0.048889] RCU Tasks Rude: Setting shift to 2 and lim to 1 rcu_task_cb_adjust=1 rcu_task_cpu_ids=4.
+
+[    0.049022] RCU Tasks Trace: Setting shift to 2 and lim to 1 rcu_task_cb_adjust=1 rcu_task_cpu_ids=4.
+
+[    0.049872] rcu: Hierarchical SRCU implementation.
+
+[    0.049897] rcu: 	Max phase no-delay instances is 1000.
+
+[    0.052771] EFI services will not be available.
+
+[    0.053491] smp: Bringing up secondary CPUs ...
+
+[    0.057272] Detected PIPT I-cache on CPU1
+
+[    0.058026] CPU1: Booted secondary processor 0x0000000001 [0x411fd070]
+
+[    0.062588] Detected PIPT I-cache on CPU2
+
+[    0.062799] CPU2: Booted secondary processor 0x0000000002 [0x411fd070]
+
+[    0.063958] Detected PIPT I-cache on CPU3
+
+[    0.064113] CPU3: Booted secondary processor 0x0000000003 [0x411fd070]
+
+[    0.065015] smp: Brought up 1 node, 4 CPUs
+
+[    0.065041] SMP: Total of 4 processors activated.
+
+[    0.065113] CPU features: detected: 32-bit EL0 Support
+
+[    0.065155] CPU features: detected: CRC32 instructions
+
+[    0.067560] CPU: All CPU(s) started at EL1
+
+[    0.067582] alternatives: applying system-wide alternatives
+
+[    0.083339] devtmpfs: initialized
+
+[    0.090318] clocksource: jiffies: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 7645041785100000 ns
+
+[    0.090471] futex hash table entries: 1024 (order: 4, 65536 bytes, linear)
+
+[    0.094441] DMI not present or invalid.
+
+[    0.100839] NET: Registered PF_NETLINK/PF_ROUTE protocol family
+
+[    0.105309] DMA: preallocated 128 KiB GFP_KERNEL pool for atomic allocations
+
+[    0.105466] DMA: preallocated 128 KiB GFP_KERNEL|GFP_DMA pool for atomic allocations
+
+[    0.105545] DMA: preallocated 128 KiB GFP_KERNEL|GFP_DMA32 pool for atomic allocations
+
+[    0.108489] hw-breakpoint: found 6 breakpoint and 4 watchpoint registers.
+
+[    0.109459] ASID allocator initialised with 65536 entries
+
+[    0.109919] Serial: AMBA PL011 UART driver
+
+[    0.130645] 9000000.pl011: ttyAMA0 at MMIO 0x9000000 (irq = 13, base_baud = 0) is a PL011 rev1
+
+[    0.131538] printk: console [ttyAMA0] enabled
+
+[    0.209265] Modules: 26768 pages in range for non-PLT usage
+
+[    0.209311] Modules: 518288 pages in range for PLT usage
+
+[    0.292493] raid6: neonx8   gen()  4823 MB/s
+
+[    0.362588] raid6: neonx4   gen()  3962 MB/s
+
+[    0.432820] raid6: neonx2   gen()  2495 MB/s
+
+[    0.503271] raid6: neonx1   gen()  1135 MB/s
+
+[    0.573266] raid6: int64x8  gen()  2795 MB/s
+
+[    0.644111] raid6: int64x4  gen()  1772 MB/s
+
+[    0.715227] raid6: int64x2  gen()  3509 MB/s
+
+[    0.787092] raid6: int64x1  gen()  2560 MB/s
+
+[    0.787541] raid6: using algorithm neonx8 gen() 4823 MB/s
+
+[    0.858114] raid6: .... xor() 2127 MB/s, rmw enabled
+
+[    0.858685] raid6: using neon recovery algorithm
+
+[    0.860232] iommu: Default domain type: Translated
+
+[    0.860590] iommu: DMA domain TLB invalidation policy: strict mode
+
+[    0.862636] SCSI subsystem initialized
+
+[    0.864165] usbcore: registered new interface driver usbfs
+
+[    0.864611] usbcore: registered new interface driver hub
+
+[    0.864966] usbcore: registered new device driver usb
+
+[    0.865491] pps_core: LinuxPPS API ver. 1 registered
+
+[    0.865659] pps_core: Software ver. 5.3.6 - Copyright 2005-2007 Rodolfo Giometti <giometti@linux.it>
+
+[    0.866072] PTP clock support registered
+
+[    0.877845] vgaarb: loaded
+
+[    0.879089] clocksource: Switched to clocksource arch_sys_counter
+
+[    0.922321] NET: Registered PF_INET protocol family
+
+[    0.924857] IP idents hash table entries: 4096 (order: 3, 32768 bytes, linear)
+
+[    0.933425] tcp_listen_portaddr_hash hash table entries: 256 (order: 0, 4096 bytes, linear)
+
+[    0.933827] Table-perturb hash table entries: 65536 (order: 6, 262144 bytes, linear)
+
+[    0.934237] TCP established hash table entries: 2048 (order: 2, 16384 bytes, linear)
+
+[    0.934703] TCP bind hash table entries: 2048 (order: 4, 65536 bytes, linear)
+
+[    0.936434] TCP: Hash tables configured (established 2048 bind 2048)
+
+[    0.940294] UDP hash table entries: 256 (order: 1, 8192 bytes, linear)
+
+[    0.941484] UDP-Lite hash table entries: 256 (order: 1, 8192 bytes, linear)
+
+[    0.943536] NET: Registered PF_UNIX/PF_LOCAL protocol family
+
+[    0.948069] RPC: Registered named UNIX socket transport module.
+
+[    0.948309] RPC: Registered udp transport module.
+
+[    0.948558] RPC: Registered tcp transport module.
+
+[    0.948654] RPC: Registered tcp-with-tls transport module.
+
+[    0.948922] RPC: Registered tcp NFSv4.1 backchannel transport module.
+
+[    0.949280] PCI: CLS 0 bytes, default 64
+
+[    0.957969] workingset: timestamp_bits=46 max_order=16 bucket_order=0
+
+[    0.965636] NFS: Registering the id_resolver key type
+
+[    0.968778] Key type id_resolver registered
+
+[    0.969976] Key type id_legacy registered
+
+[    0.976247] Key type cifs.idmap registered
+
+[    1.023524] xor: measuring software checksum speed
+
+[    1.025186]    8regs           :  2575 MB/sec
+
+[    1.026009]    32regs          :  6352 MB/sec
+
+[    1.027456]    arm64_neon      :  2808 MB/sec
+
+[    1.027833] xor: using function: 32regs (6352 MB/sec)
+
+[    1.028524] Block layer SCSI generic (bsg) driver version 0.4 loaded (major 250)
+
+[    1.029293] io scheduler mq-deadline registered
+
+[    1.029707] io scheduler kyber registered
+
+[    1.032738] pci-host-generic 4010000000.pcie: host bridge /pcie@10000000 ranges:
+
+[    1.033979] pci-host-generic 4010000000.pcie:       IO 0x003eff0000..0x003effffff -> 0x0000000000
+
+[    1.035371] pci-host-generic 4010000000.pcie:      MEM 0x0010000000..0x003efeffff -> 0x0010000000
+
+[    1.037183] pci-host-generic 4010000000.pcie:      MEM 0x8000000000..0xffffffffff -> 0x8000000000
+
+[    1.038349] pci-host-generic 4010000000.pcie: Memory resource size exceeds max for 32 bits
+
+[    1.039670] pci-host-generic 4010000000.pcie: ECAM at [mem 0x4010000000-0x401fffffff] for [bus 00-ff]
+
+[    1.040829] pci-host-generic 4010000000.pcie: PCI host bridge to bus 0000:00
+
+[    1.041292] pci_bus 0000:00: root bus resource [bus 00-ff]
+
+[    1.041620] pci_bus 0000:00: root bus resource [io  0x0000-0xffff]
+
+[    1.042088] pci_bus 0000:00: root bus resource [mem 0x10000000-0x3efeffff]
+
+[    1.042588] pci_bus 0000:00: root bus resource [mem 0x8000000000-0xffffffffff]
+
+[    1.045586] pci 0000:00:00.0: [1b36:0008] type 00 class 0x060000
+
+[    1.049004] pci 0000:00:01.0: [1af4:1000] type 00 class 0x020000
+
+[    1.049323] pci 0000:00:01.0: BAR 0 [io  0x0000-0x001f]
+
+[    1.049738] pci 0000:00:01.0: BAR 1 [mem 0x00000000-0x00000fff]
+
+[    1.050158] pci 0000:00:01.0: BAR 4 [mem 0x00000000-0x00003fff 64bit pref]
+
+[    1.050663] pci 0000:00:01.0: ROM [mem 0x00000000-0x0003ffff pref]
+
+[    1.052843] pci 0000:00:02.0: [1af4:1005] type 00 class 0x00ff00
+
+[    1.053158] pci 0000:00:02.0: BAR 0 [io  0x0000-0x001f]
+
+[    1.053420] pci 0000:00:02.0: BAR 1 [mem 0x00000000-0x00000fff]
+
+[    1.053935] pci 0000:00:02.0: BAR 4 [mem 0x00000000-0x00003fff 64bit pref]
+
+[    1.055179] pci 0000:00:03.0: [1af4:1001] type 00 class 0x010000
+
+[    1.055759] pci 0000:00:03.0: BAR 0 [io  0x0000-0x007f]
+
+[    1.056235] pci 0000:00:03.0: BAR 1 [mem 0x00000000-0x00000fff]
+
+[    1.056580] pci 0000:00:03.0: BAR 4 [mem 0x00000000-0x00003fff 64bit pref]
+
+[    1.057441] pci 0000:00:04.0: [1b36:000d] type 00 class 0x0c0330
+
+[    1.057628] pci 0000:00:04.0: BAR 0 [mem 0x00000000-0x00003fff 64bit]
+
+[    1.058596] pci 0000:00:05.0: [1af4:1050] type 00 class 0x038000
+
+[    1.059559] pci 0000:00:05.0: BAR 1 [mem 0x00000000-0x00000fff]
+
+[    1.060124] pci 0000:00:05.0: BAR 4 [mem 0x00000000-0x00003fff 64bit pref]
+
+[    1.062138] pci 0000:00:01.0: ROM [mem 0x10000000-0x1003ffff pref]: assigned
+
+[    1.063963] pci 0000:00:01.0: BAR 4 [mem 0x8000000000-0x8000003fff 64bit pref]: assigned
+
+[    1.064852] pci 0000:00:02.0: BAR 4 [mem 0x8000004000-0x8000007fff 64bit pref]: assigned
+
+[    1.065422] pci 0000:00:03.0: BAR 4 [mem 0x8000008000-0x800000bfff 64bit pref]: assigned
+
+[    1.066123] pci 0000:00:04.0: BAR 0 [mem 0x800000c000-0x800000ffff 64bit]: assigned
+
+[    1.066494] pci 0000:00:05.0: BAR 4 [mem 0x8000010000-0x8000013fff 64bit pref]: assigned
+
+[    1.067491] pci 0000:00:01.0: BAR 1 [mem 0x10040000-0x10040fff]: assigned
+
+[    1.068505] pci 0000:00:02.0: BAR 1 [mem 0x10041000-0x10041fff]: assigned
+
+[    1.069093] pci 0000:00:03.0: BAR 1 [mem 0x10042000-0x10042fff]: assigned
+
+[    1.069609] pci 0000:00:05.0: BAR 1 [mem 0x10043000-0x10043fff]: assigned
+
+[    1.070130] pci 0000:00:03.0: BAR 0 [io  0x1000-0x107f]: assigned
+
+[    1.070549] pci 0000:00:01.0: BAR 0 [io  0x1080-0x109f]: assigned
+
+[    1.071933] pci 0000:00:02.0: BAR 0 [io  0x10a0-0x10bf]: assigned
+
+[    1.073334] pci 0000:00:04.0: enabling device (0000 -> 0002)
+
+[    1.079368] virtio-pci 0000:00:01.0: enabling device (0000 -> 0003)
+
+[    1.084355] virtio-pci 0000:00:02.0: enabling device (0000 -> 0003)
+
+[    1.086579] virtio-pci 0000:00:03.0: enabling device (0000 -> 0003)
+
+[    1.091350] virtio-pci 0000:00:05.0: enabling device (0000 -> 0002)
+
+[    1.104318] [drm] pci: virtio-gpu-pci detected at 0000:00:05.0
+
+[    1.105595] [drm] features: -virgl +edid -resource_blob -host_visible
+
+[    1.105615] [drm] features: -context_init
+
+[    1.106591] [drm] number of scanouts: 1
+
+[    1.107170] [drm] number of cap sets: 0
+
+[    1.115639] [drm] Initialized virtio_gpu 0.1.0 0 for 0000:00:05.0 on minor 0
+
+[    1.155984] Console: switching to colour frame buffer device 160x50
+
+[    1.161847] virtio-pci 0000:00:05.0: [drm] fb0: virtio_gpudrmfb frame buffer device
+
+[    1.187438] brd: module loaded
+
+[    1.188219] virtio_blk virtio2: 4/0/0 default/read/poll queues
+
+[    1.195599] virtio_blk virtio2: [vda] 107682 512-byte logical blocks (55.1 MB/52.6 MiB)
+
+[    1.209372] xhci_hcd 0000:00:04.0: xHCI Host Controller
+
+[    1.210121] xhci_hcd 0000:00:04.0: new USB bus registered, assigned bus number 1
+
+[    1.213880] xhci_hcd 0000:00:04.0: hcc params 0x00087001 hci version 0x100 quirks 0x0000000000000010
+
+[    1.217548] xhci_hcd 0000:00:04.0: xHCI Host Controller
+
+[    1.217703] xhci_hcd 0000:00:04.0: new USB bus registered, assigned bus number 2
+
+[    1.218327] xhci_hcd 0000:00:04.0: Host supports USB 3.0 SuperSpeed
+
+[    1.225078] hub 1-0:1.0: USB hub found
+
+[    1.225681] hub 1-0:1.0: 4 ports detected
+
+[    1.229068] usb usb2: We don't know the algorithms for LPM for this host, disabling LPM.
+
+[    1.230498] hub 2-0:1.0: USB hub found
+
+[    1.231281] hub 2-0:1.0: 4 ports detected
+
+[    1.236464] rtc-pl031 9010000.pl031: registered as rtc0
+
+[    1.237129] rtc-pl031 9010000.pl031: setting system clock to 2026-11-17T07:31:22 UTC (1794900682)
+
+[    1.239888] device-mapper: ioctl: 4.48.0-ioctl (2023-03-01) initialised: dm-devel@redhat.com
+
+[    1.243473] usbcore: registered new interface driver usbhid
+
+[    1.243781] usbhid: USB HID core driver
+
+[    1.246545] hw perfevents: enabled with armv8_pmuv3 PMU driver, 7 counters available
+
+[    1.248132] u32 classifier
+
+[    1.248264]     input device check on
+
+[    1.248626]     Actions configured
+
+[    1.250319] NET: Registered PF_INET6 protocol family
+
+[    1.259179] Segment Routing with IPv6
+
+[    1.259670] In-situ OAM (IOAM) with IPv6
+
+[    1.260399] sit: IPv6, IPv4 and MPLS over IPv4 tunneling driver
+
+[    1.263219] NET: Registered PF_PACKET protocol family
+
+[    1.264289] Bridge firewalling registered
+
+[    1.265371] Key type dns_resolver registered
+
+[    1.265963] NET: Registered PF_VSOCK protocol family
+
+[    1.275871] registered taskstats version 1
+
+[    1.289125] Key type .fscrypt registered
+
+[    1.289302] Key type fscrypt-provisioning registered
+
+[    1.293816] Btrfs loaded, zoned=no, fsverity=no
+
+[    1.309132] Key type encrypted registered
+
+[    1.311473] printk: console [netcon0] enabled
+
+[    1.311659] netconsole: network logging started
+
+[    1.351029] Sending DHCP requests ., OK
+
+[    1.367673] IP-Config: Got DHCP answer from 10.0.2.2, my address is 10.0.2.15
+
+[    1.368398] IP-Config: Complete:
+
+[    1.368674]      device=eth0, hwaddr=52:54:00:12:35:02, ipaddr=10.0.2.15, mask=255.255.255.0, gw=10.0.2.2
+
+[    1.369534]      host=10.0.2.15, domain=, nis-domain=(none)
+
+[    1.369976]      bootserver=10.0.2.2, rootserver=10.0.2.2, rootpath=
+
+[    1.370001]      nameserver0=10.0.2.3
+
+[    1.374074] clk: Disabling unused clocks
+
+[    1.379268] md: Waiting for all devices to be available before autodetect
+
+[    1.379895] md: If you don't use raid, use raid=noautodetect
+
+[    1.380201] md: Autodetecting RAID arrays.
+
+[    1.380599] md: autorun ...
+
+[    1.380771] md: ... autorun DONE.
+
+[    1.414402] EXT4-fs (vda): mounted filesystem eb1417b2-ca17-4fa8-9239-374ef4638e12 r/w with ordered data mode. Quota mode: disabled.
+
+[    1.416950] VFS: Mounted root (ext4 filesystem) on device 253:0.
+
+[    1.419249] devtmpfs: mounted
+
+[    1.471768] Freeing unused kernel memory: 4608K
+
+[    1.472746] Run /sbin/init as init process
+
+[    1.487273] usb 1-1: new high-speed USB device number 2 using xhci_hcd
+
+
+INIT: version 3.04 booting
+
+
+[    1.666298] input: QEMU QEMU USB Tablet as /devices/platform/4010000000.pcie/pci0000:00/0000:00:04.0/usb1/1-1/1-1:1.0/0003:0627:0001.0001/input/input0
+
+[    1.669778] hid-generic 0003:0627:0001.0001: input: USB HID v0.01 Mouse [QEMU QEMU USB Tablet] on usb-0000:00:04.0-1/input0
+
+[    1.807138] usb 1-2: new high-speed USB device number 3 using xhci_hcd
+
+[    1.964523] input: QEMU QEMU USB Keyboard as /devices/platform/4010000000.pcie/pci0000:00/0000:00:04.0/usb1/1-2/1-2:1.0/0003:0627:0001.0002/input/input1
+
+[    2.031865] hid-generic 0003:0627:0001.0002: input: USB HID v1.11 Keyboard [QEMU QEMU USB Keyboard] on usb-0000:00:04.0-2/input0
+
+Starting udev
+
+[    2.350231] udevd[116]: starting version 3.2.14
+
+[    2.409520] udevd[117]: starting eudev-3.2.14
+
+[    2.677592] hid_morse_kbd: loading out-of-tree module taints kernel.
+
+[    2.690331] input: MorseMouse Virtual Keyboard as /devices/virtual/input/input2
+
+[    2.692804] hid_morse_kbd: virtual keyboard registered; printable_ascii=95
+
+[    2.694793] hid_morse_kbd: character device registered; name=morse_hid major=10 minor=258
+
+[    2.755682] hid_morse_kbd: connected to "QEMU QEMU USB Tablet"; grab=disabled queue_capacity=64
+
+[    2.757594] hid_morse_kbd: registered; target_name="USB Tablet", grab_on_bind=false queue_capacity=64 sequence_capacity=63 map_entries=95
+
+[    2.948624] EXT4-fs (vda): re-mounted eb1417b2-ca17-4fa8-9239-374ef4638e12.
+
+
+INIT: Entering runlevel: 5
+
+
+
+Configuring network interfaces... ip: RTNETLINK answers: File exists
+
+
+Starting syslogd/klogd: done
+
+
+
+
+
+Poky (Yocto Project Reference Distro) 5.0.21 qemuarm64 /dev/ttyAMA0
+
+
+
+
+
+qemuarm64 login: root
+root
+
+
+
+WARNING: Poky is a reference Yocto Project distribution that should be used for
+
+testing and development purposes only. It is recommended that you create your
+
+own distribution for production use.
+
+
+
+7[r[999;999H[6nroot@qemuarm64:~# sleep 2; morse_hud_client; echo MORSE_COMMAND_DONE_1
+sleep 2; morse_hud_client; echo MORSE_COMMAND_DONE_1
+
+MorseMouse: current
+
+version=1
+
+monotonic_ms=10980
+
+interval_ms=1000
+
+daemon=running
+
+driver=ready
+
+power=disabled
+
+connected=1
+
+received=0
+
+processed=0
+
+dropped=0
+
+input_overflows=0
+
+diagnostic_dropped=0
+
+input_queue=0
+
+diagnostic_queue=0
+
+event_id=1
+
+event_type=9
+
+ascii=0
+
+sequence=
+
+loss_notifications=0
+
+MORSE_COMMAND_DONE_1
+
+root@qemuarm64:~# sleep 2; morse_hud_client; echo MORSE_COMMAND_DONE_2
+[   11.595357] hid_morse_kbd: FSM action=DOT sequence=. event_ns=11535960096
+
+[   11.655268] hid_morse_kbd: FSM action=DASH sequence=.- event_ns=11596436768
+
+[   11.716256] hid_morse_kbd: FSM COMMIT valid sequence=.- ascii=65 hex=0x41
+
+[   11.718244] hid_morse_kbd: virtual keyboard emitted ascii=65
+
+sleep 2; morse_hud_client; echo MORSE_COMMAND_DONE_2
+
+MorseMouse: current
+
+version=1
+
+monotonic_ms=13662
+
+interval_ms=1000
+
+daemon=running
+
+driver=ready
+
+power=disabled
+
+connected=1
+
+received=6
+
+processed=6
+
+dropped=0
+
+input_overflows=0
+
+diagnostic_dropped=0
+
+input_queue=0
+
+diagnostic_queue=0
+
+event_id=4
+
+event_type=3
+
+ascii=65
+
+sequence=.-
+
+loss_notifications=0
+
+MORSE_COMMAND_DONE_2
+
+root@qemuarm64:~# /etc/init.d/morsed restart; sleep 2; morse_hud_client; echo MORSE_COMMAND_DONE_3
+/etc/init.d/morsed restart; sleep 2; morse_hud_client; echo MO
+
+
+RSE_COMMAND_DONE_3
+
+stopped /usr/bin/morsed (pid 278)
+
+MorseMouse: current
+
+version=1
+
+monotonic_ms=15010
+
+interval_ms=1000
+
+daemon=running
+
+driver=ready
+
+power=disabled
+
+connected=1
+
+received=6
+
+processed=6
+
+dropped=0
+
+input_overflows=0
+
+diagnostic_dropped=0
+
+input_queue=0
+
+diagnostic_queue=0
+
+event_id=0
+
+event_type=0
+
+ascii=0
+
+sequence=
+
+loss_notifications=0
+
+MORSE_COMMAND_DONE_3
+
+root@qemuarm64:~# /etc/init.d/morsed stop; sleep 4; morse_hud_client; echo MORSE_COMMAND_DONE_4
+/etc/init.d/morsed stop; sleep 4; morse_hud_client; echo MORSE
+
+
+_COMMAND_DONE_4
+
+stopped /usr/bin/morsed (pid 298)
+
+MorseMouse: STALE
+
+version=1
+
+monotonic_ms=16135
+
+interval_ms=1000
+
+daemon=stopped
+
+driver=ready
+
+power=disabled
+
+connected=1
+
+received=6
+
+processed=6
+
+dropped=0
+
+input_overflows=0
+
+diagnostic_dropped=0
+
+input_queue=0
+
+diagnostic_queue=0
+
+event_id=0
+
+event_type=0
+
+ascii=0
+
+sequence=
+
+loss_notifications=0
+
+MORSE_COMMAND_DONE_4
+
+root@qemuarm64:~# mv /run/morsemouse/status /tmp/saved-status; morse_hud_client; mv /tmp/saved-status /run/morsemouse/status; echo MORSE_COMMAND_DONE_5
+mv /run/morsemouse/status /tmp/saved-status; morse_hud_client;
+
+
+ mv /tmp/saved-status /run/morsemouse/status; echo MORSE_COMMAND_DONE_5
+
+MorseMouse: telemetry unavailable
+
+MORSE_COMMAND_DONE_5
+
+root@qemuarm64:~# rmmod hid_morse_kbd; /etc/init.d/morsed start; sleep 2; morse_hud_client; echo MORSE_COMMAND_DONE_6
+rmmod hid_morse_kbd; /etc/init.d/morsed start; sleep 2; morse_
+
+
+hud_client; echo MORSE_COMMAND_DONE_6
+
+[   20.499335] hid_morse_kbd: disconnected from "QEMU QEMU USB Tablet" received=6 processed=6 queue_overflows=0 dropped=0 sequence_overflows=0 commits_valid=1 commits_empty=0 commits_invalid=0
+
+[   20.502740] hid_morse_kbd: character device unregistered
+
+[   20.551745] hid_morse_kbd: virtual keyboard unregistered
+
+[   20.552872] hid_morse_kbd: unloaded
+
+MorseMouse: current
+
+version=1
+
+monotonic_ms=22601
+
+interval_ms=1000
+
+daemon=running
+
+driver=unavailable
+
+power=disabled
+
+connected=0
+
+received=0
+
+processed=0
+
+dropped=0
+
+input_overflows=0
+
+diagnostic_dropped=0
+
+input_queue=0
+
+diagnostic_queue=0
+
+event_id=0
+
+event_type=0
+
+ascii=0
+
+sequence=
+
+loss_notifications=0
+
+MORSE_COMMAND_DONE_6
+
+root@qemuarm64:~# modprobe hid_morse_kbd; sleep 2; morse_hud_client; echo MORSE_COMMAND_DONE_7
+modprobe hid_morse_kbd; sleep 2; morse_hud_client; echo MORSE_
+
+
+COMMAND_DONE_7
+
+[   22.770276] input: MorseMouse Virtual Keyboard as /devices/virtual/input/input3
+
+[   22.771862] hid_morse_kbd: virtual keyboard registered; printable_ascii=95
+
+[   22.773689] hid_morse_kbd: character device registered; name=morse_hid major=10 minor=258
+
+[   22.835610] hid_morse_kbd: connected to "QEMU QEMU USB Tablet"; grab=disabled queue_capacity=64
+
+[   22.836132] hid_morse_kbd: registered; target_name="USB Tablet", grab_on_bind=false queue_capacity=64 sequence_capacity=63 map_entries=95
+
+MorseMouse: current
+
+version=1
+
+monotonic_ms=24604
+
+interval_ms=1000
+
+daemon=running
+
+driver=ready
+
+power=disabled
+
+connected=1
+
+received=0
+
+processed=0
+
+dropped=0
+
+input_overflows=0
+
+diagnostic_dropped=0
+
+input_queue=0
+
+diagnostic_queue=0
+
+event_id=1
+
+event_type=9
+
+ascii=0
+
+sequence=
+
+loss_notifications=0
+
+MORSE_COMMAND_DONE_7
+
+root@qemuarm64:~# printf 'power_mode=execute\n' > /tmp/unsafe.conf; morsed /tmp/unsafe.conf --check-config; echo CONFIG_RC=$?; echo MORSE_COMMAND_DONE_8
+printf 'power_mode=execute\n' > /tmp/unsafe.conf; morsed /tmp/
+
+
+unsafe.conf --check-config; echo CONFIG_RC=$?; echo MORSE_COMMAND_DONE_8
+
+power execution is unavailable
+
+CONFIG_RC=2
+
+MORSE_COMMAND_DONE_8
+
+root@qemuarm64:~# printf 'interval_ms=0\n' > /tmp/invalid.conf; morsed /tmp/invalid.conf --check-config; echo INTERVAL_RC=$?; echo MORSE_COMMAND_DONE_9
+printf 'interval_ms=0\n' > /tmp/invalid.conf; morsed /tmp/inva
+
+
+lid.conf --check-config; echo INTERVAL_RC=$?; echo MORSE_COMMAND_DONE_9
+
+INTERVAL_RC=2
+
+MORSE_COMMAND_DONE_9
+
+root@qemuarm64:~# morsed; echo SECOND_DAEMON_RC=$?; echo MORSE_COMMAND_DONE_10
+morsed; echo SECOND_DAEMON_RC=$?; echo MORSE_COMMAND_DONE_10
+
+daemon lock: Resource temporarily unavailable
+
+SECOND_DAEMON_RC=1
+
+MORSE_COMMAND_DONE_10
+
+root@qemuarm64:~# /etc/init.d/morsed stop; morse-hid-test --self-test; /etc/init.d/morsed start; echo MORSE_COMMAND_DONE_11
+/etc/init.d/morsed stop; morse-hid-test --self-test; /etc/init
+
+
+.d/morsed start; echo MORSE_COMMAND_DONE_11
+
+stopped /usr/bin/morsed (pid 311)
+
+
+
+MorseMouse character-device self-test
+
+Device: /dev/morse_hid
+
+
+
+ABI version: 1
+
+Event size: 104 bytes
+
+Diagnostic capacity: 128
+
+Feature flags: 0x1f
+
+[PASS] GET_INFO and ABI validation
+
+Received: 0, processed: 0, dropped: 0
+
+Input queue: 0, diagnostic queue: 0
+
+[PASS] GET_STATS and statistics structure
+
+[PASS] Exclusive reader enforcement
+
+[PASS] Unsupported ioctl returns ENOTTY
+
+[PASS] Invalid ioctl pointer returns EFAULT
+
+[PASS] Invalid read size returns EINVAL
+
+[SKIP] Invalid read-pointer test: no event available
+
+Drained 0 diagnostic records
+
+[PASS] Diagnostic event records validated
+
+[PASS] Empty non-blocking read returns EAGAIN
+
+[PASS] poll timeout on empty diagnostic queue
+
+[PASS] Final GET_STATS ioctl
+
+
+
+====================================
+
+RESULT: ALL EXECUTED TESTS PASSED
+
+MORSE_COMMAND_DONE_11
+
+root@qemuarm64:~# dmesg | grep -iE 'BUG:|Oops:|WARNING:|hung task' || true; echo MORSE_COMMAND_DONE_12
+dmesg | grep -iE 'BUG:|Oops:|WARNING:|hung task' || true; echo
+
+
+ MORSE_COMMAND_DONE_12
+
+MORSE_COMMAND_DONE_12
+
+root@qemuarm64:~# sync; echo MORSE_COMMAND_DONE_13
+sync; echo MORSE_COMMAND_DONE_13
+
+MORSE_COMMAND_DONE_13
+
+root@qemuarm64:~# poweroff
+poweroff
+
+
+
+
+Broadcast message from root@qemuarm64 (ttyAMA0) (Tue Nov 17 07:31:46 2026):
+
+
+
+
+
+
+The system is going down for system halt NOW!
+
+
+
+INIT: Switching to runlevel: 0
+
+
+root@qemuarm64:~# 
+INIT: Sending processes configured via /etc/inittab the TERM signal
+
+
+Stopping syslogd/klogd: stopped syslogd (pid 271)
+
+stopped klogd (pid 274)
+
+done
+
+Unmounting remote filesystems...
+
+Deconfiguring network interfaces... ifdown: interface lo not configured
+
+done.
+
+stopped /usr/bin/morsed (pid 325)
+
+Sending all processes the TERM signal...
+
+Sending all processes the KILL signal...
+
+Deactivating swap...
+
+Unmounting local filesystems...
+
+[   31.679393] EXT4-fs (vda): re-mounted eb1417b2-ca17-4fa8-9239-374ef4638e12 ro.
+
+[   31.805805] reboot: Power down
+
+runqemu - INFO - Cleaning up
+runqemu - INFO - Host uptime: 1112.94
+
+[?7h

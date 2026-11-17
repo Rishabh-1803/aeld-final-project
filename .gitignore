@@ -48,3 +48,9 @@ Thumbs.db
 # Locally compiled test binaries
 /tools/test-morse-keymap
 /tools/test-morse-fsm
+
+/userspace/morsed
+/userspace/morse_hud_client
+/issue8-close.md
+
+/userspace/morse-input-stress

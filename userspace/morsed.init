@@ -1,0 +1,15 @@
+#!/bin/sh
+### BEGIN INIT INFO
+# Provides: morsed
+# Required-Start: $local_fs
+# Required-Stop: $local_fs
+# Default-Start: 2 3 4 5
+# Default-Stop: 0 1 6
+# Short-Description: MorseMouse diagnostic service
+### END INIT INFO
+case "$1" in
+ start) start-stop-daemon --start --background --make-pidfile --pidfile /run/morsed.pid --exec /usr/bin/morsed ;;
+ stop) start-stop-daemon --stop --retry TERM/5/KILL/1 --pidfile /run/morsed.pid --exec /usr/bin/morsed ;;
+ restart) "$0" stop; "$0" start ;;
+ *) echo "Usage: $0 {start|stop|restart}"; exit 2 ;;
+esac
