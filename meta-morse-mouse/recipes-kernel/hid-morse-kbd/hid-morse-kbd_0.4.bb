@@ -30,3 +30,6 @@ do_install:append:raspberrypi4-64() {
     install -d ${D}${sysconfdir}/modprobe.d
     install -m 0644 ${WORKDIR}/morse-mouse.conf ${D}${sysconfdir}/modprobe.d/
 }
+
+FILES:${PN}:append:raspberrypi4-64 = " ${sysconfdir}/modprobe.d/morse-mouse.conf"
+CONFFILES:${PN}:append:raspberrypi4-64 = " ${sysconfdir}/modprobe.d/morse-mouse.conf"

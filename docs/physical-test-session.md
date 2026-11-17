@@ -75,3 +75,6 @@ The verified pinned kernel commit is e442e5c1ab6bff5b5460b4fc949beb72aaf77970.
 
 
 The owner will use Wi-Fi, not Ethernet. Optional private Wi-Fi/SSH provisioning is enabled locally; see [local test access](local-test-access.md). The radio connection still needs actual board testing. No microSD is connected to the laptop yet; only the internal system disk was observed, so no write has been attempted.
+
+
+Both Pi images are now built and the development image passed offline partition, boot-file, ARM64 module and private-profile verification. Card insertion/writing is deferred at the owner's request. Do not treat image inspection as a physical boot result.

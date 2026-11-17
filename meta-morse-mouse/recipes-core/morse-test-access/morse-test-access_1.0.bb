@@ -2,8 +2,8 @@ SUMMARY = "Optional locally provisioned MorseMouse test access"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda2f7b4f302"
 FILESEXTRAPATHS:prepend := "${MORSE_PRIVATE_FILES}:"
-SRC_URI = "file://authorized_keys"
-SRC_URI:append:raspberrypi4-64 = " file://wpa_supplicant.conf"
+SRC_URI = "${@bb.utils.contains('MORSE_ENABLE_TEST_ACCESS', '1', 'file://authorized_keys', '', d)}"
+SRC_URI:append:raspberrypi4-64 = "${@bb.utils.contains('MORSE_ENABLE_TEST_ACCESS', '1', ' file://wpa_supplicant.conf', '', d)}"
 S = "${WORKDIR}"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 RDEPENDS:${PN} = "dropbear"
@@ -17,3 +17,8 @@ do_install:append:raspberrypi4-64() {
     install -m 0600 ${WORKDIR}/wpa_supplicant.conf ${D}${sysconfdir}/wpa_supplicant/wpa_supplicant-wlan0.conf
 }
 FILES:${PN} += "${ROOT_HOME}/.ssh"
+
+python __anonymous() {
+    if d.getVar('MORSE_ENABLE_TEST_ACCESS') != '1':
+        raise bb.parse.SkipRecipe('local test access provisioning is disabled')
+}

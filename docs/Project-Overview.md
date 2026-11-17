@@ -104,7 +104,7 @@ The course's [Supported Hardware Platforms](https://github.com/cu-ecen-aeld/aesd
 
 ### Hardware status boundary
 
-QEMU ARM64 image builds, QEMU input-event tests and kernel-driver tests are the current development evidence. The QEMU gate has passed. Raspberry Pi image preparation is underway; physical boot, Linux descriptor inspection and real mouse-event validation remain pending. Windows observed receiver VID/PID 3151/1020. QEMU results are not presented as physical-hardware results.
+QEMU ARM64 image builds, QEMU input-event tests and kernel-driver tests are the current development evidence. The QEMU gate has passed. Raspberry Pi production and development images have built successfully and passed offline inspection; physical boot, Linux descriptor inspection and real mouse-event validation remain pending. Windows observed receiver VID/PID 3151/1020. QEMU results are not presented as physical-hardware results.
 
 ## Open Source Projects Used
 
@@ -224,8 +224,10 @@ The owner confirmed on November 17 that power execution and shutdown
 gestures are deferred until after the final submission. The daemon must
 keep execution disabled. The Zebronics mouse is available; Raspberry Pi 4
 will be borrowed for a limited test session after QEMU acceptance.
-Daemon and HUD now have November 17 QEMU acceptance evidence. QEMU integration is accepted; physical validation and final demonstration remain pending.
+Daemon and HUD now have November 17 QEMU acceptance evidence. QEMU integration is accepted; physical validation and final demonstration remain pending. Card writing is deferred until the hardware session.
 
 See [daemon/HUD usage and policy](https://github.com/Rishabh-1803/aeld-final-project/blob/main/docs/daemon-hud.md) and November 17 daemon/HUD evidence. Power execution is deferred until after submission.
 
 Integrated overflow/recovery and teardown pressure passed on November 17. The physical Pi is an 8 GB borrowed board; hardware tests and card writing remain pending.
+
+Pi image build: all 4,864 tasks passed. Offline artifact verification passed; physical boot is not yet claimed. See the [Pi build report](https://github.com/Rishabh-1803/aeld-final-project/blob/main/evidence/builds/2026-11-17-rpi4-build.md).

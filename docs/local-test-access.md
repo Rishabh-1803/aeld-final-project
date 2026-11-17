@@ -42,3 +42,5 @@ WPA mode adjustment is needed, confirm the actual network requirements.
 See the QEMU SSH acceptance report for positive key login and rejected
 password authentication. Stop morsed before using the exclusive diagnostic
 self-test reader or unloading the module.
+
+All VM runners are intended to run one at a time. They use snapshot disks, a per-process QMP socket and build-qemu/test-results logs, so tests do not modify the base image.

@@ -1,0 +1,40 @@
+{
+  "artifact": "core-image-morse-dev-raspberrypi4-64.rootfs-20261117084812.wic.bz2",
+  "compressed_bytes": 45006358,
+  "sha256": "23eae2a05acd44ab3c24473b579d8ef5cd0096d922ffff3a5facaef326bca6b3",
+  "image_bytes": 284372992,
+  "image_sha256": "ebfea00d40b733ff4e770e490c899fc8611f3a622b78bc9f031abffaee7aca20",
+  "partitions": [
+    {
+      "index": 1,
+      "type": "0xc",
+      "offset": 4194304,
+      "size": 136314880
+    },
+    {
+      "index": 2,
+      "type": "0x83",
+      "offset": 142606336,
+      "size": 141766656
+    }
+  ],
+  "checks": {
+    "/etc/wpa_supplicant/wpa_supplicant-wlan0.conf": "root-owned, mode 0600",
+    "/home/root/.ssh/authorized_keys": "root-owned, mode 0600",
+    "/home/root/.ssh": "root-owned, mode 0700"
+  },
+  "module_arch": "AArch64",
+  "module_vermagic": "6.6.63-v8 SMP preempt mod_unload modversions aarch64",
+  "boot_files": [
+    "kernel8.img",
+    "config.txt",
+    "bcm2711-rpi-4-b.dtb",
+    "start4.elf"
+  ],
+  "boot_arm64": true,
+  "boot_root_partition_consistent": true,
+  "hdmi_login_console": true,
+  "private_profile_matches": true,
+  "key_only_ssh_config": true,
+  "physical_boot_tested": false
+}

@@ -219,10 +219,12 @@ The owner confirmed on November 17 that power execution and shutdown
 gestures are deferred until after the final submission. The daemon must
 keep execution disabled. The Zebronics mouse is available; Raspberry Pi 4
 will be borrowed for a limited test session after QEMU acceptance.
-Daemon and HUD now have November 17 QEMU acceptance evidence. QEMU integration is accepted; physical validation and final demonstration remain pending.
+Daemon and HUD now have November 17 QEMU acceptance evidence. QEMU integration is accepted; physical validation and final demonstration remain pending. Card writing is deferred until the hardware session.
 
 See [daemon/HUD usage and policy](https://github.com/Rishabh-1803/aeld-final-project/blob/main/docs/daemon-hud.md) and November 17 daemon/HUD evidence. Power execution is deferred until after submission.
 
 Integrated overflow/recovery and teardown pressure passed on November 17. The physical Pi is an 8 GB borrowed board; hardware tests and card writing remain pending.
 
 QEMU Phase A is accepted with the November 17 evidence; Phase B remains pending. The receiver Windows VID/PID is 3151/1020. Linux descriptors and physical input behavior are not yet validated.
+
+Pi image build: all 4,864 tasks passed. Offline artifact verification passed; physical boot is not yet claimed. See the [Pi build report](https://github.com/Rishabh-1803/aeld-final-project/blob/main/evidence/builds/2026-11-17-rpi4-build.md).

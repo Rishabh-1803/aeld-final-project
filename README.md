@@ -55,7 +55,7 @@ QEMU is the current development and validation target. Raspberry Pi 4 and the ph
 - **QEMU development target:** `MACHINE = "qemuarm64"`.
 - **Planned physical target:** Raspberry Pi 4 64-bit, `MACHINE = "raspberrypi4-64"`, supported through the [`meta-raspberrypi` BSP layer](https://github.com/agherzan/meta-raspberrypi).
 - **Physical input peripheral:** Zebronics PULSE mouse with 2.4 GHz USB receiver.
-- **Current status:** QEMU image/build and input-handler/FSM validation have evidence. Raspberry Pi physical build/boot and receiver validation are deferred until the QEMU gate passes.
+- **Current status:** QEMU image/build and input-handler/FSM validation have evidence. Raspberry Pi images are built; physical boot and receiver validation remain pending.
 
 ## 4. Current Progress
 
@@ -71,7 +71,8 @@ QEMU is the current development and validation target. Raspberry Pi 4 and the ph
 | `morsed` diagnostic daemon | QEMU validated; power deferred |
 | Read-only telemetry/HUD | QEMU validated |
 | QEMU integration | Passed; November 17 evidence |
-| Physical Pi/receiver validation | Pending; image preparation underway |
+| Raspberry Pi production/development images | Built; offline image checks passed |
+| Physical Pi/receiver validation | Pending; card writing deferred |
 
 Sprint 1 snapshot: [`coursera-sprint-1`](https://github.com/Rishabh-1803/aeld-final-project/tree/coursera-sprint-1). The tag is a frozen submission boundary, not a claim that later Sprint 2 work is complete.
 
@@ -138,3 +139,5 @@ Daemon and HUD now have November 17 QEMU acceptance evidence. QEMU integration i
 See [daemon/HUD usage and policy](https://github.com/Rishabh-1803/aeld-final-project/blob/main/docs/daemon-hud.md) and November 17 daemon/HUD evidence. Power execution is deferred until after submission.
 
 Physical session: [checklist](docs/physical-test-session.md). Final demonstration: [recording/submission plan](docs/final-demo-plan.md).
+
+[Pi image build and offline verification](evidence/builds/2026-11-17-rpi4-build.md) · [Local Wi-Fi/SSH setup](docs/local-test-access.md). The provisioned SD image is kept local because it contains the private network profile.

@@ -1,10 +1,12 @@
 import json, socket, time, pathlib, pexpect, os
 
 root = pathlib.Path(os.environ.get('MORSE_PROJECT_ROOT', str(pathlib.Path(__file__).resolve().parents[1])))
-sock = '/tmp/morse-acceptance-qmp.sock'
+sock = '/tmp/morse-acceptance-qmp-' + str(os.getpid()) + '.sock'
 pathlib.Path(sock).unlink(missing_ok=True)
-log = open(str(root / 'morse-stress-acceptance.log'), 'w')
-cmd = 'source poky/oe-init-build-env build-qemu >/dev/null && runqemu tmp/deploy/images/qemuarm64/core-image-morse-dev-qemuarm64.rootfs.qemuboot.conf nographic slirp qemuparams="-qmp unix:'+sock+',server=on,wait=off"'
+results = root / 'build-qemu/test-results'
+results.mkdir(parents=True, exist_ok=True)
+log = open(results / 'morse-stress-acceptance.log', 'w')
+cmd = 'source poky/oe-init-build-env build-qemu >/dev/null && runqemu tmp/deploy/images/qemuarm64/core-image-morse-dev-qemuarm64.rootfs.qemuboot.conf nographic slirp qemuparams="-snapshot -qmp unix:'+sock+',server=on,wait=off"'
 p = pexpect.spawn('/bin/bash', ['-lc', cmd], cwd=str(root), encoding='utf-8', timeout=120)
 p.logfile = log
 p.expect('login:'); p.sendline('root'); p.expect('root@qemuarm64:~#')

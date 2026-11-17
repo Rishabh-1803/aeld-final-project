@@ -20,7 +20,7 @@ physical hardware and final demonstration remain outstanding.
 
 1. Issue #11 Phase A is accepted with the integrated service-image stress/recovery
    evidence. Preserve that software checkpoint while preparing hardware.
-2. Borrow Raspberry Pi 4 after QEMU acceptance; build its image, inspect the
+2. Use the built Pi 4 image for the borrowed-board session; write the card and inspect the
    owner's Zebronics PULSE receiver and validate actual hardware separately.
 3. Complete final documentation, public-link checks, demonstration video and
    submission evidence. No video URL or hardware result has been invented.
@@ -38,3 +38,14 @@ the owner's November 17 decision. No executable power policy is included.
 
 Build directories and external layers remain outside version control. Physical
 tests must not reuse QEMU kernel modules; build against the Pi's actual kernel.
+
+
+## Raspberry Pi build checkpoint
+
+Production and development Pi 4 images built successfully on November 17
+(4,864 tasks). Offline image checks passed; see the Pi build report. Optional
+Wi-Fi/key-only SSH provisioning is enabled in the local image, with secrets
+excluded from Git. Public/default builds remain credential-free and opt-in
+access is disabled. Card writing and physical tests are deferred by the owner.
+
+VM test runners now use QEMU snapshot disks and keep logs under build-qemu/test-results. The verified SSH regression left the base image SHA-256 unchanged. Both public wiki pages returned HTTP 200 with the expected page titles in an unauthenticated check.
