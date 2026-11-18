@@ -36,23 +36,36 @@ def click(mask): buttons(mask); buttons(0)
 def sequence(s):
     for c in s: click(1 if c=='.' else 2)
     click(4)
+def self_test():
+    output = shell('morse-hid-test --self-test; echo SELF_TEST_RC=$?')
+    assert 'SELF_TEST_RC=0' in output, output
+    assert 'RESULT: ALL EXECUTED TESTS PASSED' in output, output
+    assert '[FAIL]' not in output, output
+    return output
 shell('/etc/init.d/morsed stop 2>/dev/null || true')
-shell('morse-hid-test --self-test')
+self_test()
 shell('morse-hid-test --wait > /tmp/wakeup.log 2>&1 &')
 click(1)
 shell('cat /tmp/wakeup.log')
 # Discard the partial character using a chord, then drain before the matrix.
 buttons(3); buttons(0)
-shell('morse-hid-test --self-test')
-shell('evtest /dev/input/event2 > /tmp/keyboard.log 2>&1 &')
+output = self_test()
+assert 'Invalid read pointer returns EFAULT without consuming event' in output, output
+output = shell('for p in /sys/class/input/event*/device/name; do [ "$(cat "$p")" = "MorseMouse Virtual Keyboard" ] && echo KEYBOARD_NODE=/dev/input/$(basename "$(dirname "$(dirname "$p")")"); done')
+import re
+match = re.search(r'KEYBOARD_NODE=(/dev/input/event[0-9]+)', output)
+assert match, output
+shell('evtest ' + match.group(1) + ' > /tmp/keyboard.log 2>&1 &')
 sequence('.-'); click(4); sequence('..........')
 click(1); buttons(3); buttons(0); sequence('.-')
-shell('morse-hid-test --self-test')
+self_test()
 shell('kill %1; tail -20 /tmp/keyboard.log')
 # Overflow the diagnostic ring at a paced rate without starving the worker.
 for i in range(140): click(1)
-shell('morse-hid-test --self-test')
-shell('rmmod hid_morse_kbd; test ! -e /dev/morse_hid && echo NODE_REMOVED; modprobe hid_morse_kbd; morse-hid-test --self-test')
+self_test()
+output = shell('rmmod hid_morse_kbd; test ! -e /dev/morse_hid && echo NODE_REMOVED; modprobe hid_morse_kbd')
+assert 'NODE_REMOVED' in output, output
+self_test()
 shell("dmesg | grep -iE 'BUG:|Oops:|WARNING:|hung task' || true")
 shell('sync')
 p.sendline('poweroff'); p.expect(pexpect.EOF)

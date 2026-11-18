@@ -2,7 +2,7 @@
 
 The authoritative definitions are in `include/morse_hid_uapi.h`.
 The driver registers `/dev/morse_hid` as a misc device with mode 0600.
-One open file is permitted at a time (EBUSY for another open). The future
+One open file is permitted at a time (EBUSY for another open). The
 daemon owns this stream; HUD clients consume its snapshots instead.
 
 ## Record and ioctl contract
@@ -34,3 +34,5 @@ rmmod fails while it is in use. Physical disconnect generates a diagnostic
 record and leaves the interface available for reconnection.
 
 See `evidence/input/2026-11-17-qemu-character-device.md` for acceptance.
+
+[November 18 follow-up](../evidence/input/2026-11-18-qemu-character-device.md) explicitly exercised the queued-event EFAULT/retention check skipped in the owner review.

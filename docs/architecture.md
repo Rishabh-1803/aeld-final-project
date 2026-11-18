@@ -4,7 +4,7 @@
 
 MorseMouse is an Embedded Linux input system designed to turn a supported mouse into a compact Morse text-entry device. The approved v1 grammar uses the left button for DOT, the right button for DASH, and the middle button for explicit COMMIT. Scroll-wheel gestures are disabled in v1. QEMU ARM64 is the development and integration target; Raspberry Pi 4 64-bit is reserved for final physical validation.
 
-## Planned data path
+## Implemented data path
 
 ```text
 Physical mouse + USB receiver
@@ -30,7 +30,7 @@ Linux applications   read-only telemetry
                     morse_hud_client
 ```
 
-This diagram describes the intended architecture. Components must not be treated as implemented until source code and validation evidence exist.
+This software path is implemented and QEMU-validated. Physical Pi/receiver acceptance remains pending.
 
 ## Implemented userspace reference path
 
@@ -74,13 +74,13 @@ Implemented behavior:
 - Lockout ends only after both primary buttons have been released.
 - Decoded printable ASCII characters can be emitted through uinput.
 
-The independent FSM has 37 passing unit checks. The integrated decoder and virtual keyboard were verified in QEMU. This is a userspace reference implementation, not the planned kernel input handler.
+The independent FSM has 52 passing unit checks and 58 shared vectors. The integrated decoder and virtual keyboard were verified in QEMU. This is a userspace reference implementation, separate from the implemented kernel input handler.
 
 ## Kernel input-handler module — implemented baseline
 
 The `hid_morse_kbd.ko` module is implemented and committed. It registers a targeted Linux `input_handler`, matches the QEMU USB Tablet by name substring and event capabilities, logs button transitions, supports the `target_name` and `grab_on_bind` module parameters, and handles connect/disconnect and module lifecycle. The QEMU acceptance evidence verifies automatic binding, keyboard exclusion, left/right/middle press/release events, exclusive grab, grab release on unload, HID unbind/rebind, and actual QEMU USB hot-unplug/hot-replug.
 
-Source: `driver/hid_morse_kbd_main.c`; Yocto recipe: `meta-morse-mouse/recipes-kernel/hid-morse-kbd/hid-morse-kbd_0.3.bb`. See [QEMU kernel input-handler runtime evidence](../evidence/input/2026-11-05-qemu-kernel-input-handler.md).
+Source: `driver/hid_morse_kbd_main.c`; Yocto recipe: `meta-morse-mouse/recipes-kernel/hid-morse-kbd/hid-morse-kbd_0.4.bb`. See [QEMU kernel input-handler runtime evidence](../evidence/input/2026-11-05-qemu-kernel-input-handler.md).
 
 The kernel path now includes the bounded queue, shared FSM, virtual keyboard
 and versioned diagnostic character device. Issue #7 evidence is dated
@@ -91,11 +91,13 @@ Input/timer callbacks must not perform filesystem or socket I/O, user-copy, arbi
 
 ## Userspace components
 
-| Component | Planned responsibility |
+| Component | Implemented responsibility |
 |---|---|
-| `morsed` | Read driver events, coordinate service lifecycle, diagnostics, guarded local power-intent validation, and telemetry |
-| `morsectl` | Local administrative/query/test interface |
-| `morse_hud_client` | Read-only status display for mode, decoder, layer, queue, counters, and service state |
+| `morsed` | Exclusive diagnostic reader, service lifecycle and atomic telemetry publication; power disabled |
+| `morse_hud_client` | Read-only current/stale/unavailable status and event/counter display |
+| `morse-hid-test` | Development ABI/self-test client; stop morsed before opening the exclusive stream |
+
+No separate `morsectl` tool is included in the submission scope.
 
 The daemon must not interpret client-provided strings as shell commands. The HUD is read-only and cannot initiate power actions.
 

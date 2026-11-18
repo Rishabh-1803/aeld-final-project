@@ -39,3 +39,5 @@ claim that a physical demonstration has already been recorded.
 
 The hardware session date, physical results, public video URL and submission
 receipt remain pending. A final tag/release is deliberately not created yet.
+
+The owner confirmed on November 18 that displayed Coursera dates change. Treat them as informational and recheck at submission; do not change the repository sprint calendar to match them.
