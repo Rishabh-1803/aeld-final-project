@@ -78,3 +78,5 @@ The owner will use Wi-Fi, not Ethernet. Optional private Wi-Fi/SSH provisioning 
 
 
 Both Pi images are now built and the development image passed offline partition, boot-file, ARM64 module and private-profile verification. Card insertion/writing is deferred at the owner's request. Do not treat image inspection as a physical boot result.
+
+Windows preparation: [November 18 mouse observations](../evidence/hardware/2026-11-18-windows-mouse.md) cover three buttons, wheel directions and simultaneous left/right input. Open tools/mouse-input-test.html in a browser to repeat. This does not satisfy Pi/Linux receiver acceptance.
